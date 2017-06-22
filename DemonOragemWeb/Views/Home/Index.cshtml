@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+<script src="~/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/bootstrap/js/_____jquery-2.1.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.js"></script>
+
+
+<div style="width:800px; height:500px;">
+    <canvas id="myChart" ></canvas>
+</div>
+<script>
+    var ctx = document.getElementById("myChart");
+    var Vitoria;
+    var Empates;
+    var Derrota;
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/MyAction",
+        dataType: "JSON",
+        async: false,
+        success: function (data) {
+            Vitoria = data[0];
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "/Home/MyAction",
+        dataType: "JSON",
+        async: false,
+        success: function (data) {
+            Empates = data[1];
+        }
+    });
+    $.ajax({
+        type: "POST",
+        url: "/Home/MyAction",
+        dataType: "JSON",
+        async: false,
+        success: function (data) {
+            Derrota = data[2];
+        }
+    });
+
+    var data = {
+        labels: ["3/4", "4/4", "5/4", "6/4", "7/4", "8/4", "9/4"],
+        datasets: [
+            {
+                label: "Vitoria",
+                backgroundColor: "rgba(75,192,192,0)",
+                borderColor: "rgba(75,192,192,1)",
+               // pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+               // pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                data: Vitoria,
+            },
+             {
+                 label: "Empates",                 
+                 backgroundColor: "rgba(25,12,12,0)",
+                 borderColor: "rgba(25,12,12,1)",
+                 //pointBorderColor: "rgba(25,12,12,1)",
+                 pointBackgroundColor: "#000",
+                // pointHoverBackgroundColor: "rgba(25,12,12,1)",
+                 data: Empates,
+             }, {
+                 label: "Derrota",
+                 backgroundColor: "rgba(225,12,12,0)",
+                 borderColor: "rgba(225,12,12,1)",
+                 //pointBorderColor: "rgba(225,12,12,1)",
+                 pointBackgroundColor: "Red",
+                // pointHoverBackgroundColor: "rgba(225,12,12,1)",
+                 data: Derrota,
+             }
+        ]
+    };
+    var scatterChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+       
+    });
+</script>

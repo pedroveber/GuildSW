@@ -1,0 +1,496 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DB_SW_GuildModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Batalhas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="Guilda" Type="varchar" MaxLength="100" />
+          <Property Name="Life" Type="bigint" />
+          <Property Name="Data" Type="datetime" />
+          <Property Name="PontuacaoOponente" Type="bigint" />
+          <Property Name="PontuacaoGuild" Type="bigint" />
+          <Property Name="RankGuild" Type="bigint" />
+          <Property Name="idGuilda" Type="bigint" />
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Lutas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodBatalhas" Type="bigint" />
+          <Property Name="CodPlayer" Type="bigint" />
+          <Property Name="CodPlayerOponente" Type="bigint" />
+          <Property Name="Vitoria" Type="int" />
+          <Property Name="ValorBarra" Type="bigint" />
+          <Property Name="DataHora" Type="datetime" />
+          <Property Name="MomentoVitoria" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" />
+          <Property Name="Level" Type="bigint" />
+          <Property Name="PontoArena" Type="bigint" />
+          <Property Name="Status" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="PlayerDefesas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPlayer" Type="bigint" />
+          <Property Name="NomeOponente" Type="varchar" MaxLength="100" />
+          <Property Name="NomeGuilda" Type="varchar" MaxLength="100" />
+          <Property Name="Vitoria" Type="int" />
+          <Property Name="DataHora" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PlayerOponente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="CodGuilda" Type="bigint" />
+          <Property Name="Nome" Type="varchar" MaxLength="100" />
+          <Property Name="Bonus" Type="int" />
+        </EntityType>
+        <EntityType Name="PlayerStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdPlayer" Type="bigint" />
+          <Property Name="IdBatalha" Type="bigint" />
+          <Property Name="Status" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <Association Name="FK__Lutas__CodPlayer__31EC6D26">
+          <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="Lutas" Type="Self.Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lutas__CodPlayer__32E0915F">
+          <End Role="PlayerOponente" Type="Self.PlayerOponente" Multiplicity="0..1" />
+          <End Role="Lutas" Type="Self.Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlayerOponente">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodPlayerOponente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlayerDef__IdPla__25869641">
+          <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="PlayerDefesas" Type="Self.PlayerDefesas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerDefesas">
+              <PropertyRef Name="IdPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlayerSta__IdPla__2A4B4B5E">
+          <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
+          <End Role="PlayerStatus" Type="Self.PlayerStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerStatus">
+              <PropertyRef Name="IdPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LUTAS_BATALHA">
+          <End Role="Batalhas" Type="Self.Batalhas" Multiplicity="0..1" />
+          <End Role="Lutas" Type="Self.Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodBatalhas" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PLAYEROPONENTE_BATALHA">
+          <End Role="Batalhas" Type="Self.Batalhas" Multiplicity="0..1" />
+          <End Role="PlayerOponente" Type="Self.PlayerOponente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerOponente">
+              <PropertyRef Name="CodGuilda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_STATUS_BATALHA">
+          <End Role="Batalhas" Type="Self.Batalhas" Multiplicity="0..1" />
+          <End Role="PlayerStatus" Type="Self.PlayerStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerStatus">
+              <PropertyRef Name="IdBatalha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DB_SW_GuildModelStoreContainer">
+          <EntitySet Name="Batalhas" EntityType="Self.Batalhas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Lutas" EntityType="Self.Lutas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlayerDefesas" EntityType="Self.PlayerDefesas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlayerOponente" EntityType="Self.PlayerOponente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PlayerStatus" EntityType="Self.PlayerStatus" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Lutas__CodPlayer__31EC6D26" Association="Self.FK__Lutas__CodPlayer__31EC6D26">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lutas__CodPlayer__32E0915F" Association="Self.FK__Lutas__CodPlayer__32E0915F">
+            <End Role="PlayerOponente" EntitySet="PlayerOponente" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlayerDef__IdPla__25869641" Association="Self.FK__PlayerDef__IdPla__25869641">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="PlayerDefesas" EntitySet="PlayerDefesas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlayerSta__IdPla__2A4B4B5E" Association="Self.FK__PlayerSta__IdPla__2A4B4B5E">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="PlayerStatus" EntitySet="PlayerStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LUTAS_BATALHA" Association="Self.FK_LUTAS_BATALHA">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PLAYEROPONENTE_BATALHA" Association="Self.FK_PLAYEROPONENTE_BATALHA">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="PlayerOponente" EntitySet="PlayerOponente" />
+          </AssociationSet>
+          <AssociationSet Name="FK_STATUS_BATALHA" Association="Self.FK_STATUS_BATALHA">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="PlayerStatus" EntitySet="PlayerStatus" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_SW_GuildModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DB_SW_GuildEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Batalhas" EntityType="DB_SW_GuildModel.Batalhas" />
+          <EntitySet Name="Lutas" EntityType="DB_SW_GuildModel.Lutas" />
+          <EntitySet Name="Player" EntityType="DB_SW_GuildModel.Player" />
+          <EntitySet Name="PlayerOponente" EntityType="DB_SW_GuildModel.PlayerOponente" />
+          <EntitySet Name="PlayerStatus" EntityType="DB_SW_GuildModel.PlayerStatus" />
+          <AssociationSet Name="FK__Lutas__CodBatalh__22751F6C" Association="DB_SW_GuildModel.FK__Lutas__CodBatalh__22751F6C">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlayerOpo__CodGu__1F98B2C1" Association="DB_SW_GuildModel.FK__PlayerOpo__CodGu__1F98B2C1">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="PlayerOponente" EntitySet="PlayerOponente" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlayerSta__IdBat__1CBC4616" Association="DB_SW_GuildModel.FK__PlayerSta__IdBat__1CBC4616">
+            <End Role="Batalhas" EntitySet="Batalhas" />
+            <End Role="PlayerStatus" EntitySet="PlayerStatus" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lutas__CodPlayer__236943A5" Association="DB_SW_GuildModel.FK__Lutas__CodPlayer__236943A5">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Lutas__CodPlayer__245D67DE" Association="DB_SW_GuildModel.FK__Lutas__CodPlayer__245D67DE">
+            <End Role="PlayerOponente" EntitySet="PlayerOponente" />
+            <End Role="Lutas" EntitySet="Lutas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__PlayerSta__IdPla__1BC821DD" Association="DB_SW_GuildModel.FK__PlayerSta__IdPla__1BC821DD">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="PlayerStatus" EntitySet="PlayerStatus" />
+          </AssociationSet>
+          <EntitySet Name="PlayerDefesas" EntityType="DB_SW_GuildModel.PlayerDefesas" />
+          <AssociationSet Name="FK__PlayerDef__IdPla__1A14E395" Association="DB_SW_GuildModel.FK__PlayerDef__IdPla__1A14E395">
+            <End Role="Player" EntitySet="Player" />
+            <End Role="PlayerDefesas" EntitySet="PlayerDefesas" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Batalhas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="Guilda" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Life" Type="Int64" />
+          <Property Name="Data" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Lutas" Relationship="DB_SW_GuildModel.FK__Lutas__CodBatalh__22751F6C" FromRole="Batalhas" ToRole="Lutas" />
+          <NavigationProperty Name="PlayerOponente" Relationship="DB_SW_GuildModel.FK__PlayerOpo__CodGu__1F98B2C1" FromRole="Batalhas" ToRole="PlayerOponente" />
+          <NavigationProperty Name="PlayerStatus" Relationship="DB_SW_GuildModel.FK__PlayerSta__IdBat__1CBC4616" FromRole="Batalhas" ToRole="PlayerStatus" />
+          <Property Name="PontuacaoOponente" Type="Int64" />
+          <Property Name="PontuacaoGuild" Type="Int64" />
+          <Property Name="RankGuild" Type="Int64" />
+          <Property Name="idGuilda" Type="Int64" />
+        </EntityType>
+        <EntityType Name="Lutas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodBatalhas" Type="Int64" />
+          <Property Name="CodPlayer" Type="Int64" />
+          <Property Name="CodPlayerOponente" Type="Int64" />
+          <Property Name="Vitoria" Type="Int32" />
+          <Property Name="ValorBarra" Type="Int64" />
+          <Property Name="DataHora" Type="DateTime" Precision="3" />
+          <Property Name="MomentoVitoria" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Batalhas" Relationship="DB_SW_GuildModel.FK__Lutas__CodBatalh__22751F6C" FromRole="Lutas" ToRole="Batalhas" />
+          <NavigationProperty Name="Player" Relationship="DB_SW_GuildModel.FK__Lutas__CodPlayer__236943A5" FromRole="Lutas" ToRole="Player" />
+          <NavigationProperty Name="PlayerOponente" Relationship="DB_SW_GuildModel.FK__Lutas__CodPlayer__245D67DE" FromRole="Lutas" ToRole="PlayerOponente" />
+        </EntityType>
+        <EntityType Name="Player">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="Nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Level" Type="Int64" />
+          <Property Name="PontoArena" Type="Int64" />
+          <Property Name="Status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Lutas" Relationship="DB_SW_GuildModel.FK__Lutas__CodPlayer__236943A5" FromRole="Player" ToRole="Lutas" />
+          <NavigationProperty Name="PlayerStatus" Relationship="DB_SW_GuildModel.FK__PlayerSta__IdPla__1BC821DD" FromRole="Player" ToRole="PlayerStatus" />
+          <NavigationProperty Name="PlayerDefesas" Relationship="DB_SW_GuildModel.FK__PlayerDef__IdPla__1A14E395" FromRole="Player" ToRole="PlayerDefesas" />
+        </EntityType>
+        <EntityType Name="PlayerOponente">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="CodGuilda" Type="Int64" />
+          <Property Name="Nome" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Bonus" Type="Int32" />
+          <NavigationProperty Name="Batalhas" Relationship="DB_SW_GuildModel.FK__PlayerOpo__CodGu__1F98B2C1" FromRole="PlayerOponente" ToRole="Batalhas" />
+          <NavigationProperty Name="Lutas" Relationship="DB_SW_GuildModel.FK__Lutas__CodPlayer__245D67DE" FromRole="PlayerOponente" ToRole="Lutas" />
+        </EntityType>
+        <EntityType Name="PlayerStatus">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="IdPlayer" Type="Int64" />
+          <Property Name="IdBatalha" Type="Int64" />
+          <Property Name="Status" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Batalhas" Relationship="DB_SW_GuildModel.FK__PlayerSta__IdBat__1CBC4616" FromRole="PlayerStatus" ToRole="Batalhas" />
+          <NavigationProperty Name="Player" Relationship="DB_SW_GuildModel.FK__PlayerSta__IdPla__1BC821DD" FromRole="PlayerStatus" ToRole="Player" />
+        </EntityType>
+        <Association Name="FK__Lutas__CodBatalh__22751F6C">
+          <End Type="DB_SW_GuildModel.Batalhas" Role="Batalhas" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.Lutas" Role="Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodBatalhas" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlayerOpo__CodGu__1F98B2C1">
+          <End Type="DB_SW_GuildModel.Batalhas" Role="Batalhas" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.PlayerOponente" Role="PlayerOponente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerOponente">
+              <PropertyRef Name="CodGuilda" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlayerSta__IdBat__1CBC4616">
+          <End Type="DB_SW_GuildModel.Batalhas" Role="Batalhas" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.PlayerStatus" Role="PlayerStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batalhas">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerStatus">
+              <PropertyRef Name="IdBatalha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lutas__CodPlayer__236943A5">
+          <End Type="DB_SW_GuildModel.Player" Role="Player" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.Lutas" Role="Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Lutas__CodPlayer__245D67DE">
+          <End Type="DB_SW_GuildModel.PlayerOponente" Role="PlayerOponente" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.Lutas" Role="Lutas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PlayerOponente">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Lutas">
+              <PropertyRef Name="CodPlayerOponente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__PlayerSta__IdPla__1BC821DD">
+          <End Type="DB_SW_GuildModel.Player" Role="Player" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.PlayerStatus" Role="PlayerStatus" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerStatus">
+              <PropertyRef Name="IdPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PlayerDefesas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdPlayer" Type="Int64" />
+          <Property Name="NomeOponente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NomeGuilda" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Vitoria" Type="Int32" />
+          <Property Name="DataHora" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Player" Relationship="DB_SW_GuildModel.FK__PlayerDef__IdPla__1A14E395" FromRole="PlayerDefesas" ToRole="Player" />
+        </EntityType>
+        <Association Name="FK__PlayerDef__IdPla__1A14E395">
+          <End Type="DB_SW_GuildModel.Player" Role="Player" Multiplicity="0..1" />
+          <End Type="DB_SW_GuildModel.PlayerDefesas" Role="PlayerDefesas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Player">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="PlayerDefesas">
+              <PropertyRef Name="IdPlayer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_SW_GuildModelStoreContainer" CdmEntityContainer="DB_SW_GuildEntities">
+          <EntitySetMapping Name="Batalhas">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.Batalhas">
+              <MappingFragment StoreEntitySet="Batalhas">
+                <ScalarProperty Name="idGuilda" ColumnName="idGuilda" />
+                <ScalarProperty Name="RankGuild" ColumnName="RankGuild" />
+                <ScalarProperty Name="PontuacaoGuild" ColumnName="PontuacaoGuild" />
+                <ScalarProperty Name="PontuacaoOponente" ColumnName="PontuacaoOponente" />
+                <ScalarProperty Name="Data" ColumnName="Data" />
+                <ScalarProperty Name="Life" ColumnName="Life" />
+                <ScalarProperty Name="Guilda" ColumnName="Guilda" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lutas">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.Lutas">
+              <MappingFragment StoreEntitySet="Lutas">
+                <ScalarProperty Name="MomentoVitoria" ColumnName="MomentoVitoria" />
+                <ScalarProperty Name="DataHora" ColumnName="DataHora" />
+                <ScalarProperty Name="ValorBarra" ColumnName="ValorBarra" />
+                <ScalarProperty Name="Vitoria" ColumnName="Vitoria" />
+                <ScalarProperty Name="CodPlayerOponente" ColumnName="CodPlayerOponente" />
+                <ScalarProperty Name="CodPlayer" ColumnName="CodPlayer" />
+                <ScalarProperty Name="CodBatalhas" ColumnName="CodBatalhas" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Player">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.Player">
+              <MappingFragment StoreEntitySet="Player">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PontoArena" ColumnName="PontoArena" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlayerOponente">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.PlayerOponente">
+              <MappingFragment StoreEntitySet="PlayerOponente">
+                <ScalarProperty Name="Bonus" ColumnName="Bonus" />
+                <ScalarProperty Name="Nome" ColumnName="Nome" />
+                <ScalarProperty Name="CodGuilda" ColumnName="CodGuilda" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlayerStatus">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.PlayerStatus">
+              <MappingFragment StoreEntitySet="PlayerStatus">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="IdBatalha" ColumnName="IdBatalha" />
+                <ScalarProperty Name="IdPlayer" ColumnName="IdPlayer" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlayerDefesas">
+            <EntityTypeMapping TypeName="DB_SW_GuildModel.PlayerDefesas">
+              <MappingFragment StoreEntitySet="PlayerDefesas">
+                <ScalarProperty Name="DataHora" ColumnName="DataHora" />
+                <ScalarProperty Name="Vitoria" ColumnName="Vitoria" />
+                <ScalarProperty Name="NomeGuilda" ColumnName="NomeGuilda" />
+                <ScalarProperty Name="NomeOponente" ColumnName="NomeOponente" />
+                <ScalarProperty Name="IdPlayer" ColumnName="IdPlayer" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
