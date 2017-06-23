@@ -23,10 +23,8 @@ namespace DemonOrange
             InitializeComponent();
         }
 
-        // string StrConexao = "user id=sa;pwd=star;data source=DESKTOP-G33SKEI\\SQLEXPRESS;persist security info=False;initial catalog=DB_SW_Guild";
-        string StrConexao = @"Server=localhost\SQLEXPRESS;Database=DB_SW;Trusted_Connection=True";
-
-        //string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_GuildEntities"].ToString();
+        
+        string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
 
 
         private void button1_Click(object sender, EventArgs e)
