@@ -23,7 +23,7 @@ namespace DemonOrange
             InitializeComponent();
         }
 
-        
+
         string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
 
 
@@ -1092,18 +1092,24 @@ namespace DemonOrange
                     PainelLoad(true, "Cadastrando os oponentes", (j + 1).ToString() + "/" + ObjOponente.opp_defense_list.Count.ToString(), false);
                     log = "";
                     //Insert Oponente
+
+                    int iBonus = 0;
+                    if (ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault() != null)
+                    { iBonus = ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus; }
+                    else { iBonus = 0; }
+
                     new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.PlayerOponente()
                     {
                         ID = ObjOponente.opp_guild_member_list[j].wizard_id,
                         Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
-                        Bonus = ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus,
+                        Bonus = iBonus,
                         CodGuilda = idBatalha
 
                     });
 
                     log = "ID:" + ObjOponente.opp_guild_member_list[j].wizard_id + "\r\n";
                     log += "Nome:" + ObjOponente.opp_guild_member_list[j].wizard_name + "\r\n";
-                    log += "Bonus:" + ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus + "\r\n";
+                    log += "Bonus:" + iBonus + "\r\n";
                     log += "CodGuilda:" + idBatalha + "\r\n";
                 }
             }
@@ -1141,7 +1147,7 @@ namespace DemonOrange
                         CodPlayer = ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].wizard_id,
                         CodPlayerOponente = ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].opp_wizard_id,
                         //Se Draw = 1 e Win = 1 Então WIN senao pega o que vier mesmo.
-                        Vitoria = ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].win_count ==1  && ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].draw_count==1 ? 2 : ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].win_count,
+                        Vitoria = ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].win_count == 1 && ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].draw_count == 1 ? 2 : ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].win_count,
                         ValorBarra = retorno[0],
                         DataHora = dtDateTime,
                         MomentoVitoria = retorno[1] < ObjOponente.guildwar_match_info.opp_guild_hp_win_cond ? "Win" : "In War"
