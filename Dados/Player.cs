@@ -26,6 +26,7 @@ namespace Dados
         public Nullable<long> Level { get; set; }
         public Nullable<long> PontoArena { get; set; }
         public string Status { get; set; }
+        public string Imagem { get; set; }
     
         public virtual ICollection<Lutas> Lutas { get; set; }
         public virtual ICollection<PlayerStatus> PlayerStatus { get; set; }

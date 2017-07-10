@@ -1100,8 +1100,10 @@ namespace DemonOrange
 
                     new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.PlayerOponente()
                     {
-                        ID = ObjOponente.opp_guild_member_list[j].wizard_id,
-                        Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
+                        //ID = ObjOponente.opp_guild_member_list[j].wizard_id,
+                        //Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
+                        ID = ObjOponente.opp_guild_member_list.Single(a=> a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_id,
+                        Nome = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_name,
                         Bonus = iBonus,
                         CodGuilda = idBatalha
 
@@ -1154,11 +1156,12 @@ namespace DemonOrange
                     });
 
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     MessageBox.Show("Erro ao cadastrar luta");
-                    string log;
-                    log = "CodBatalhas: " + Batalha.ID + "\r\n";
+                    string log = "";
+                    log += "Mensagem de erro: " + ex.Message.ToString();
+                    log += "CodBatalhas: " + Batalha.ID + "\r\n";
                     log += "CodPlayer: " + ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].wizard_id + "\r\n";
                     log += "CodPlayerOponente: " + ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].opp_wizard_id + "\r\n";
                     log += "Vitoria: " + ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].win_count + "\r\n";
