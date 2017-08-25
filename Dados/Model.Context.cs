@@ -16,13 +16,13 @@ namespace Dados
     public partial class DB_SW_GuildEntities : DbContext
     {
         public DB_SW_GuildEntities()
-            : base("name=DB_SW_GuildEntities")
+            : base(BLO.Conexao.ObterStringConexao())
         {
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            throw new UnintentionalCodeFirstException();
+            //throw new UnintentionalCodeFirstException();
         }
     
         public DbSet<Batalhas> Batalhas { get; set; }

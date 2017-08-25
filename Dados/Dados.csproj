@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
@@ -64,12 +65,14 @@
     <Compile Include="BLO\BLO_PlayerDefesas.cs" />
     <Compile Include="BLO\BLO_PlayerOponente.cs" />
     <Compile Include="BLO\BLO_PlayerStatus.cs" />
+    <Compile Include="BLO\BLO_Security.cs" />
     <Compile Include="DAO\DAO_Batalha.cs" />
     <Compile Include="DAO\DAO_Lutas.cs" />
     <Compile Include="DAO\DAO_Player.cs" />
     <Compile Include="DAO\DAO_PlayerDefesas.cs" />
     <Compile Include="DAO\DAO_PlayerOponente.cs" />
     <Compile Include="DAO\DAO_PlayerStatus.cs" />
+    <Compile Include="DAO\DAO_TimeDefesa.cs" />
     <Compile Include="Lutas.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -88,6 +91,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\InfoBatalha.cs" />
+    <Compile Include="Models\InfoBatalhaPlayer.cs" />
+    <Compile Include="Models\InfoDefesas.cs" />
+    <Compile Include="Models\InfoOponente.cs" />
+    <Compile Include="Models\InfoOtherInfoPlayer.cs" />
+    <Compile Include="Models\InfoParticipantes.cs" />
+    <Compile Include="Models\InfoPlayer.cs" />
     <Compile Include="Player.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>

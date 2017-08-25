@@ -11,6 +11,7 @@ namespace Dados.DAO
     {
         public static List<Batalhas> _SelectAll()
         {
+            //
             return new DB_SW_GuildEntities().Batalhas.ToList();
         }
 

@@ -4,11 +4,51 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApplication1
+namespace Models
 {
- public   class InfoParticipantes
+    public class InfoOtherInfoPlayer
     {
-        public class GuildwarMemberList
+        public class CacheExpireTime
+        {
+            public string date { get; set; }
+            public long? timezone_type { get; set; }
+            public string timezone { get; set; }
+        }
+
+        public class CreateTime
+        {
+            public string date { get; set; }
+            public long? timezone_type { get; set; }
+            public string timezone { get; set; }
+        }
+
+        public class GuildInfo
+        {
+            public string comment { get; set; }
+            public string notice { get; set; }
+            public string master_wizard_name { get; set; }
+            public string name { get; set; }
+            public long? level { get; set; }
+            public long? master_wizard_level { get; set; }
+            public CacheExpireTime cache_expire_time { get; set; }
+            public long? experience { get; set; }
+            public long? member_now { get; set; }
+            public CreateTime create_time { get; set; }
+            public long? master_wizard_id { get; set; }
+            public long? guild_id { get; set; }
+            public long? member_max { get; set; }
+        }
+
+        public class GuildSkill
+        {
+            public long? skill_type { get; set; }
+            public long? rid { get; set; }
+            public long? guild_id { get; set; }
+            public long? total_guild_polong { get; set; }
+            public long? skill_level { get; set; }
+        }
+
+        public class GuildMember
         {
             public long? last_login_time { get; set; }
             public long? wizard_level { get; set; }
@@ -21,6 +61,16 @@ namespace ConsoleApplication1
             public long? guild_id { get; set; }
         }
 
+        public class Guild
+        {
+            public GuildInfo guild_info { get; set; }
+            public List<GuildSkill> guild_skills { get; set; }
+            public List<GuildMember> guild_members { get; set; }
+            public long? price { get; set; }
+            public List<object> popup_msgs { get; set; }
+            public long? dc_rate { get; set; }
+        }
+
         public class GuildwarRankingInfo
         {
             public long? rating_id { get; set; }
@@ -28,28 +78,6 @@ namespace ConsoleApplication1
             public long? match_score { get; set; }
             public long? total_guild_count { get; set; }
             public long? rank { get; set; }
-        }
-
-        public class GuildwarParticipationInfo
-        {
-            public long? league_type { get; set; }
-            public long? match_lose { get; set; }
-            public long? member_count { get; set; }
-            public long? energy { get; set; }
-            public long? match_score { get; set; }
-            public long? energy_max { get; set; }
-            public long? energy_regen_remained { get; set; }
-            public long? guild_id { get; set; }
-            public long? participated { get; set; }
-            public long? match_win { get; set; }
-        }
-
-        public class GuildwarReserve
-        {
-            public long? status { get; set; }
-            public long? league_type { get; set; }
-            public long? guild_id { get; set; }
-            public string last_update { get; set; }
         }
 
         public class Current
@@ -79,7 +107,7 @@ namespace ConsoleApplication1
             public long? rating_id { get; set; }
             public long? attack_lose_count { get; set; }
             public long? defense_lose_count { get; set; }
-            public long? match_score { get; set; }
+            public long match_score { get; set; }
             public long? rank { get; set; }
             public long? total_guild_count { get; set; }
             public long? defense_win_count { get; set; }
@@ -110,26 +138,17 @@ namespace ConsoleApplication1
             public Best best { get; set; }
         }
 
-        public class GuildMemberDefenseList
-        {
-            public List<object> unit_list { get; set; }
-            public long? wizard_id { get; set; }
-        }
-
         public class Root
         {
-            public List<GuildwarMemberList> guildwar_member_list { get; set; }
+            public Guild guild { get; set; }
             public long? ret_code { get; set; }
             public long? ts_val { get; set; }
             public string tzone { get; set; }
             public long? tvalue { get; set; }
             public long? tvaluelocal { get; set; }
             public GuildwarRankingInfo guildwar_ranking_info { get; set; }
-            public GuildwarParticipationInfo guildwar_participation_info { get; set; }
-            public GuildwarReserve guildwar_reserve { get; set; }
             public string command { get; set; }
             public GuildwarRankingStat guildwar_ranking_stat { get; set; }
-            public List<GuildMemberDefenseList> guild_member_defense_list { get; set; }
         }
     }
 }

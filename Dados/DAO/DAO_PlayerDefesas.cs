@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace Dados.DAO
 {
@@ -10,6 +12,7 @@ namespace Dados.DAO
     {
         public static PlayerDefesas _SelectBy_Data_idPlayer(PlayerDefesas _obj)
         {
+            
             using (var ObjEntity = new DB_SW_GuildEntities())
             {
                 return ObjEntity.PlayerDefesas.Where(w => w.DataHora == _obj.DataHora && w.IdPlayer == _obj.IdPlayer).FirstOrDefault();
@@ -33,4 +36,5 @@ namespace Dados.DAO
             }
         }
     }
+
 }

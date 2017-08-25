@@ -71,21 +71,7 @@
           <Property Name="IdBatalha" Type="bigint" />
           <Property Name="Status" Type="varchar" MaxLength="1" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6013: The table/view 'DB_SW.dbo.tb_defesasTemp' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="tb_defesasTemp">
-          <Property Name="idPlayer" Type="bigint" />
-          <Property Name="t1w" Type="int" />
-          <Property Name="t1d" Type="int" />
-          <Property Name="t1l" Type="int" />
-          <Property Name="t2w" Type="int" />
-          <Property Name="t2d" Type="int" />
-          <Property Name="t2l" Type="int" />
-          <Property Name="QtdVitoria" Type="int" />
-          <Property Name="dataDef" Type="date" />
-          <Property Name="nomeGuild" Type="varchar" MaxLength="50" />
-        </EntityType>-->
-        <Association Name="FK__Lutas__CodPlayer__145C0A3F">
+        <Association Name="FK__Lutas__CodPlayer__15502E78">
           <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
           <End Role="Lutas" Type="Self.Lutas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -97,7 +83,7 @@ warning 6013: The table/view 'DB_SW.dbo.tb_defesasTemp' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Lutas__CodPlayer__15502E78">
+        <Association Name="FK__Lutas__CodPlayer__164452B1">
           <End Role="PlayerOponente" Type="Self.PlayerOponente" Multiplicity="0..1" />
           <End Role="Lutas" Type="Self.Lutas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -109,7 +95,7 @@ warning 6013: The table/view 'DB_SW.dbo.tb_defesasTemp' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PlayerDef__IdPla__1A14E395">
+        <Association Name="FK__PlayerDef__IdPla__182C9B23">
           <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
           <End Role="PlayerDefesas" Type="Self.PlayerDefesas" Multiplicity="*" />
           <ReferentialConstraint>
@@ -121,7 +107,7 @@ warning 6013: The table/view 'DB_SW.dbo.tb_defesasTemp' does not have a primary 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__PlayerSta__IdPla__08EA5793">
+        <Association Name="FK__PlayerSta__IdPla__1A14E395">
           <End Role="Player" Type="Self.Player" Multiplicity="0..1" />
           <End Role="PlayerStatus" Type="Self.PlayerStatus" Multiplicity="*" />
           <ReferentialConstraint>
@@ -176,19 +162,19 @@ warning 6013: The table/view 'DB_SW.dbo.tb_defesasTemp' does not have a primary 
           <EntitySet Name="PlayerDefesas" EntityType="Self.PlayerDefesas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlayerOponente" EntityType="Self.PlayerOponente" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PlayerStatus" EntityType="Self.PlayerStatus" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK__Lutas__CodPlayer__145C0A3F" Association="Self.FK__Lutas__CodPlayer__145C0A3F">
+          <AssociationSet Name="FK__Lutas__CodPlayer__15502E78" Association="Self.FK__Lutas__CodPlayer__15502E78">
             <End Role="Player" EntitySet="Player" />
             <End Role="Lutas" EntitySet="Lutas" />
           </AssociationSet>
-          <AssociationSet Name="FK__Lutas__CodPlayer__15502E78" Association="Self.FK__Lutas__CodPlayer__15502E78">
+          <AssociationSet Name="FK__Lutas__CodPlayer__164452B1" Association="Self.FK__Lutas__CodPlayer__164452B1">
             <End Role="PlayerOponente" EntitySet="PlayerOponente" />
             <End Role="Lutas" EntitySet="Lutas" />
           </AssociationSet>
-          <AssociationSet Name="FK__PlayerDef__IdPla__1A14E395" Association="Self.FK__PlayerDef__IdPla__1A14E395">
+          <AssociationSet Name="FK__PlayerDef__IdPla__182C9B23" Association="Self.FK__PlayerDef__IdPla__182C9B23">
             <End Role="Player" EntitySet="Player" />
             <End Role="PlayerDefesas" EntitySet="PlayerDefesas" />
           </AssociationSet>
-          <AssociationSet Name="FK__PlayerSta__IdPla__08EA5793" Association="Self.FK__PlayerSta__IdPla__08EA5793">
+          <AssociationSet Name="FK__PlayerSta__IdPla__1A14E395" Association="Self.FK__PlayerSta__IdPla__1A14E395">
             <End Role="Player" EntitySet="Player" />
             <End Role="PlayerStatus" EntitySet="PlayerStatus" />
           </AssociationSet>

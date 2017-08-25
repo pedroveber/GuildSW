@@ -11,6 +11,7 @@ namespace Dados.DAO
     {
         public static Player _SelectByID(Player _obj)
         {
+            //)
             using (var ObjEntity = new DB_SW_GuildEntities())
             {
                 return ObjEntity.Player.Where(w => w.ID == _obj.ID).FirstOrDefault();

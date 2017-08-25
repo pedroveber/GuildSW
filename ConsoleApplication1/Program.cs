@@ -12,12 +12,34 @@ namespace ConsoleApplication1
 
         static void Main(string[] args)
         {
+            string[] lines = System.IO.File.ReadAllLines(@"C:\temp\full_log.txt");
+            string Texto = "";
+            foreach (string line in lines)
+            {
+                //pedro
+                if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
+                {
+                    Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
+                    break;
+                }
+            }
+
+            JavaScriptSerializer Defesas = new JavaScriptSerializer();
+            //InfoParticipantes.Root ObjParticipante = Paticipante.Deserialize<InfoParticipantes.Root>(Texto);
+            InfoDefesas.Root objDefesa = Defesas.Deserialize<InfoDefesas.Root>(Texto);
+
+            Console.ReadLine();
+
+        }
+
+        static void Main2(string[] args)
+        {
 
 
-            Dados.DAO.DAO_Lutas.ApagaTudo();
-            Dados.DAO.DAO_PlayerOponente.ApagaTudo();
-            Dados.DAO.DAO_Player.ApagaTudo();
-            Dados.DAO.DAO_Batalha.ApagaTudo();
+            //Dados.DAO.DAO_Lutas.ApagaTudo();
+            //Dados.DAO.DAO_PlayerOponente.ApagaTudo();
+            //Dados.DAO.DAO_Player.ApagaTudo();
+            //Dados.DAO.DAO_Batalha.ApagaTudo();
 
             string[] lines = System.IO.File.ReadAllLines("full_log.txt");
             //=====================================================================================================================================================================================

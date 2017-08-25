@@ -1,4 +1,4 @@
-﻿using ConsoleApplication1;
+﻿using Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
+using Dados;
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -13,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
+
 
 namespace DemonOrange
 {
@@ -24,7 +26,7 @@ namespace DemonOrange
         }
 
 
-        string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
+        //string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
 
 
         private void button1_Click(object sender, EventArgs e)
@@ -33,7 +35,7 @@ namespace DemonOrange
             DataTable dt = new DataTable();
             using (SqlConnection cn = new SqlConnection())
             {
-                cn.ConnectionString = StrConexao;
+                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
                 SqlDataAdapter da = new SqlDataAdapter();
                 try
                 {
@@ -121,7 +123,7 @@ namespace DemonOrange
             DataTable dt = new DataTable();
             using (SqlConnection cn = new SqlConnection())
             {
-                cn.ConnectionString = StrConexao;
+                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2(); 
                 SqlDataAdapter da = new SqlDataAdapter();
                 try
                 {
@@ -420,7 +422,7 @@ namespace DemonOrange
                             count++;
 
                             //Luta
-                            CadastrarLuta(ObjBatalha, count, i, j, VidaClan, Batalha, ObjOponente);
+                            VidaClan= CadastrarLuta(ObjBatalha, count, i, j, VidaClan, Batalha, ObjOponente);
                         }
                     }
                 }
@@ -485,7 +487,7 @@ namespace DemonOrange
             DataTable dt = new DataTable();
             using (SqlConnection cn = new SqlConnection())
             {
-                cn.ConnectionString = StrConexao;
+                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
                 SqlDataAdapter da = new SqlDataAdapter();
                 try
                 {
@@ -515,7 +517,7 @@ namespace DemonOrange
             DataTable dt = new DataTable();
             using (SqlConnection cn = new SqlConnection())
             {
-                cn.ConnectionString = StrConexao;
+                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
                 SqlDataAdapter da = new SqlDataAdapter();
                 try
                 {
@@ -654,6 +656,18 @@ namespace DemonOrange
 
         private void button13_Click(object sender, EventArgs e)
         {
+            try
+            {
+                CarregarTimeDefesas();
+                lblMsgDefesa.Text  = "Defesas carregadas com sucesso.";
+            }
+            catch (Exception ex)
+            {
+
+                lblMsgDefesa.Text = "Erro ao carregar time das defesas+";
+                lblMsgDefesa.Text += Environment.NewLine + "Erro: " + ex.Message;
+            }
+            
             Thread YhdIniciar = new Thread(() => Defesas());
             YhdIniciar.Start();
         }
@@ -669,7 +683,7 @@ namespace DemonOrange
             DataTable dt = new DataTable();
             using (SqlConnection cn = new SqlConnection())
             {
-                cn.ConnectionString = StrConexao;
+                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
                 SqlDataAdapter da = new SqlDataAdapter();
                 try
                 {
@@ -968,11 +982,12 @@ namespace DemonOrange
 
                     }
                     //se Der erro, continua para o próximo.
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         MessageBox.Show("Erro ao incluir Players");
                         string log;
                         log = "Erro ao tentar incluir Player.\r\n ";
+                        log += ex.Message + " \r\n ";
                         log += "Nome: " + ObjPlayer.guildwar_contribute_list[j].wizard_name + "\r\n";
                         log += "Level: " + ObjPlayer.guildwar_contribute_list[j].wizard_level + "\r\n";
                         log += "PontoArena: " + ObjPlayer.guildwar_contribute_list[j].guild_pts + "\r\n";
@@ -991,11 +1006,12 @@ namespace DemonOrange
                             Status = "N"
                         });
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         MessageBox.Show("Erro ao incluir Player Status");
                         string log;
                         log = "Erro ao tentar incluir Player Status \r\n ";
+                        log +=  ex.Message + " \r\n ";
                         log += "ID: " + ObjPlayer.guildwar_contribute_list[j].wizard_id + "\r\n";
                         log += "ID Batalha: " + idBatalha + "\r\n";
                         GravarLog(log);
@@ -1125,7 +1141,7 @@ namespace DemonOrange
 
         }
 
-        private void CadastrarLuta(InfoBatalha ObjBatalha, int count, int indexLoopBatalhas, int indexLoopLuta, long vidaClan, Dados.Batalhas Batalha, InfoOponente.Root ObjOponente)
+        private long CadastrarLuta(InfoBatalha ObjBatalha, int count, int indexLoopBatalhas, int indexLoopLuta, long vidaClan, Dados.Batalhas Batalha, InfoOponente.Root ObjOponente)
         {
             try
             {
@@ -1171,6 +1187,9 @@ namespace DemonOrange
                     GravarLog(log);
 
                 }
+
+                //Retorno do vidaClan
+                return retorno[1];
 
             }
             catch (Exception ex)
@@ -1338,6 +1357,36 @@ namespace DemonOrange
 
         }
 
+        private void     CarregarTimeDefesas()
+        {
+            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
+            string Texto = "";
+            foreach (string line in lines)
+            {
+                
+                if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
+                {
+                    Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
+
+                    JavaScriptSerializer Defesas = new JavaScriptSerializer();
+                    InfoDefesas.Root objDefesa = Defesas.Deserialize<InfoDefesas.Root>(Texto);
+
+                    Dados.DAO.DAO_TimeDefesa daoTimeDefesa = new Dados.DAO.DAO_TimeDefesa();
+                    try
+                    {
+                        daoTimeDefesa.AtualizarTimeDefesa(objDefesa);
+                    }
+                    catch (Exception)
+                    {
+
+                        lblMsgDefesa.Text += Environment.NewLine + "Erro ao tentar incluir Time Defesa";
+                        lblMsgDefesa.Text += Environment.NewLine + "IdPlayer: " + objDefesa.defense_wizard_id;
+                    }
+                    
+                    Texto = string.Empty;
+                }
+            }
+        }
 
     }
 

@@ -45,6 +45,12 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label10 = new System.Windows.Forms.Label();
+            this.txtSenhaEnviaServer = new System.Windows.Forms.TextBox();
+            this.pl_load = new System.Windows.Forms.Panel();
+            this.lbl_msnLoad2 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.lbl_msnLoad = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.btnEnviarLog = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -91,13 +97,8 @@
             this.button13 = new System.Windows.Forms.Button();
             this.dataGridView3 = new System.Windows.Forms.DataGridView();
             this.button12 = new System.Windows.Forms.Button();
-            this.pl_load = new System.Windows.Forms.Panel();
-            this.lbl_msnLoad2 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.lbl_msnLoad = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.txtSenhaEnviaServer = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.lblMsgDefesa = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -106,6 +107,8 @@
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.pl_load.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel1.SuspendLayout();
             this.tabPage5.SuspendLayout();
             this.tabControl2.SuspendLayout();
@@ -119,8 +122,6 @@
             this.tabPage13.SuspendLayout();
             this.tabPage12.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
-            this.pl_load.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
@@ -332,6 +333,69 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Atualizar Base";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(639, 287);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(41, 13);
+            this.label10.TabIndex = 79;
+            this.label10.Text = "Senha:";
+            // 
+            // txtSenhaEnviaServer
+            // 
+            this.txtSenhaEnviaServer.Location = new System.Drawing.Point(684, 285);
+            this.txtSenhaEnviaServer.Name = "txtSenhaEnviaServer";
+            this.txtSenhaEnviaServer.PasswordChar = '*';
+            this.txtSenhaEnviaServer.Size = new System.Drawing.Size(100, 20);
+            this.txtSenhaEnviaServer.TabIndex = 78;
+            // 
+            // pl_load
+            // 
+            this.pl_load.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pl_load.BackColor = System.Drawing.Color.DarkGray;
+            this.pl_load.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pl_load.Controls.Add(this.lbl_msnLoad2);
+            this.pl_load.Controls.Add(this.pictureBox2);
+            this.pl_load.Controls.Add(this.lbl_msnLoad);
+            this.pl_load.Location = new System.Drawing.Point(104, 309);
+            this.pl_load.Name = "pl_load";
+            this.pl_load.Size = new System.Drawing.Size(601, 132);
+            this.pl_load.TabIndex = 77;
+            this.pl_load.Visible = false;
+            // 
+            // lbl_msnLoad2
+            // 
+            this.lbl_msnLoad2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbl_msnLoad2.AutoSize = true;
+            this.lbl_msnLoad2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_msnLoad2.Location = new System.Drawing.Point(196, 55);
+            this.lbl_msnLoad2.Name = "lbl_msnLoad2";
+            this.lbl_msnLoad2.Size = new System.Drawing.Size(12, 16);
+            this.lbl_msnLoad2.TabIndex = 56;
+            this.lbl_msnLoad2.Text = "-";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox2.Image = global::DemonOrange.Properties.Resources.loading;
+            this.pictureBox2.Location = new System.Drawing.Point(140, 25);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox2.TabIndex = 1;
+            this.pictureBox2.TabStop = false;
+            // 
+            // lbl_msnLoad
+            // 
+            this.lbl_msnLoad.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbl_msnLoad.AutoSize = true;
+            this.lbl_msnLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbl_msnLoad.Location = new System.Drawing.Point(196, 29);
+            this.lbl_msnLoad.Name = "lbl_msnLoad";
+            this.lbl_msnLoad.Size = new System.Drawing.Size(14, 18);
+            this.lbl_msnLoad.TabIndex = 0;
+            this.lbl_msnLoad.Text = "-";
             // 
             // label9
             // 
@@ -807,6 +871,7 @@
             // 
             // tabPage12
             // 
+            this.tabPage12.Controls.Add(this.lblMsgDefesa);
             this.tabPage12.Controls.Add(this.button13);
             this.tabPage12.Controls.Add(this.dataGridView3);
             this.tabPage12.Controls.Add(this.button12);
@@ -850,73 +915,17 @@
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.button12_Click);
             // 
-            // pl_load
-            // 
-            this.pl_load.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pl_load.BackColor = System.Drawing.Color.DarkGray;
-            this.pl_load.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pl_load.Controls.Add(this.lbl_msnLoad2);
-            this.pl_load.Controls.Add(this.pictureBox2);
-            this.pl_load.Controls.Add(this.lbl_msnLoad);
-            this.pl_load.Location = new System.Drawing.Point(104, 309);
-            this.pl_load.Name = "pl_load";
-            this.pl_load.Size = new System.Drawing.Size(601, 132);
-            this.pl_load.TabIndex = 77;
-            this.pl_load.Visible = false;
-            // 
-            // lbl_msnLoad2
-            // 
-            this.lbl_msnLoad2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lbl_msnLoad2.AutoSize = true;
-            this.lbl_msnLoad2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_msnLoad2.Location = new System.Drawing.Point(196, 55);
-            this.lbl_msnLoad2.Name = "lbl_msnLoad2";
-            this.lbl_msnLoad2.Size = new System.Drawing.Size(12, 16);
-            this.lbl_msnLoad2.TabIndex = 56;
-            this.lbl_msnLoad2.Text = "-";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pictureBox2.Image = global::DemonOrange.Properties.Resources.loading;
-            this.pictureBox2.Location = new System.Drawing.Point(140, 25);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
-            // 
-            // lbl_msnLoad
-            // 
-            this.lbl_msnLoad.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lbl_msnLoad.AutoSize = true;
-            this.lbl_msnLoad.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_msnLoad.Location = new System.Drawing.Point(196, 29);
-            this.lbl_msnLoad.Name = "lbl_msnLoad";
-            this.lbl_msnLoad.Size = new System.Drawing.Size(14, 18);
-            this.lbl_msnLoad.TabIndex = 0;
-            this.lbl_msnLoad.Text = "-";
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.btnVerificaArq_Click);
             // 
-            // txtSenhaEnviaServer
+            // lblMsgDefesa
             // 
-            this.txtSenhaEnviaServer.Location = new System.Drawing.Point(684, 285);
-            this.txtSenhaEnviaServer.Name = "txtSenhaEnviaServer";
-            this.txtSenhaEnviaServer.PasswordChar = '*';
-            this.txtSenhaEnviaServer.Size = new System.Drawing.Size(100, 20);
-            this.txtSenhaEnviaServer.TabIndex = 78;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(639, 287);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(41, 13);
-            this.label10.TabIndex = 79;
-            this.label10.Text = "Senha:";
+            this.lblMsgDefesa.Location = new System.Drawing.Point(21, 134);
+            this.lblMsgDefesa.Name = "lblMsgDefesa";
+            this.lblMsgDefesa.Size = new System.Drawing.Size(350, 321);
+            this.lblMsgDefesa.TabIndex = 9;
             // 
             // Form1
             // 
@@ -940,6 +949,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
+            this.pl_load.ResumeLayout(false);
+            this.pl_load.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel1.ResumeLayout(false);
             this.tabPage5.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
@@ -959,9 +971,6 @@
             this.tabPage13.PerformLayout();
             this.tabPage12.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
-            this.pl_load.ResumeLayout(false);
-            this.pl_load.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1037,6 +1046,7 @@
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtSenhaEnviaServer;
+        private System.Windows.Forms.Label lblMsgDefesa;
     }
 }
 

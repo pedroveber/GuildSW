@@ -7,7 +7,7 @@
       <Diagram DiagramId="f59acc5245d84f1e957ea963b416431e" Name="Diagram1">
         <EntityTypeShape EntityType="DB_SW_GuildModel.Batalhas" Width="1.5" PointX="7.125" PointY="3.875" />
         <EntityTypeShape EntityType="DB_SW_GuildModel.Lutas" Width="1.5" PointX="5.125" PointY="2.25" />
-        <EntityTypeShape EntityType="DB_SW_GuildModel.Player" Width="1.5" PointX="3" PointY="1.25" />
+        <EntityTypeShape EntityType="DB_SW_GuildModel.Player" Width="1.5" PointX="3.125" PointY="0.5" />
         <EntityTypeShape EntityType="DB_SW_GuildModel.PlayerOponente" Width="1.5" PointX="2.75" PointY="4.125" />
         <EntityTypeShape EntityType="DB_SW_GuildModel.PlayerStatus" Width="1.5" PointX="7.125" PointY="1.25" />
         <AssociationConnector Association="DB_SW_GuildModel.FK__Lutas__CodBatalh__22751F6C" />
