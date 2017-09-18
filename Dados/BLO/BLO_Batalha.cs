@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dados.Models;
 
 namespace Dados.BLO
 {
@@ -25,7 +26,7 @@ namespace Dados.BLO
             else
             {
                 _obj.ID = objRetorno.ID;
-                DAO.DAO_Batalha.UpDateDate(_obj);
+                DAO.DAO_Batalha.AtualizarData(_obj);
             }
 
             return _obj;

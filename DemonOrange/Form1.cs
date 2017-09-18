@@ -25,45 +25,13 @@ namespace DemonOrange
             InitializeComponent();
         }
 
-
-        //string StrConexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
-
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = new SqlConnection())
-            {
-                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
-                SqlDataAdapter da = new SqlDataAdapter();
-                try
-                {
-                    da.SelectCommand = new SqlCommand();
-                    da.SelectCommand.Connection = cn;
-                    da.SelectCommand.CommandType = CommandType.Text;
-                    da.SelectCommand.CommandText = string.Format(textBox2.Text, cb_Batalhas.SelectedValue.ToString());
-                    cn.Open();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    cn.Close();
-                    tabControl1.SelectTab(1);
-                }
-            }
-        }
         string PATH = System.AppDomain.CurrentDomain.BaseDirectory.ToString();
-        private void button2_Click(object sender, EventArgs e)
+
+        private void btnSalvarConfigs_Click(object sender, EventArgs e)
         {
             string[] conf = new string[2];
             conf[0] = txtDiretorio.Text;
-            if (checkBox1.Checked == true)
+            if (chkAtualizacaoAutomatica.Checked == true)
             { conf[1] = "1"; }
             else
             { conf[1] = "0"; }
@@ -74,85 +42,26 @@ namespace DemonOrange
         {
             Thread YhdIniciar = new Thread(() => TimerIni());
             YhdIniciar.Start();
-            txt_Dt.Value = Convert.ToDateTime(DateTime.Now.AddDays(-(int)DateTime.Now.DayOfWeek + 1).ToString("dd/MM/yyyy"));
+
             string[] lines;
             if (System.IO.File.Exists(PATH + @"config.txt"))
             {
                 lines = System.IO.File.ReadAllLines(PATH + @"config.txt");
                 txtDiretorio.Text = lines[0];
                 if (lines[1] == "1")
-                    checkBox1.Checked = true;
+                    chkAtualizacaoAutomatica.Checked = true;
                 else
-                    checkBox1.Checked = false;
+                    chkAtualizacaoAutomatica.Checked = false;
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//full_log.txt");
             }
-            if (System.IO.File.Exists(PATH + @"resultado_geral.txt"))
-            {
-                textBox2.Text = System.IO.File.ReadAllText(PATH + @"resultado_geral.txt");
-            }
-            if (System.IO.File.Exists(PATH + @"nao_atacaram.txt"))
-            {
-                textBox3.Text = System.IO.File.ReadAllText(PATH + @"nao_atacaram.txt");
-            }
-            if (System.IO.File.Exists(PATH + @"timeline_gvg.txt"))
-            {
-                textBox4.Text = System.IO.File.ReadAllText(PATH + @"timeline_gvg.txt");
-            }
-            if (System.IO.File.Exists(PATH + @"resumo_semana.txt"))
-            {
-                textBox1.Text = System.IO.File.ReadAllText(PATH + @"resumo_semana.txt");
-            }
-            if (System.IO.File.Exists(PATH + @"defesa.txt"))
-            {
-                textBox5.Text = System.IO.File.ReadAllText(PATH + @"defesa.txt");
-            }
-            CarregaBatalhasDrop();
-            CarregaGreedSemana();
+
+
         }
 
-        private void CarregaBatalhasDrop()
-        {
-            List<Dados.Batalhas> Obj = Dados.BLO.BLO_Batalha._SelectAll().Where(w => w.Data >= txt_Dt.Value).OrderByDescending(w => w.Data).ToList();
-            cb_Batalhas.DataSource = Obj;
-            cb_Batalhas.ValueMember = "ID";
-            cb_Batalhas.DisplayMember = "Guilda";
-        }
-        private void CarregaGreedSemana()
-        {
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = new SqlConnection())
-            {
-                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2(); 
-                SqlDataAdapter da = new SqlDataAdapter();
-                try
-                {
-                    da.SelectCommand = new SqlCommand();
-                    da.SelectCommand.Connection = cn;
-                    da.SelectCommand.CommandType = CommandType.Text;
-                    da.SelectCommand.CommandText = string.Format(textBox1.Text, cb_Batalhas.SelectedValue.ToString());
-                    cn.Open();
-                    da.Fill(dt);
-                    dataGridView2.DataSource = dt;
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    cn.Close();
-                }
-            }
-        }
 
         private void btnVerificaArq_Click(object sender, EventArgs e)
         {
-            //ValidarArquivo();
-            //if (File.Exists(@"C:\SW\Verifica.txt"))
-            //{
-            //    File.Delete(@"C:\SW\Verifica.txt");
-            //}
             Thread YhdIniciar = new Thread(() => Timer());
             YhdIniciar.Start();
         }
@@ -167,10 +76,6 @@ namespace DemonOrange
         }
         void Timer()
         {
-            if (File.Exists(@"C:\SW\Verifica.txt"))
-            {
-                File.Delete(@"C:\SW\Verifica.txt");
-            }
             ServiceReference.UploadSoapClient wsUpload = new ServiceReference.UploadSoapClient();
             label9.Invoke(new MethodInvoker(delegate { label9.Text = wsUpload.UltimaAtt(); }));
 
@@ -187,12 +92,14 @@ namespace DemonOrange
             pl_3.BackColor = Color.Tomato;
             pl_4.BackColor = Color.Tomato;
             pl_5.BackColor = Color.Tomato;
+
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
+
+                //Percorre o arquivo e verificar se existem tudo o que precisa para alimentar a base. 
                 string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
                 foreach (string line in lines)
                 {
-                    //pedro
                     if (line.Contains("GetGuildWarContributeList") && line.Contains(@"ret_code"":0"))
                     {
                         Arq1 = true;
@@ -226,7 +133,7 @@ namespace DemonOrange
                     btnEnviarLog.Invoke(new MethodInvoker(delegate { btnEnviarLog.Enabled = true; }));
 
                     lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "-"; }));
-                    if (checkBox1.Checked)
+                    if (chkAtualizacaoAutomatica.Checked)
                     {
                         if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                             System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
@@ -266,7 +173,7 @@ namespace DemonOrange
                 string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
                 foreach (string line in lines)
                 {
-                    //pedro
+
                     if (line.Contains("GetGuildWarContributeList") && line.Contains(@"ret_code"":0"))
                     {
                         Arq1 = true;
@@ -298,7 +205,7 @@ namespace DemonOrange
                     btnAlimentaDB.Enabled = true;
                     btnEnviarLog.Enabled = true;
                     lblErro.Text = "-";
-                    if (checkBox1.Checked)
+                    if (chkAtualizacaoAutomatica.Checked)
                     {
                         if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                             System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
@@ -342,8 +249,8 @@ namespace DemonOrange
             tabControl1.Enabled = !_painel;
             if (!_painel)
                 ValidarArquivo();
-            CarregaBatalhasDrop();
-            CarregaGreedSemana();
+
+
         }
 
 
@@ -404,7 +311,7 @@ namespace DemonOrange
 
                     }
 
-                    //20170612
+
                     // Unix timestamp is seconds past epoch
                     System.DateTime dBatalha2 = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                     dBatalha2 = dBatalha2.AddSeconds(ObjBatalha.battle_log_list_group[i].battle_log_list[0].battle_end).ToLocalTime();
@@ -422,7 +329,7 @@ namespace DemonOrange
                             count++;
 
                             //Luta
-                            VidaClan= CadastrarLuta(ObjBatalha, count, i, j, VidaClan, Batalha, ObjOponente);
+                            VidaClan = CadastrarLuta(ObjBatalha, count, i, j, VidaClan, Batalha, ObjOponente);
                         }
                     }
                 }
@@ -436,7 +343,7 @@ namespace DemonOrange
                     {
                         List<Dados.Lutas> ObjLuta = Dados.DAO.DAO_Lutas._SelectAllByBatalha(Obj).OrderBy(w => w.DataHora).ToList();
                         Obj.Data = ObjLuta[0].DataHora;
-                        Dados.DAO.DAO_Batalha.UpDateDateTime(Obj);
+                        Dados.DAO.DAO_Batalha.AtualizarData(Obj);
                     }
                 }
 
@@ -453,109 +360,18 @@ namespace DemonOrange
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
-        {
-            Dados.DAO.DAO_PlayerStatus.ApagaTudo();
-            Dados.DAO.DAO_Lutas.ApagaTudo();
-            Dados.DAO.DAO_PlayerOponente.ApagaTudo();
-            Dados.DAO.DAO_Player.ApagaTudo();
-            Dados.DAO.DAO_Batalha.ApagaTudo();
 
 
 
-            MessageBox.Show("Base de Dados Limpa", "Mensagem", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            System.IO.File.WriteAllText(PATH + "\\resultado_geral.txt", textBox2.Text);
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            System.IO.File.WriteAllText(PATH + "\\nao_atacaram.txt", textBox3.Text);
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            System.IO.File.WriteAllText(PATH + "\\timeline_gvg.txt", textBox4.Text);
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = new SqlConnection())
-            {
-                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
-                SqlDataAdapter da = new SqlDataAdapter();
-                try
-                {
-                    da.SelectCommand = new SqlCommand();
-                    da.SelectCommand.Connection = cn;
-                    da.SelectCommand.CommandType = CommandType.Text;
-                    da.SelectCommand.CommandText = string.Format(textBox3.Text, cb_Batalhas.SelectedValue.ToString());
-                    cn.Open();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    cn.Close();
-                    tabControl1.SelectTab(1);
-                }
-            }
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = new SqlConnection())
-            {
-                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
-                SqlDataAdapter da = new SqlDataAdapter();
-                try
-                {
-                    da.SelectCommand = new SqlCommand();
-                    da.SelectCommand.Connection = cn;
-                    da.SelectCommand.CommandType = CommandType.Text;
-                    da.SelectCommand.CommandText = string.Format(textBox4.Text, cb_Batalhas.SelectedValue.ToString());
-                    cn.Open();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    cn.Close();
-                    tabControl1.SelectTab(1);
-                }
-            }
-        }
-
-        private void button9_Click(object sender, EventArgs e)
+        private void btnLimparLog_Click(object sender, EventArgs e)
         {
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
                 System.IO.File.Delete(txtDiretorio.Text + @"//full_log.txt");
         }
 
-        private void button10_Click(object sender, EventArgs e)
-        {
-            System.IO.File.WriteAllText(PATH + "\\resumo_semana.txt", textBox1.Text);
-        }
 
-        private void button11_Click(object sender, EventArgs e)
-        {
-
-        }
+        #region Enviar Arquivo Servidor
         void EviarArq()
         {
             PainelLoad(true, "Aguarde", "Verificando Servidor!", false);
@@ -590,23 +406,21 @@ namespace DemonOrange
             System.IO.File.Delete(txtDiretorio.Text + @"//full_log.txt");
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void chkAtualizacaoAutomatica_CheckedChanged(object sender, EventArgs e)
         {
             string[] conf = new string[2];
             conf[0] = txtDiretorio.Text;
-            if (checkBox1.Checked == true)
+            if (chkAtualizacaoAutomatica.Checked == true)
             { conf[1] = "1"; }
             else
             { conf[1] = "0"; }
             System.IO.File.WriteAllLines(PATH + "\\config.txt", conf);
         }
+        #endregion
 
-        private void txt_Dt_ValueChanged(object sender, EventArgs e)
-        {
-            CarregaBatalhasDrop();
-        }
+
         List<InfoBatalhaPlayer.BattleLogList> List = new List<InfoBatalhaPlayer.BattleLogList>();
-        private void button12_Click(object sender, EventArgs e)
+        private void btnValidarArquivoDefesa_Click(object sender, EventArgs e)
         {
             string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
 
@@ -615,7 +429,7 @@ namespace DemonOrange
             for (int i = 0; i < lines.Length; i++)
             {
                 if (lines[i].Contains("GetGuildWarBattleLogByWizardId") && lines[i].Contains(@"ret_code"":0"))
-                //if (lines[i].Contains("Response (GetGuildWarBattleLogByWizardId):"))
+
 
                 {
                     JavaScriptSerializer Player = new JavaScriptSerializer();
@@ -627,11 +441,10 @@ namespace DemonOrange
                         if (ListPlayer.Where(w => w.Nome == ObjPlayer.battle_log_list[j].wizard_name).FirstOrDefault() == null)
                             ListPlayer.Add(new PlayerDef() { Nome = ObjPlayer.battle_log_list[j].wizard_name });
                     }
-                    //System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-                    //dtDateTime = dtDateTime.AddSeconds(ObjPlayer.battle_log_list[i].battle_end).ToLocalTime();
+
                 }
             }
-            dataGridView3.DataSource = ListPlayer;
+            dtvArquivoDefesa.DataSource = ListPlayer;
 
 
         }
@@ -654,12 +467,12 @@ namespace DemonOrange
             PainelLoad(false, "-", "-", false);
         }
 
-        private void button13_Click(object sender, EventArgs e)
+        private void btnEfetivarCargaDefesa_Click(object sender, EventArgs e)
         {
             try
             {
                 CarregarTimeDefesas();
-                lblMsgDefesa.Text  = "Defesas carregadas com sucesso.";
+                lblMsgDefesa.Text = "Defesas carregadas com sucesso.";
             }
             catch (Exception ex)
             {
@@ -667,50 +480,12 @@ namespace DemonOrange
                 lblMsgDefesa.Text = "Erro ao carregar time das defesas+";
                 lblMsgDefesa.Text += Environment.NewLine + "Erro: " + ex.Message;
             }
-            
+
             Thread YhdIniciar = new Thread(() => Defesas());
             YhdIniciar.Start();
         }
 
-        private void button15_Click(object sender, EventArgs e)
-        {
-            System.IO.File.WriteAllText(PATH + "\\defesa.txt", textBox5.Text);
-        }
 
-        private void button14_Click(object sender, EventArgs e)
-        {
-
-            DataTable dt = new DataTable();
-            using (SqlConnection cn = new SqlConnection())
-            {
-                cn.ConnectionString = Dados.BLO.Conexao.ObterStringConexao2();
-                SqlDataAdapter da = new SqlDataAdapter();
-                try
-                {
-                    da.SelectCommand = new SqlCommand();
-                    da.SelectCommand.Connection = cn;
-                    da.SelectCommand.CommandType = CommandType.Text;
-                    da.SelectCommand.CommandText = string.Format(textBox5.Text, cb_Batalhas.SelectedValue.ToString());
-                    cn.Open();
-                    da.Fill(dt);
-                    dataGridView1.DataSource = dt;
-                }
-                catch
-                {
-
-                }
-                finally
-                {
-                    cn.Close();
-                    tabControl1.SelectTab(1);
-                }
-            }
-        }
-
-        private void txtDiretorio_TextChanged(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnEnviarLog_Click(object sender, EventArgs e)
         {
@@ -1011,7 +786,7 @@ namespace DemonOrange
                         MessageBox.Show("Erro ao incluir Player Status");
                         string log;
                         log = "Erro ao tentar incluir Player Status \r\n ";
-                        log +=  ex.Message + " \r\n ";
+                        log += ex.Message + " \r\n ";
                         log += "ID: " + ObjPlayer.guildwar_contribute_list[j].wizard_id + "\r\n";
                         log += "ID Batalha: " + idBatalha + "\r\n";
                         GravarLog(log);
@@ -1118,7 +893,7 @@ namespace DemonOrange
                     {
                         //ID = ObjOponente.opp_guild_member_list[j].wizard_id,
                         //Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
-                        ID = ObjOponente.opp_guild_member_list.Single(a=> a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_id,
+                        ID = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_id,
                         Nome = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_name,
                         Bonus = iBonus,
                         CodGuilda = idBatalha
@@ -1357,13 +1132,13 @@ namespace DemonOrange
 
         }
 
-        private void     CarregarTimeDefesas()
+        private void CarregarTimeDefesas()
         {
             string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
             string Texto = "";
             foreach (string line in lines)
             {
-                
+
                 if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
                 {
                     Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
@@ -1382,15 +1157,12 @@ namespace DemonOrange
                         lblMsgDefesa.Text += Environment.NewLine + "Erro ao tentar incluir Time Defesa";
                         lblMsgDefesa.Text += Environment.NewLine + "IdPlayer: " + objDefesa.defense_wizard_id;
                     }
-                    
+
                     Texto = string.Empty;
                 }
             }
         }
-
     }
-
-
 
     public class PlayerDef
     {

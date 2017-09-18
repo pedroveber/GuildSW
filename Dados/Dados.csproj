@@ -56,9 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Batalhas.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="BLO\BLO_Batalha.cs" />
     <Compile Include="BLO\BLO_Lutas.cs" />
     <Compile Include="BLO\BLO_Player.cs" />
@@ -73,9 +70,6 @@
     <Compile Include="DAO\DAO_PlayerOponente.cs" />
     <Compile Include="DAO\DAO_PlayerStatus.cs" />
     <Compile Include="DAO\DAO_TimeDefesa.cs" />
-    <Compile Include="Lutas.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
     <Compile Include="Model.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -91,6 +85,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Model.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Batalhas.cs" />
     <Compile Include="Models\InfoBatalha.cs" />
     <Compile Include="Models\InfoBatalhaPlayer.cs" />
     <Compile Include="Models\InfoDefesas.cs" />
@@ -98,18 +93,11 @@
     <Compile Include="Models\InfoOtherInfoPlayer.cs" />
     <Compile Include="Models\InfoParticipantes.cs" />
     <Compile Include="Models\InfoPlayer.cs" />
-    <Compile Include="Player.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerDefesas.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerOponente.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
-    <Compile Include="PlayerStatus.cs">
-      <DependentUpon>Model.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Models\Lutas.cs" />
+    <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\PlayerDefesas.cs" />
+    <Compile Include="Models\PlayerOponente.cs" />
+    <Compile Include="Models\PlayerStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
