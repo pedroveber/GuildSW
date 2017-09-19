@@ -34,7 +34,7 @@ namespace Dados.BLO
 
         public Batalhas SelectByID(Batalhas _obj)
         {
-            return DAO.DAO_Batalha._SelectByID(_obj);
+            return DAO.DAO_Batalha._SelectByID(_obj.ID);
         }
 
         public Batalhas SelectByIdDate(Batalhas _obj)

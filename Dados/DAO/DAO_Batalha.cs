@@ -132,27 +132,64 @@ namespace Dados.DAO
                 throw ex;
             }
         }
-        public static Batalhas _SelectByIdDate(Batalhas _obj)
+        public static Batalhas _SelectByIdDate(Batalhas obj)
         {
+            //faz um select no Batalhas por Id guilda e Data (hoje ou ontem)
+            //maior igual a onte ou maior igual a hoje
 
-            using (var ObjEntity = new DB_SW_GuildEntities())
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+            select.AppendLine("SET DATEFORMAT dmy;");
+            select.AppendLine("select Guilda,Life,Data,PontuacaoOponente,PontuacaoGuild,RankGuild,idGuilda,ID,IdGuildaAtacante from dbo.Batalhas ");
+            select.AppendLine("where idGuilda = @idGuilda and (Data = @Data or Data = @Data2)");
+
+            command.Parameters.Add(new SqlParameter("@idGuilda", System.Data.SqlDbType.BigInt));
+            command.Parameters["@idGuilda"].Value = obj.idGuilda;
+
+            command.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.DateTime));
+            command.Parameters["@Data"].Value = obj.Data;
+
+            command.Parameters.Add(new SqlParameter("@Data2", System.Data.SqlDbType.DateTime));
+            command.Parameters["@Data2"].Value = Convert.ToDateTime(obj.Data).AddDays(-1);
+
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            Batalhas objBatalha = new Batalhas();
+
+            conexao.Open();
+            command.Connection = conexao;
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
             {
-                //gambi.. tive que arrumar rapidao antes de ir embora
-                Batalhas temp = _obj;
-                temp = ObjEntity.Batalhas.Where(w => w.idGuilda == _obj.idGuilda && w.Data == _obj.Data).FirstOrDefault();
-                if (temp == null)
-                {
-                    temp = _obj;
-                }
+                objBatalha = new Batalhas();
+                objBatalha.ID = long.Parse(reader["ID"].ToString());
+                objBatalha.Data = DateTime.Parse(reader["Data"].ToString());
+                objBatalha.Guilda = reader["Guilda"].ToString();
+                objBatalha.idGuilda = long.Parse(reader["idGuilda"].ToString());
+                objBatalha.idGuildaAtacante = long.Parse(reader["IdGuildaAtacante"].ToString());
+                objBatalha.Life = long.Parse(reader["Life"].ToString());
+                objBatalha.PontuacaoGuild = long.Parse(reader["PontuacaoGuild"].ToString());
+                objBatalha.RankGuild = long.Parse(reader["RankGuild"].ToString());
 
-                if (temp.ID == 0)
-                {
-                    DateTime tempDAta = Convert.ToDateTime(_obj.Data).AddDays(-1);
-                    temp = ObjEntity.Batalhas.Where(w => w.idGuilda == _obj.idGuilda && w.Data == tempDAta).FirstOrDefault();
-                }
-
-                return temp;
+                objBatalha.Lutas = DAO.DAO_Lutas._SelectAllByBatalha(objBatalha);
+                
             }
+
+            
+
+            conexao.Close();
+            conexao.Dispose();
+
+            return objBatalha;
+
+
         }
 
         public static Batalhas Insert(Batalhas obj)
@@ -199,7 +236,7 @@ namespace Dados.DAO
             conexao.Open();
             command.Connection = conexao;
             int modified = (int)command.ExecuteScalar();
-            
+
             conexao.Close();
             conexao.Dispose();
 
@@ -228,7 +265,7 @@ namespace Dados.DAO
 
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
-            
+
             conexao.Open();
             command.Connection = conexao;
             command.ExecuteNonQuery();

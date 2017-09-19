@@ -59,7 +59,7 @@ namespace Dados.DAO
 
                 //todo: fazer o get player
                 //objLuta.Player
-                
+
             }
 
             conexao.Close();
@@ -160,7 +160,7 @@ namespace Dados.DAO
             command.Parameters.Add(new SqlParameter("@MomentoVitoria", System.Data.SqlDbType.VarChar));
             command.Parameters["@MomentoVitoria"].Value = obj.MomentoVitoria;
 
-      
+
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
@@ -176,6 +176,33 @@ namespace Dados.DAO
             return obj;
 
         }
-       
+        public static void ApagaTudoByBatalha(long _idBatalha)
+        {
+            //var deleteCommand = context.Database.Connection.CreateCommand();
+            //deleteCommand.CommandText = "DELETE FROM Lutas where CodBatalhas = " + _idBatalha;
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+            select.AppendLine("DELETE FROM Lutas where CodBatalhas = @idBatalha ");
+
+            command.Parameters.Add(new SqlParameter("@idBatalha", System.Data.SqlDbType.BigInt));
+            command.Parameters["@idBatalha"].Value = _idBatalha;
+
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            conexao.Open();
+            command.Connection = conexao;
+            command.ExecuteNonQuery();
+
+            conexao.Close();
+            conexao.Dispose();
+
+        }
+
     }
 }

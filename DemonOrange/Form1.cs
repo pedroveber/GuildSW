@@ -14,7 +14,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows.Forms;
-
+using Dados.Models;
+using Dados.DAO;
 
 namespace DemonOrange
 {
@@ -316,7 +317,7 @@ namespace DemonOrange
                     System.DateTime dBatalha2 = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                     dBatalha2 = dBatalha2.AddSeconds(ObjBatalha.battle_log_list_group[i].battle_log_list[0].battle_end).ToLocalTime();
 
-                    Dados.Batalhas Batalha = new Dados.BLO.BLO_Batalha().SelectByIdDate(new Dados.Batalhas() { idGuilda = ObjBatalha.battle_log_list_group[i].opp_guild_info.guild_id, Data = Convert.ToDateTime(dBatalha2.ToShortDateString()) });
+                    Dados.Models.Batalhas Batalha = new Dados.BLO.BLO_Batalha().SelectByIdDate(new Dados.Models.Batalhas() { idGuilda = ObjBatalha.battle_log_list_group[i].opp_guild_info.guild_id, Data = Convert.ToDateTime(dBatalha2.ToShortDateString()) });
 
                     long VidaClan = Batalha != null ? Batalha.Life.Value : 0;
                     int count = 0;
@@ -338,10 +339,10 @@ namespace DemonOrange
                 PainelLoad(true, "Finalizando", "Aguarde...", false);
                 for (int j = 0; j < ObjBatalha.battle_log_list_group.Count; j++)
                 {
-                    Dados.Batalhas Obj = Dados.DAO.DAO_Batalha._SelectByID(new Dados.Batalhas() { ID = ObjBatalha.battle_log_list_group[j].opp_guild_info.guild_id });
+                    Dados.Models.Batalhas Obj = Dados.DAO.DAO_Batalha._SelectByID(ObjBatalha.battle_log_list_group[j].opp_guild_info.guild_id);
                     if (Obj != null)
                     {
-                        List<Dados.Lutas> ObjLuta = Dados.DAO.DAO_Lutas._SelectAllByBatalha(Obj).OrderBy(w => w.DataHora).ToList();
+                        List<Dados.Models.Lutas> ObjLuta = Dados.DAO.DAO_Lutas._SelectAllByBatalha(Obj).OrderBy(w => w.DataHora).ToList();
                         Obj.Data = ObjLuta[0].DataHora;
                         Dados.DAO.DAO_Batalha.AtualizarData(Obj);
                     }
@@ -455,7 +456,7 @@ namespace DemonOrange
                 PainelLoad(true, "Cadastrando os oponentes", (j + 1).ToString() + "/" + List.Count.ToString(), false);
                 System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 dtDateTime = dtDateTime.AddSeconds(List[j].battle_end).ToLocalTime();
-                new Dados.BLO.BLO_PlayerDefesas().Insert(new Dados.PlayerDefesas()
+                new Dados.BLO.BLO_PlayerDefesas().Insert(new Dados.Models.PlayerDefesas()
                 {
                     IdPlayer = List[j].wizard_id,
                     NomeGuilda = List[j].opp_guild_name,
@@ -688,7 +689,7 @@ namespace DemonOrange
                 System.DateTime dBatalha = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
                 dBatalha = dBatalha.AddSeconds(ObjBatalha.battle_log_list_group[0].battle_log_list[0].battle_end).ToLocalTime();
 
-                Dados.Batalhas BatalhaTemp = new Dados.BLO.BLO_Batalha().Insert(new Dados.Batalhas()
+                Dados.Models.Batalhas BatalhaTemp = new Dados.BLO.BLO_Batalha().Insert(new Dados.Models.Batalhas()
                 {
                     //20170612
                     Data = Convert.ToDateTime(dBatalha.ToShortDateString()),
@@ -746,7 +747,7 @@ namespace DemonOrange
                     //Insert Player
                     try
                     {
-                        new Dados.BLO.BLO_Player().Insert(new Dados.Player()
+                        new Dados.BLO.BLO_Player().Insert(new Dados.Models.Player()
                         {
                             ID = ObjPlayer.guildwar_contribute_list[j].wizard_id,
                             Nome = ObjPlayer.guildwar_contribute_list[j].wizard_name,
@@ -773,7 +774,7 @@ namespace DemonOrange
                     //Insert Player Status
                     try
                     {
-                        new Dados.BLO.BLO_PlayerStatus().Insert(new Dados.PlayerStatus()
+                        new Dados.BLO.BLO_PlayerStatus().Insert(new Dados.Models.PlayerStatus()
                         {
                             IdPlayer = ObjPlayer.guildwar_contribute_list[j].wizard_id,
                             //20170612
@@ -816,7 +817,7 @@ namespace DemonOrange
                     //Insert Player
                     try
                     {
-                        new Dados.BLO.BLO_Player().Insert(new Dados.Player()
+                        new Dados.BLO.BLO_Player().Insert(new Dados.Models.Player()
                         {
                             ID = ObjOponente.my_attack_list[j].wizard_id,
                             Nome = ObjPlayer.guildwar_contribute_list.Where(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id).FirstOrDefault().wizard_name,
@@ -840,7 +841,7 @@ namespace DemonOrange
                     //Insert Player Status
                     try
                     {
-                        new Dados.BLO.BLO_PlayerStatus().Insert(new Dados.PlayerStatus()
+                        new Dados.BLO.BLO_PlayerStatus().Insert(new Dados.Models.PlayerStatus()
                         {
                             IdPlayer = ObjOponente.my_attack_list[j].wizard_id,
                             //20170612
@@ -889,7 +890,7 @@ namespace DemonOrange
                     { iBonus = ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus; }
                     else { iBonus = 0; }
 
-                    new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.PlayerOponente()
+                    new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.Models.PlayerOponente()
                     {
                         //ID = ObjOponente.opp_guild_member_list[j].wizard_id,
                         //Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
@@ -916,7 +917,7 @@ namespace DemonOrange
 
         }
 
-        private long CadastrarLuta(InfoBatalha ObjBatalha, int count, int indexLoopBatalhas, int indexLoopLuta, long vidaClan, Dados.Batalhas Batalha, InfoOponente.Root ObjOponente)
+        private long CadastrarLuta(InfoBatalha ObjBatalha, int count, int indexLoopBatalhas, int indexLoopLuta, long vidaClan, Dados.Models.Batalhas Batalha, InfoOponente.Root ObjOponente)
         {
             try
             {
@@ -934,7 +935,7 @@ namespace DemonOrange
                 //Inser Luta
                 try
                 {
-                    new Dados.BLO.BLO_Lutas().Insert(new Dados.Lutas()
+                    new Dados.BLO.BLO_Lutas().Insert(new Dados.Models.Lutas()
                     {
                         CodBatalhas = Batalha.ID,
                         CodPlayer = ObjBatalha.battle_log_list_group[indexLoopBatalhas].battle_log_list[indexLoopLuta].wizard_id,

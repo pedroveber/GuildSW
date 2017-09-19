@@ -5,11 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Configuration;
+using Dados.Models;
+
 namespace Dados.DAO
+
 {
    public class DAO_TimeDefesa
     {
-        public void AtualizarTimeDefesa(Models.InfoDefesas.Root defesa)
+        public void AtualizarTimeDefesa(InfoDefesas.Root defesa)
         {
             SqlConnection conn = new SqlConnection();
             SqlCommand sqlCom = new SqlCommand();
