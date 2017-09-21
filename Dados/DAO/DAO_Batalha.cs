@@ -173,9 +173,17 @@ namespace Dados.DAO
                 objBatalha.Data = DateTime.Parse(reader["Data"].ToString());
                 objBatalha.Guilda = reader["Guilda"].ToString();
                 objBatalha.idGuilda = long.Parse(reader["idGuilda"].ToString());
+
+                if (reader["IdGuildaAtacante"].ToString() != string.Empty)
                 objBatalha.idGuildaAtacante = long.Parse(reader["IdGuildaAtacante"].ToString());
+
+                if(reader["Life"].ToString() != string.Empty)
                 objBatalha.Life = long.Parse(reader["Life"].ToString());
+
+                if(reader["PontuacaoGuild"].ToString()!= string.Empty)
                 objBatalha.PontuacaoGuild = long.Parse(reader["PontuacaoGuild"].ToString());
+
+                if(reader["RankGuild"].ToString() != string.Empty)
                 objBatalha.RankGuild = long.Parse(reader["RankGuild"].ToString());
 
                 objBatalha.Lutas = DAO.DAO_Lutas._SelectAllByBatalha(objBatalha);
@@ -261,7 +269,7 @@ namespace Dados.DAO
             command.Parameters["@Data"].Value = obj.Data;
 
             command.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.BigInt));
-            command.Parameters["@Id"].Value = obj.idGuilda;
+            command.Parameters["@Id"].Value = obj.ID;
 
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;

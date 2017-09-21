@@ -35,7 +35,7 @@ namespace Dados.DAO
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            Lutas objLuta = new Lutas();
+            Lutas objLuta=null;
 
             conexao.Open();
             command.Connection = conexao;
@@ -81,7 +81,7 @@ namespace Dados.DAO
 
             select.AppendLine("SET DATEFORMAT dmy;");
             select.AppendLine("select id,CodBatalhas,CodPlayer,CodPlayerOponente,Vitoria,ValorBarra,DataHora,MomentoVitoria from dbo.Lutas ");
-            select.AppendLine("where CodBatalhas=@CodBatalhas and CodPlayer=@CodPlayer and CodPlayerOponente=@CodPlayerOponente");
+            select.AppendLine("where CodBatalhas=@CodBatalhas");
 
             command.Parameters.Add(new SqlParameter("@CodBatalhas", System.Data.SqlDbType.BigInt));
             command.Parameters["@CodBatalhas"].Value = obj.ID;
@@ -100,13 +100,27 @@ namespace Dados.DAO
             {
                 objLuta = new Lutas();
                 objLuta.ID = long.Parse(reader["ID"].ToString());
-                objLuta.CodBatalhas = long.Parse(reader["CodBatalhas"].ToString());
-                objLuta.CodPlayer = long.Parse(reader["CodPlayer"].ToString());
-                objLuta.CodPlayerOponente = long.Parse(reader["CodPlayerOponente"].ToString());
-                objLuta.DataHora = Convert.ToDateTime(reader["DataHora"].ToString());
-                objLuta.MomentoVitoria = reader["MomentoVitoria"].ToString();
-                objLuta.ValorBarra = long.Parse(reader["ValorBarra"].ToString());
-                objLuta.Vitoria = int.Parse(reader["Vitoria"].ToString());
+
+                if (reader["CodBatalhas"].ToString() != string.Empty)
+                    objLuta.CodBatalhas = long.Parse(reader["CodBatalhas"].ToString());
+
+                if (reader["CodPlayer"].ToString() != string.Empty)
+                    objLuta.CodPlayer = long.Parse(reader["CodPlayer"].ToString());
+
+                if (reader["CodPlayerOponente"].ToString() != string.Empty)
+                    objLuta.CodPlayerOponente = long.Parse(reader["CodPlayerOponente"].ToString());
+
+                if (reader["DataHora"].ToString() != string.Empty)
+                    objLuta.DataHora = Convert.ToDateTime(reader["DataHora"].ToString());
+
+                if (reader["MomentoVitoria"].ToString() != string.Empty)
+                    objLuta.MomentoVitoria = reader["MomentoVitoria"].ToString();
+
+                if (reader["ValorBarra"].ToString() != string.Empty)
+                    objLuta.ValorBarra = long.Parse(reader["ValorBarra"].ToString());
+
+                if (reader["Vitoria"].ToString() != string.Empty)
+                    objLuta.Vitoria = int.Parse(reader["Vitoria"].ToString());
 
 
                 //todo: fazer o get playerOPonente
@@ -167,7 +181,7 @@ namespace Dados.DAO
 
             conexao.Open();
             command.Connection = conexao;
-            int modified = (int)command.ExecuteScalar();
+            long modified = (long)command.ExecuteScalar();
 
             conexao.Close();
             conexao.Dispose();

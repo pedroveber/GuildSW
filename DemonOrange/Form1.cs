@@ -339,7 +339,11 @@ namespace DemonOrange
                 PainelLoad(true, "Finalizando", "Aguarde...", false);
                 for (int j = 0; j < ObjBatalha.battle_log_list_group.Count; j++)
                 {
-                    Dados.Models.Batalhas Obj = Dados.DAO.DAO_Batalha._SelectByID(ObjBatalha.battle_log_list_group[j].opp_guild_info.guild_id);
+
+                    System.DateTime dataBatalha = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                    dataBatalha = dataBatalha.AddSeconds(ObjBatalha.battle_log_list_group[j].battle_log_list[0].battle_end).ToLocalTime();
+
+                    Dados.Models.Batalhas Obj = new Dados.BLO.BLO_Batalha().SelectByIdDate(new Dados.Models.Batalhas() { idGuilda = ObjBatalha.battle_log_list_group[j].opp_guild_info.guild_id, Data = Convert.ToDateTime(dataBatalha.ToShortDateString()) });
                     if (Obj != null)
                     {
                         List<Dados.Models.Lutas> ObjLuta = Dados.DAO.DAO_Lutas._SelectAllByBatalha(Obj).OrderBy(w => w.DataHora).ToList();
