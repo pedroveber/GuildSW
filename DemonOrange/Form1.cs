@@ -291,6 +291,9 @@ namespace DemonOrange
                 for (int i = 0; i < ObjBatalha.battle_log_list_group.Count; i++)
                 {
 
+                    //Cadastrar a Guilda
+                    CadastrarGuilda(ObjBatalha);
+                    
                     PainelLoad(true, "Cadastrando a Batalha", ObjBatalha.battle_log_list_group[i].opp_guild_info.name, false);
 
                     //Se 0 = GVG atual. Incluir os dados dos players e oponentes. 
@@ -677,6 +680,33 @@ namespace DemonOrange
         #endregion
 
         #region Cadastrar Dados do FullLog no Banco
+
+        private void CadastrarGuilda(InfoBatalha ObjBatalha)
+        {
+            try
+            {
+              Dados.Models.Guilda GuildaTemp = new Dados.BLO.BLO_Guilda().Insert(new Dados.Models.Guilda()
+                {
+                    Id = ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id,
+                    Nome = ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_name
+
+                });
+                
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Cadastrar Guilda.\r\n";
+
+                log += "OBJGuilda\r\n";
+                log += "Guild Id: " + ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id + "\r\n";
+                log += "Guild name: " + ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_name + "\r\n";
+                log += "\nErro:" + ex.Message;
+
+                GravarLog(log);
+
+            }
+        }
+
         private long CadastrarBatalha(InfoBatalha ObjBatalha, InfoOponente.Root ObjOponente, InfoParticipantes.Root ObjParticipante)
         {
 
@@ -702,7 +732,9 @@ namespace DemonOrange
                     Life = VidaClanAux,
                     PontuacaoOponente = ObjOponente.opp_participation_info.match_score,
                     PontuacaoGuild = ObjParticipante.guildwar_ranking_info.match_score,
-                    RankGuild = ObjParticipante.guildwar_ranking_info.rank
+                    RankGuild = ObjParticipante.guildwar_ranking_info.rank,
+                    idGuildaAtacante = ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id
+
                 });
 
                 return BatalhaTemp.ID;

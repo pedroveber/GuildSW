@@ -22,15 +22,18 @@ namespace Dados.DAO
 
             select.AppendLine("SET DATEFORMAT dmy;");
             select.AppendLine("select id,codGuilda,Nome,Bonus from dbo.PlayerOponente ");
-            select.AppendLine("where Id = @Id ");
+            select.AppendLine("where Id = @Id and codGuilda = @codGuilda");
 
             command.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.BigInt));
             command.Parameters["@Id"].Value = obj.ID;
 
+            command.Parameters.Add(new SqlParameter("@codGuilda", System.Data.SqlDbType.BigInt));
+            command.Parameters["@codGuilda"].Value = obj.CodGuilda;
+
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            PlayerOponente objPlayerOponente = new PlayerOponente();
+            PlayerOponente objPlayerOponente = null;
 
             conexao.Open();
             command.Connection = conexao;

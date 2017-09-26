@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLO\BLO_Batalha.cs" />
+    <Compile Include="BLO\BLO_Guilda.cs" />
     <Compile Include="BLO\BLO_Lutas.cs" />
     <Compile Include="BLO\BLO_Player.cs" />
     <Compile Include="BLO\BLO_PlayerDefesas.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="BLO\BLO_PlayerStatus.cs" />
     <Compile Include="BLO\BLO_Security.cs" />
     <Compile Include="DAO\DAO_Batalha.cs" />
+    <Compile Include="DAO\DAO_Guilda.cs" />
     <Compile Include="DAO\DAO_Lutas.cs" />
     <Compile Include="DAO\DAO_Player.cs" />
     <Compile Include="DAO\DAO_PlayerDefesas.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="DAO\DAO_PlayerStatus.cs" />
     <Compile Include="DAO\DAO_TimeDefesa.cs" />
     <Compile Include="Models\Batalhas.cs" />
+    <Compile Include="Models\Guilda.cs" />
     <Compile Include="Models\InfoBatalha.cs" />
     <Compile Include="Models\InfoBatalhaPlayer.cs" />
     <Compile Include="Models\InfoDefesas.cs" />

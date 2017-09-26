@@ -146,7 +146,7 @@ namespace Dados.DAO
 
             select.AppendLine("SET DATEFORMAT dmy;");
             select.AppendLine("select Guilda,Life,Data,PontuacaoOponente,PontuacaoGuild,RankGuild,idGuilda,ID,IdGuildaAtacante from dbo.Batalhas ");
-            select.AppendLine("where idGuilda = @idGuilda and (Data = @Data or Data = @Data2)");
+            select.AppendLine("where idGuilda = @idGuilda and (convert(Date, Data,103) = @Data or convert(Date, Data,103) = @Data2)");
 
             command.Parameters.Add(new SqlParameter("@idGuilda", System.Data.SqlDbType.BigInt));
             command.Parameters["@idGuilda"].Value = obj.idGuilda;
@@ -160,7 +160,7 @@ namespace Dados.DAO
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            Batalhas objBatalha = new Batalhas();
+            Batalhas objBatalha = null;
 
             conexao.Open();
             command.Connection = conexao;
@@ -210,7 +210,7 @@ namespace Dados.DAO
             StringBuilder select = new StringBuilder();
 
             select.AppendLine("INSERT INTO DBO.BATALHAS  (Guilda, Life, Data, PontuacaoOponente, PontuacaoGuild, RankGuild,idGUilda, IdGuildaAtacante) ");
-            select.AppendLine("output INSERTED.ID values (@Guilda, @Life, @Data, @PontuacaoOponente, @PontuacaoGuild, @RankGuild,@idGUilda, @Id, @IdGuildaAtacante)");
+            select.AppendLine("output INSERTED.ID values (@Guilda, @Life, @Data, @PontuacaoOponente, @PontuacaoGuild, @RankGuild,@idGUilda, @IdGuildaAtacante)");
 
             command.Parameters.Add(new SqlParameter("@Guilda", System.Data.SqlDbType.VarChar));
             command.Parameters["@Guilda"].Value = obj.Guilda;
@@ -243,7 +243,7 @@ namespace Dados.DAO
 
             conexao.Open();
             command.Connection = conexao;
-            int modified = (int)command.ExecuteScalar();
+            long modified = (long)command.ExecuteScalar();
 
             conexao.Close();
             conexao.Dispose();
