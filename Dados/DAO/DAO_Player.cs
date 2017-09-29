@@ -30,7 +30,7 @@ namespace Dados.DAO
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            Player objPlayer = new Player();
+            Player objPlayer = null;
 
             conexao.Open();
             command.Connection = conexao;
