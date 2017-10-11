@@ -293,7 +293,7 @@ namespace DemonOrange
 
                     //Cadastrar a Guilda
                     CadastrarGuilda(ObjBatalha);
-                    
+
                     PainelLoad(true, "Cadastrando a Batalha", ObjBatalha.battle_log_list_group[i].opp_guild_info.name, false);
 
                     //Se 0 = GVG atual. Incluir os dados dos players e oponentes. 
@@ -305,7 +305,7 @@ namespace DemonOrange
                         idBatalha = CadastrarBatalha(ObjBatalha, ObjOponente, ObjParticipante);
 
                         //Player
-                        CadastrarPlayer(ObjPlayer, idBatalha);
+                        CadastrarPlayer(ObjPlayer, idBatalha, ObjBatalha);
 
                         //PlayerStatus
                         CadastrarPlayerStatus(ObjOponente, ObjPlayer, idBatalha);
@@ -685,13 +685,13 @@ namespace DemonOrange
         {
             try
             {
-              Dados.Models.Guilda GuildaTemp = new Dados.BLO.BLO_Guilda().Insert(new Dados.Models.Guilda()
+                Dados.Models.Guilda GuildaTemp = new Dados.BLO.BLO_Guilda().Insert(new Dados.Models.Guilda()
                 {
                     Id = ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id,
                     Nome = ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_name
 
                 });
-                
+
             }
             catch (Exception ex)
             {
@@ -772,10 +772,16 @@ namespace DemonOrange
 
         }
 
-        private void CadastrarPlayer(InfoPlayer.Root ObjPlayer, long idBatalha)
+        private void CadastrarPlayer(InfoPlayer.Root ObjPlayer, long idBatalha, InfoBatalha ObjBatalha)
         {
             try
             {
+                //Listar os usuarios da Guilda para nao ficar toda hora fazendo Select. 
+                List<GuildaPlayer> lstGuildaPlayers = new List<GuildaPlayer>();
+                Dados.BLO.BLO_Guilda blGuilda = new Dados.BLO.BLO_Guilda();
+                lstGuildaPlayers = blGuilda.ListarGuildaPlayer(ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id);
+
+
                 for (int j = 0; j < ObjPlayer.guildwar_contribute_list.Count; j++)
                 {
                     PainelLoad(true, "Cadastrando os Players", (j + 1).ToString() + "/" + ObjPlayer.guildwar_contribute_list.Count.ToString(), false);
@@ -823,6 +829,28 @@ namespace DemonOrange
                         MessageBox.Show("Erro ao incluir Player Status");
                         string log;
                         log = "Erro ao tentar incluir Player Status \r\n ";
+                        log += ex.Message + " \r\n ";
+                        log += "ID: " + ObjPlayer.guildwar_contribute_list[j].wizard_id + "\r\n";
+                        log += "ID Batalha: " + idBatalha + "\r\n";
+                        GravarLog(log);
+                    }
+
+                    //Inser Player Guilda
+                    try
+                    {
+
+                        //Se não existir insere
+                        if (!lstGuildaPlayers.Any(x => x.IdPlayer == ObjPlayer.guildwar_contribute_list[j].wizard_id))
+                        {
+                            blGuilda.InsertGuildaPlayer(ObjBatalha.battle_log_list_group[0].battle_log_list[0].guild_id, ObjPlayer.guildwar_contribute_list[j].wizard_id);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        MessageBox.Show("Erro ao incluir Player Guilda");
+                        string log;
+                        log = "Erro ao tentar incluir Player Guilda \r\n ";
                         log += ex.Message + " \r\n ";
                         log += "ID: " + ObjPlayer.guildwar_contribute_list[j].wizard_id + "\r\n";
                         log += "ID Batalha: " + idBatalha + "\r\n";

@@ -113,5 +113,84 @@ namespace Dados.DAO
             ObjTemp.Nome = obj.Nome;
             return ObjTemp;
         }
+
+        public static List<GuildaPlayer> ListarGuildaPlayer(long idGuilda)
+        {
+            //codbatalha = obj.id
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+            select.AppendLine("SET DATEFORMAT dmy;");
+            select.AppendLine("select IdGuilda,IdUsuario,IdPlayer,Ativo from dbo.Guilda_Player ");
+            select.AppendLine("where idGuilda=@idGuilda");
+
+            command.Parameters.Add(new SqlParameter("@idGuilda", System.Data.SqlDbType.BigInt));
+            command.Parameters["@idGuilda"].Value = idGuilda;
+
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            GuildaPlayer objPlayerGuilda = new GuildaPlayer();
+            List<GuildaPlayer> lstPlayers = new List<GuildaPlayer>();
+
+            conexao.Open();
+            command.Connection = conexao;
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                objPlayerGuilda = new GuildaPlayer();
+                objPlayerGuilda.Ativo = Convert.ToBoolean(reader["Ativo"].ToString());
+                objPlayerGuilda.IdGuilda = long.Parse(reader["IdGuilda"].ToString());
+                objPlayerGuilda.IdPlayer = long.Parse(reader["IdPlayer"].ToString());
+
+                if (reader["idUsuario"].ToString() != string.Empty)
+                    objPlayerGuilda.IdUsuario = reader["IdUsuario"].ToString();
+
+
+                lstPlayers.Add(objPlayerGuilda);
+
+            }
+
+            conexao.Close();
+            conexao.Dispose();
+
+            return lstPlayers;
+        }
+
+        public static void InsertGuildaPlayer(long idGuilda,long idPlayer)
+        {
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+            select.AppendLine("insert into dbo.Guilda_Player(IdGuilda,IdPlayer,Ativo)  ");
+            select.AppendLine("values (@IdGuilda,@IdPlayer,1)");
+
+            command.Parameters.Add(new SqlParameter("@IdGuilda", System.Data.SqlDbType.BigInt));
+            command.Parameters["@IdGuilda"].Value = idGuilda;
+
+            command.Parameters.Add(new SqlParameter("@IdPlayer", System.Data.SqlDbType.BigInt));
+            command.Parameters["@IdPlayer"].Value = idPlayer;
+            
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            conexao.Open();
+            command.Connection = conexao;
+            command.ExecuteNonQuery();
+
+            conexao.Close();
+            conexao.Dispose();
+            
+        }
+
     }
 }

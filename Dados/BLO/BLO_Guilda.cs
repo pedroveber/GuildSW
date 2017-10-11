@@ -15,5 +15,15 @@ namespace Dados.BLO
                 return DAO.DAO_Guilda.Insert(_obj);
             else return DAO.DAO_Guilda.UpDate(_obj);
         }
+
+        public List<GuildaPlayer> ListarGuildaPlayer(long idGuilda)
+        {
+            return DAO.DAO_Guilda.ListarGuildaPlayer(idGuilda);
+        }
+
+        public void InsertGuildaPlayer(long idGuilda, long idPlayer)
+        {
+            DAO.DAO_Guilda.InsertGuildaPlayer(idGuilda, idPlayer);
+        }
     }
 }
