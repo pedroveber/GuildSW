@@ -15,9 +15,17 @@ namespace Dados.BLO
         }
         public PlayerStatus Insert(PlayerStatus _obj)
         {
-            if (DAO.DAO_PlayerStatus._SelectByID(_obj) == null)
+            PlayerStatus objRetorno = new PlayerStatus();
+            objRetorno = DAO.DAO_PlayerStatus._SelectByID(_obj);
+
+            if (objRetorno.ID<=0)
                 return DAO.DAO_PlayerStatus.Insert(_obj);
-            else return DAO.DAO_PlayerStatus.UpDate(_obj);
+            else
+            {
+                objRetorno.Status = _obj.Status;
+                return DAO.DAO_PlayerStatus.UpDate(objRetorno);
+            }
+                
         }
     }
 }

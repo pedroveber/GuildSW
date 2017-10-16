@@ -34,7 +34,7 @@ namespace Dados.DAO
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            PlayerDefesas objPlayerDefesa = new PlayerDefesas();
+            PlayerDefesas objPlayerDefesa = null;
 
             conexao.Open();
             command.Connection = conexao;
@@ -95,7 +95,7 @@ namespace Dados.DAO
 
             conexao.Open();
             command.Connection = conexao;
-            obj.ID = (int)command.ExecuteScalar();
+            obj.ID = (long)command.ExecuteScalar();
             
             conexao.Close();
             conexao.Dispose();

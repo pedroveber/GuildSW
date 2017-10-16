@@ -17,6 +17,7 @@ using System.Windows.Forms;
 using Dados.Models;
 using Dados.DAO;
 
+
 namespace DemonOrange
 {
     public partial class Form1 : Form
@@ -93,6 +94,7 @@ namespace DemonOrange
             pl_3.BackColor = Color.Tomato;
             pl_4.BackColor = Color.Tomato;
             pl_5.BackColor = Color.Tomato;
+            pnlMatchLogs.BackColor = Color.Tomato;
 
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
@@ -126,6 +128,13 @@ namespace DemonOrange
                         Arq5 = true;
                         pl_5.BackColor = Color.Green;
                     }
+
+                    if (line.Contains("GetGuildWarMatchLog") && line.Contains(@"ret_code"":0"))
+                    {
+                        pnlMatchLogs.BackColor = Color.Green;
+                    }
+
+
                 }
                 if (Arq1 && Arq2 && Arq3 && Arq4 && Arq5)
                 {
@@ -284,6 +293,9 @@ namespace DemonOrange
                 //ParticipationInfo
                 InfoParticipantes.Root ObjParticipante = LerGuildWarParticipationInfo(lines);
 
+                //GetGuildWarMatchLog
+                InfoLogBatalhas.Root objLogBatalhas = LerGuildWarMatchLog(lines);
+                
 
                 PainelLoad(true, "Leitura de arquivo concluido", "-", false);
 
@@ -354,6 +366,36 @@ namespace DemonOrange
                         Dados.DAO.DAO_Batalha.AtualizarData(Obj);
                     }
                 }
+
+                try
+                {
+                    //Atualizar MatchLogs
+                    for (int i = 0; i < objLogBatalhas.match_log.Count; i++)
+                    {
+                        System.DateTime fimGVG = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                        fimGVG = fimGVG.AddSeconds(objLogBatalhas.match_log[i].match_end).ToLocalTime();
+
+                        if (objLogBatalhas.match_log[i].log_type == 1 && objLogBatalhas.match_log[i].win_lose == 1)
+                        {
+                            //Se encontrar a GVG atualiza o Win
+                            Dados.Models.Batalhas filtro = new Batalhas() { idGuilda = objLogBatalhas.match_log[i].opp_guild_id, Data = new DateTime(fimGVG.Year,fimGVG.Month,fimGVG.Day)};
+                            Dados.Models.Batalhas objBatalha = DAO_Batalha._SelectByIdDate(filtro);
+
+                            if (objBatalha != null)
+                            {
+                                //Atualiza o Win no dboLutas
+                                DAO_Lutas.AtualizarVitoria(objBatalha.ID);
+                            }
+                        }
+
+
+                    }
+                }
+                catch (Exception)
+                {
+                    
+                }
+                
 
 
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
@@ -487,6 +529,7 @@ namespace DemonOrange
 
                 lblMsgDefesa.Text = "Erro ao carregar time das defesas+";
                 lblMsgDefesa.Text += Environment.NewLine + "Erro: " + ex.Message;
+
             }
 
             Thread YhdIniciar = new Thread(() => Defesas());
@@ -677,7 +720,49 @@ namespace DemonOrange
 
         }
 
+        private InfoLogBatalhas.Root LerGuildWarMatchLog(string[] lines)
+        {
+            try
+            {
+                PainelLoad(true, "Lendo Match Logs", "GetGuildWarMatchLog", false);
+
+                string Texto = "";
+                foreach (string line in lines)
+                {
+                    if (line.Contains("GetGuildWarMatchLog") && line.Contains(@"ret_code"":0"))
+                    {
+                        Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
+                        break;
+                    }
+                }
+                JavaScriptSerializer MatchLog = new JavaScriptSerializer();
+                InfoLogBatalhas.Root objMatch = null;
+
+                try
+                {
+                    objMatch = MatchLog.Deserialize<InfoLogBatalhas.Root>(Texto);
+                }
+                catch (Exception)
+                {
+                    
+                }
+                
+                return objMatch;
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Ler o GetGuildWarMatchLog.";
+                log += "\nErro:" + ex.Message;
+
+                GravarLog(log);
+                throw ex;
+            }
+
+
+        }
+
         #endregion
+
 
         #region Cadastrar Dados do FullLog no Banco
 
@@ -954,6 +1039,11 @@ namespace DemonOrange
                     { iBonus = ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus; }
                     else { iBonus = 0; }
 
+                    log = "ID:" + ObjOponente.opp_guild_member_list[j].wizard_id + "\r\n";
+                    log += "Nome:" + ObjOponente.opp_guild_member_list[j].wizard_name + "\r\n";
+                    log += "Bonus:" + iBonus + "\r\n";
+                    log += "CodGuilda:" + idBatalha + "\r\n";
+
                     new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.Models.PlayerOponente()
                     {
                         //ID = ObjOponente.opp_guild_member_list[j].wizard_id,
@@ -961,14 +1051,10 @@ namespace DemonOrange
                         ID = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_id,
                         Nome = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_name,
                         Bonus = iBonus,
-                        CodGuilda = idBatalha
+                        IdBatalha = idBatalha
 
                     });
-
-                    log = "ID:" + ObjOponente.opp_guild_member_list[j].wizard_id + "\r\n";
-                    log += "Nome:" + ObjOponente.opp_guild_member_list[j].wizard_name + "\r\n";
-                    log += "Bonus:" + iBonus + "\r\n";
-                    log += "CodGuilda:" + idBatalha + "\r\n";
+                    
                 }
             }
             catch (Exception ex)
@@ -1227,6 +1313,8 @@ namespace DemonOrange
                 }
             }
         }
+
+        
     }
 
     public class PlayerDef

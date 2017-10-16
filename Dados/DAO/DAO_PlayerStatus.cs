@@ -33,7 +33,7 @@ namespace Dados.DAO
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
-            PlayerStatus objPlayerStatus = null;
+            PlayerStatus objPlayerStatus = new PlayerStatus();
 
             conexao.Open();
             command.Connection = conexao;

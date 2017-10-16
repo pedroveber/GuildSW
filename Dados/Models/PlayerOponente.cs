@@ -13,7 +13,7 @@ namespace Dados.Models
         }
 
         public long ID { get; set; }
-        public Nullable<long> CodGuilda { get; set; }
+        public Nullable<long> IdBatalha { get; set; }
         public string Nome { get; set; }
         public Nullable<int> Bonus { get; set; }
 

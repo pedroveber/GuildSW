@@ -21,14 +21,14 @@ namespace Dados.DAO
             StringBuilder select = new StringBuilder();
 
             select.AppendLine("SET DATEFORMAT dmy;");
-            select.AppendLine("select id,codGuilda,Nome,Bonus from dbo.PlayerOponente ");
-            select.AppendLine("where Id = @Id and codGuilda = @codGuilda");
+            select.AppendLine("select id,IdBatalha,Nome,Bonus from dbo.PlayerOponente ");
+            select.AppendLine("where Id = @Id and IdBatalha = @IdBatalha");
 
             command.Parameters.Add(new SqlParameter("@Id", System.Data.SqlDbType.BigInt));
             command.Parameters["@Id"].Value = obj.ID;
 
-            command.Parameters.Add(new SqlParameter("@codGuilda", System.Data.SqlDbType.BigInt));
-            command.Parameters["@codGuilda"].Value = obj.CodGuilda;
+            command.Parameters.Add(new SqlParameter("@IdBatalha", System.Data.SqlDbType.BigInt));
+            command.Parameters["@IdBatalha"].Value = obj.IdBatalha;
 
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
@@ -44,7 +44,7 @@ namespace Dados.DAO
                 objPlayerOponente = new PlayerOponente();
                 objPlayerOponente.ID = long.Parse(reader["ID"].ToString());
                 objPlayerOponente.Bonus = Convert.ToInt32(reader["Bonus"].ToString());
-                objPlayerOponente.CodGuilda = long.Parse(reader["codGuilda"].ToString());
+                objPlayerOponente.IdBatalha = long.Parse(reader["IdBatalha"].ToString());
                 objPlayerOponente.Nome = reader["Nome"].ToString();
 
                 //TODO: lutas
@@ -72,14 +72,14 @@ namespace Dados.DAO
 
             StringBuilder select = new StringBuilder();
 
-            select.AppendLine("insert into dbo.PlayerOponente (id,codGuilda,Nome,Bonus) ");
-            select.AppendLine("values (@id, @codGuilda, @Nome, @Bonus)");
+            select.AppendLine("insert into dbo.PlayerOponente (id,IdBatalha,Nome,Bonus) ");
+            select.AppendLine("values (@id, @IdBatalha, @Nome, @Bonus)");
 
             command.Parameters.Add(new SqlParameter("@id", System.Data.SqlDbType.BigInt));
             command.Parameters["@id"].Value = obj.ID;
 
-            command.Parameters.Add(new SqlParameter("@codGuilda", System.Data.SqlDbType.BigInt));
-            command.Parameters["@codGuilda"].Value = obj.CodGuilda;
+            command.Parameters.Add(new SqlParameter("@IdBatalha", System.Data.SqlDbType.BigInt));
+            command.Parameters["@IdBatalha"].Value = obj.IdBatalha;
 
             command.Parameters.Add(new SqlParameter("@Nome", System.Data.SqlDbType.VarChar));
             command.Parameters["@Nome"].Value = obj.Nome;

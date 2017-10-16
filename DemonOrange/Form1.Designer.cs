@@ -31,6 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.pnlMatchLogs = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
             this.txtSenhaEnviaServer = new System.Windows.Forms.TextBox();
             this.pl_load = new System.Windows.Forms.Panel();
@@ -53,6 +55,11 @@
             this.pl_3 = new System.Windows.Forms.Panel();
             this.pl_4 = new System.Windows.Forms.Panel();
             this.pl_5 = new System.Windows.Forms.Panel();
+            this.tabPage12 = new System.Windows.Forms.TabPage();
+            this.lblMsgDefesa = new System.Windows.Forms.Label();
+            this.btnEfetivarCargaDefesa = new System.Windows.Forms.Button();
+            this.dtvArquivoDefesa = new System.Windows.Forms.DataGridView();
+            this.btnValidarArquivoDefesa = new System.Windows.Forms.Button();
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
@@ -61,22 +68,17 @@
             this.txtDiretorio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSalvarConfigs = new System.Windows.Forms.Button();
-            this.tabPage12 = new System.Windows.Forms.TabPage();
-            this.lblMsgDefesa = new System.Windows.Forms.Label();
-            this.btnEfetivarCargaDefesa = new System.Windows.Forms.Button();
-            this.dtvArquivoDefesa = new System.Windows.Forms.DataGridView();
-            this.btnValidarArquivoDefesa = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.pl_load.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.panel1.SuspendLayout();
+            this.tabPage12.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dtvArquivoDefesa)).BeginInit();
             this.tabPage5.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
-            this.tabPage12.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dtvArquivoDefesa)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -95,6 +97,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.label8);
+            this.tabPage4.Controls.Add(this.pnlMatchLogs);
             this.tabPage4.Controls.Add(this.label10);
             this.tabPage4.Controls.Add(this.txtSenhaEnviaServer);
             this.tabPage4.Controls.Add(this.pl_load);
@@ -120,6 +124,24 @@
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Atualizar Base";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(623, 15);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(158, 13);
+            this.label8.TabIndex = 81;
+            this.label8.Text = "Arquivo: GetGuildWarMatchLog";
+            // 
+            // pnlMatchLogs
+            // 
+            this.pnlMatchLogs.BackColor = System.Drawing.Color.Tomato;
+            this.pnlMatchLogs.ForeColor = System.Drawing.Color.Tomato;
+            this.pnlMatchLogs.Location = new System.Drawing.Point(590, 8);
+            this.pnlMatchLogs.Name = "pnlMatchLogs";
+            this.pnlMatchLogs.Size = new System.Drawing.Size(27, 26);
+            this.pnlMatchLogs.TabIndex = 80;
             // 
             // label10
             // 
@@ -253,7 +275,7 @@
             // btnVerificaArq
             // 
             this.btnVerificaArq.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVerificaArq.Location = new System.Drawing.Point(481, 47);
+            this.btnVerificaArq.Location = new System.Drawing.Point(279, 8);
             this.btnVerificaArq.Name = "btnVerificaArq";
             this.btnVerificaArq.Size = new System.Drawing.Size(305, 77);
             this.btnVerificaArq.TabIndex = 10;
@@ -352,6 +374,59 @@
             this.pl_5.Size = new System.Drawing.Size(27, 26);
             this.pl_5.TabIndex = 0;
             // 
+            // tabPage12
+            // 
+            this.tabPage12.Controls.Add(this.lblMsgDefesa);
+            this.tabPage12.Controls.Add(this.btnEfetivarCargaDefesa);
+            this.tabPage12.Controls.Add(this.dtvArquivoDefesa);
+            this.tabPage12.Controls.Add(this.btnValidarArquivoDefesa);
+            this.tabPage12.Location = new System.Drawing.Point(4, 22);
+            this.tabPage12.Name = "tabPage12";
+            this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage12.Size = new System.Drawing.Size(792, 603);
+            this.tabPage12.TabIndex = 5;
+            this.tabPage12.Text = "Defesa";
+            this.tabPage12.UseVisualStyleBackColor = true;
+            // 
+            // lblMsgDefesa
+            // 
+            this.lblMsgDefesa.Location = new System.Drawing.Point(21, 134);
+            this.lblMsgDefesa.Name = "lblMsgDefesa";
+            this.lblMsgDefesa.Size = new System.Drawing.Size(350, 321);
+            this.lblMsgDefesa.TabIndex = 9;
+            // 
+            // btnEfetivarCargaDefesa
+            // 
+            this.btnEfetivarCargaDefesa.Location = new System.Drawing.Point(6, 67);
+            this.btnEfetivarCargaDefesa.Name = "btnEfetivarCargaDefesa";
+            this.btnEfetivarCargaDefesa.Size = new System.Drawing.Size(387, 34);
+            this.btnEfetivarCargaDefesa.TabIndex = 8;
+            this.btnEfetivarCargaDefesa.Text = "Efetivar Carga";
+            this.btnEfetivarCargaDefesa.UseVisualStyleBackColor = true;
+            this.btnEfetivarCargaDefesa.Click += new System.EventHandler(this.btnEfetivarCargaDefesa_Click);
+            // 
+            // dtvArquivoDefesa
+            // 
+            this.dtvArquivoDefesa.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dtvArquivoDefesa.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dtvArquivoDefesa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtvArquivoDefesa.Location = new System.Drawing.Point(406, 7);
+            this.dtvArquivoDefesa.Name = "dtvArquivoDefesa";
+            this.dtvArquivoDefesa.Size = new System.Drawing.Size(378, 590);
+            this.dtvArquivoDefesa.TabIndex = 7;
+            // 
+            // btnValidarArquivoDefesa
+            // 
+            this.btnValidarArquivoDefesa.Location = new System.Drawing.Point(6, 7);
+            this.btnValidarArquivoDefesa.Name = "btnValidarArquivoDefesa";
+            this.btnValidarArquivoDefesa.Size = new System.Drawing.Size(387, 34);
+            this.btnValidarArquivoDefesa.TabIndex = 0;
+            this.btnValidarArquivoDefesa.Text = "Validar Arquivo";
+            this.btnValidarArquivoDefesa.UseVisualStyleBackColor = true;
+            this.btnValidarArquivoDefesa.Click += new System.EventHandler(this.btnValidarArquivoDefesa_Click);
+            // 
             // tabPage5
             // 
             this.tabPage5.Controls.Add(this.tabControl2);
@@ -439,59 +514,6 @@
             this.btnSalvarConfigs.UseVisualStyleBackColor = true;
             this.btnSalvarConfigs.Click += new System.EventHandler(this.btnSalvarConfigs_Click);
             // 
-            // tabPage12
-            // 
-            this.tabPage12.Controls.Add(this.lblMsgDefesa);
-            this.tabPage12.Controls.Add(this.btnEfetivarCargaDefesa);
-            this.tabPage12.Controls.Add(this.dtvArquivoDefesa);
-            this.tabPage12.Controls.Add(this.btnValidarArquivoDefesa);
-            this.tabPage12.Location = new System.Drawing.Point(4, 22);
-            this.tabPage12.Name = "tabPage12";
-            this.tabPage12.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage12.Size = new System.Drawing.Size(792, 603);
-            this.tabPage12.TabIndex = 5;
-            this.tabPage12.Text = "Defesa";
-            this.tabPage12.UseVisualStyleBackColor = true;
-            // 
-            // lblMsgDefesa
-            // 
-            this.lblMsgDefesa.Location = new System.Drawing.Point(21, 134);
-            this.lblMsgDefesa.Name = "lblMsgDefesa";
-            this.lblMsgDefesa.Size = new System.Drawing.Size(350, 321);
-            this.lblMsgDefesa.TabIndex = 9;
-            // 
-            // btnEfetivarCargaDefesa
-            // 
-            this.btnEfetivarCargaDefesa.Location = new System.Drawing.Point(6, 67);
-            this.btnEfetivarCargaDefesa.Name = "btnEfetivarCargaDefesa";
-            this.btnEfetivarCargaDefesa.Size = new System.Drawing.Size(387, 34);
-            this.btnEfetivarCargaDefesa.TabIndex = 8;
-            this.btnEfetivarCargaDefesa.Text = "Efetivar Carga";
-            this.btnEfetivarCargaDefesa.UseVisualStyleBackColor = true;
-            this.btnEfetivarCargaDefesa.Click += new System.EventHandler(this.btnEfetivarCargaDefesa_Click);
-            // 
-            // dtvArquivoDefesa
-            // 
-            this.dtvArquivoDefesa.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dtvArquivoDefesa.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dtvArquivoDefesa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtvArquivoDefesa.Location = new System.Drawing.Point(406, 7);
-            this.dtvArquivoDefesa.Name = "dtvArquivoDefesa";
-            this.dtvArquivoDefesa.Size = new System.Drawing.Size(378, 590);
-            this.dtvArquivoDefesa.TabIndex = 7;
-            // 
-            // btnValidarArquivoDefesa
-            // 
-            this.btnValidarArquivoDefesa.Location = new System.Drawing.Point(6, 7);
-            this.btnValidarArquivoDefesa.Name = "btnValidarArquivoDefesa";
-            this.btnValidarArquivoDefesa.Size = new System.Drawing.Size(387, 34);
-            this.btnValidarArquivoDefesa.TabIndex = 0;
-            this.btnValidarArquivoDefesa.Text = "Validar Arquivo";
-            this.btnValidarArquivoDefesa.UseVisualStyleBackColor = true;
-            this.btnValidarArquivoDefesa.Click += new System.EventHandler(this.btnValidarArquivoDefesa_Click);
-            // 
             // timer1
             // 
             this.timer1.Interval = 1000;
@@ -507,7 +529,7 @@
             this.MinimumSize = new System.Drawing.Size(644, 566);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Demon Orange 2.0";
+            this.Text = "GPC - Atualiza GVG";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage4.ResumeLayout(false);
@@ -516,12 +538,12 @@
             this.pl_load.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.panel1.ResumeLayout(false);
+            this.tabPage12.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dtvArquivoDefesa)).EndInit();
             this.tabPage5.ResumeLayout(false);
             this.tabControl2.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
-            this.tabPage12.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dtvArquivoDefesa)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -565,6 +587,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox txtSenhaEnviaServer;
         private System.Windows.Forms.Label lblMsgDefesa;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Panel pnlMatchLogs;
     }
 }
 

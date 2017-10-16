@@ -74,6 +74,7 @@
     <Compile Include="Models\InfoBatalha.cs" />
     <Compile Include="Models\InfoBatalhaPlayer.cs" />
     <Compile Include="Models\InfoDefesas.cs" />
+    <Compile Include="Models\InfoLogBatalhas.cs" />
     <Compile Include="Models\InfoOponente.cs" />
     <Compile Include="Models\InfoOtherInfoPlayer.cs" />
     <Compile Include="Models\InfoParticipantes.cs" />

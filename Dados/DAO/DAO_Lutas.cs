@@ -192,8 +192,7 @@ namespace Dados.DAO
         }
         public static void ApagaTudoByBatalha(long _idBatalha)
         {
-            //var deleteCommand = context.Database.Connection.CreateCommand();
-            //deleteCommand.CommandText = "DELETE FROM Lutas where CodBatalhas = " + _idBatalha;
+           
             SqlConnection conexao = new SqlConnection();
             SqlCommand command = new SqlCommand();
 
@@ -205,6 +204,40 @@ namespace Dados.DAO
 
             command.Parameters.Add(new SqlParameter("@idBatalha", System.Data.SqlDbType.BigInt));
             command.Parameters["@idBatalha"].Value = _idBatalha;
+
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            conexao.Open();
+            command.Connection = conexao;
+            command.ExecuteNonQuery();
+
+            conexao.Close();
+            conexao.Dispose();
+
+        }
+
+        public static void AtualizarVitoria(long idBatalha)
+        {
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+            select.AppendLine("update dbo.Lutas set dbo.Lutas.MomentoVitoria = b.momento ");
+            select.AppendLine("from( ");
+            select.AppendLine("select 'Win' momento, ");
+            select.AppendLine("id from ");
+            select.AppendLine("dbo.Lutas ");
+            select.AppendLine("where ");
+            select.AppendLine("id = (select max(id) from dbo.lutas where CodBatalhas = @codBatalha) ");
+            select.AppendLine(") b ");
+            select.AppendLine("where b.ID = dbo.Lutas.ID ");
+
+            command.Parameters.Add(new SqlParameter("@codBatalha", System.Data.SqlDbType.BigInt));
+            command.Parameters["@codBatalha"].Value = idBatalha;
 
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
