@@ -80,35 +80,31 @@ namespace Dados.BLO
 
 
         //DESCOMENTAR DEPOIS Q TESTAR
-        //public static string ObterStringConexao2()
-        //{
-        //    //TODO: descomentar depois de terminar os testes
-        //    string conn;
-        //    conn = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
-        //    conn = conn.Substring(conn.IndexOf("password=") + 9, conn.Length - (conn.IndexOf("password=") + 9));
-
-        //    //Tenho o password decriptografado
-        //    conn = BLO_Security.Descriptografar(conn);
-
-        //    string conexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
-        //    conexao = conexao.Replace(conexao.Substring(conexao.IndexOf("password=") + 9, conexao.Length - (conexao.IndexOf("password=") + 9)), conn);
-
-        //    return conexao;
-
-
-
-        //}
-
         public static string ObterStringConexao2()
         {
-
+            //TODO: descomentar depois de terminar os testes
             string conn;
             conn = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
-            return conn;
+            conn = conn.Substring(conn.IndexOf("password=") + 9, conn.Length - (conn.IndexOf("password=") + 9));
+
+            //Tenho o password decriptografado
+            conn = BLO_Security.Descriptografar(conn);
+
+            string conexao = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
+            conexao = conexao.Replace(conexao.Substring(conexao.IndexOf("password=") + 9, conexao.Length - (conexao.IndexOf("password=") + 9)), conn);
+
+            return conexao;
 
 
 
         }
+
+        //public static string ObterStringConexao2()
+        //{
+        //    string conn;
+        //    conn = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
+        //    return conn;
+        //}
     }
 
 }

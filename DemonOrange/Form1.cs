@@ -1034,23 +1034,16 @@ namespace DemonOrange
                     log = "";
                     //Insert Oponente
 
-                    int iBonus = 0;
-                    if (ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault() != null)
-                    { iBonus = ObjOponente.opp_defense_list.Where(w => w.wizard_id == ObjOponente.opp_guild_member_list[j].wizard_id).FirstOrDefault().guild_point_bonus; }
-                    else { iBonus = 0; }
-
-                    log = "ID:" + ObjOponente.opp_guild_member_list[j].wizard_id + "\r\n";
-                    log += "Nome:" + ObjOponente.opp_guild_member_list[j].wizard_name + "\r\n";
-                    log += "Bonus:" + iBonus + "\r\n";
+                    log = "ID:" + ObjOponente.opp_defense_list[j].wizard_id + "\r\n";
+                    log += "Nome:" + ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_name + "\r\n";
+                    log += "Bonus:" + ObjOponente.opp_defense_list[j].guild_point_bonus + "\r\n";
                     log += "CodGuilda:" + idBatalha + "\r\n";
 
                     new Dados.BLO.BLO_PlayerOponente().Insert(new Dados.Models.PlayerOponente()
                     {
-                        //ID = ObjOponente.opp_guild_member_list[j].wizard_id,
-                        //Nome = ObjOponente.opp_guild_member_list[j].wizard_name,
-                        ID = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_id,
+                        ID = ObjOponente.opp_defense_list[j].wizard_id,
                         Nome = ObjOponente.opp_guild_member_list.Single(a => a.wizard_id == ObjOponente.opp_defense_list[j].wizard_id).wizard_name,
-                        Bonus = iBonus,
+                        Bonus = ObjOponente.opp_defense_list[j].guild_point_bonus,
                         IdBatalha = idBatalha
 
                     });
