@@ -498,6 +498,38 @@ namespace DemonOrange
 
 
         }
+
+        private void CarregarDefesasGVG()
+        {
+            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
+            string Texto = "";
+            foreach (string line in lines)
+            {
+
+                if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
+                {
+                    Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
+
+                    JavaScriptSerializer Defesas = new JavaScriptSerializer();
+                    InfoDefesas.Root objDefesa = Defesas.Deserialize<InfoDefesas.Root>(Texto);
+
+                    Dados.DAO.DAO_TimeDefesa daoTimeDefesa = new Dados.DAO.DAO_TimeDefesa();
+                    try
+                    {
+                        daoTimeDefesa.AtualizarTimeDefesaGVG(objDefesa);
+                    }
+                    catch (Exception)
+                    {
+
+                        lblMsgDefesa.Text += Environment.NewLine + "Erro ao tentar incluir Time Defesa";
+                        lblMsgDefesa.Text += Environment.NewLine + "IdPlayer: " + objDefesa.defense_wizard_id;
+                    }
+
+                    Texto = string.Empty;
+                }
+            }
+        }
+
         void Defesas()
         {
             for (int j = 0; j < List.Count; j++)
