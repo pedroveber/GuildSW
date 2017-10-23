@@ -295,9 +295,11 @@ namespace DemonOrange
 
                 //GetGuildWarMatchLog
                 InfoLogBatalhas.Root objLogBatalhas = LerGuildWarMatchLog(lines);
-                
+
 
                 PainelLoad(true, "Leitura de arquivo concluido", "-", false);
+
+                long CodigoBatalha = 0;
 
                 //Para cada GVG
                 for (int i = 0; i < ObjBatalha.battle_log_list_group.Count; i++)
@@ -308,22 +310,22 @@ namespace DemonOrange
 
                     PainelLoad(true, "Cadastrando a Batalha", ObjBatalha.battle_log_list_group[i].opp_guild_info.name, false);
 
+
                     //Se 0 = GVG atual. Incluir os dados dos players e oponentes. 
                     if (i == 0)
                     {
 
                         //Batalha
-                        long idBatalha;
-                        idBatalha = CadastrarBatalha(ObjBatalha, ObjOponente, ObjParticipante);
+                        CodigoBatalha = CadastrarBatalha(ObjBatalha, ObjOponente, ObjParticipante);
 
                         //Player
-                        CadastrarPlayer(ObjPlayer, idBatalha, ObjBatalha);
+                        CadastrarPlayer(ObjPlayer, CodigoBatalha, ObjBatalha);
 
                         //PlayerStatus
-                        CadastrarPlayerStatus(ObjOponente, ObjPlayer, idBatalha);
+                        CadastrarPlayerStatus(ObjOponente, ObjPlayer, CodigoBatalha);
 
                         //Oponentes
-                        CadastrarOponentes(ObjOponente, idBatalha);
+                        CadastrarOponentes(ObjOponente, CodigoBatalha);
 
                     }
 
@@ -378,7 +380,7 @@ namespace DemonOrange
                         if (objLogBatalhas.match_log[i].log_type == 1 && objLogBatalhas.match_log[i].win_lose == 1)
                         {
                             //Se encontrar a GVG atualiza o Win
-                            Dados.Models.Batalhas filtro = new Batalhas() { idGuilda = objLogBatalhas.match_log[i].opp_guild_id, Data = new DateTime(fimGVG.Year,fimGVG.Month,fimGVG.Day)};
+                            Dados.Models.Batalhas filtro = new Batalhas() { idGuilda = objLogBatalhas.match_log[i].opp_guild_id, Data = new DateTime(fimGVG.Year, fimGVG.Month, fimGVG.Day) };
                             Dados.Models.Batalhas objBatalha = DAO_Batalha._SelectByIdDate(filtro);
 
                             if (objBatalha != null)
@@ -393,9 +395,23 @@ namespace DemonOrange
                 }
                 catch (Exception)
                 {
-                    
+
                 }
-                
+
+                try
+                {
+                    //Atualizar DEFESAS GVG
+                    if (CodigoBatalha > 0)
+                    {
+                        CarregarDefesasGVG(CodigoBatalha, ObjBatalha.battle_log_list_group[0].opp_guild_info.guild_id);
+                    }
+
+                }
+                catch (Exception)
+                {
+
+                }
+
 
 
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
@@ -499,35 +515,46 @@ namespace DemonOrange
 
         }
 
-        private void CarregarDefesasGVG()
+        private void CarregarDefesasGVG(long idBatalha, long idGuilda)
         {
-            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
+            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//tempDemonOrange.txt");
             string Texto = "";
-            foreach (string line in lines)
+
+            List<InfoDefesas.Root> lstDefesas = new List<InfoDefesas.Root>();
+            Dados.DAO.DAO_TimeDefesa daoTimeDefesa = new Dados.DAO.DAO_TimeDefesa();
+            try
             {
-
-                if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
+                foreach (string line in lines)
                 {
-                    Texto += "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
 
-                    JavaScriptSerializer Defesas = new JavaScriptSerializer();
-                    InfoDefesas.Root objDefesa = Defesas.Deserialize<InfoDefesas.Root>(Texto);
-
-                    Dados.DAO.DAO_TimeDefesa daoTimeDefesa = new Dados.DAO.DAO_TimeDefesa();
-                    try
+                    if (line.Contains("GetGuildWarDefenseUnits") && line.Contains(@"ret_code"":0"))
                     {
-                        daoTimeDefesa.AtualizarTimeDefesaGVG(objDefesa);
-                    }
-                    catch (Exception)
-                    {
+                        Texto = "{\"" + line.Substring(line.IndexOf("ret_code"), line.Length - line.IndexOf("ret_code"));
 
-                        lblMsgDefesa.Text += Environment.NewLine + "Erro ao tentar incluir Time Defesa";
-                        lblMsgDefesa.Text += Environment.NewLine + "IdPlayer: " + objDefesa.defense_wizard_id;
-                    }
+                        JavaScriptSerializer Defesas = new JavaScriptSerializer();
+                        InfoDefesas.Root objDefesa = Defesas.Deserialize<InfoDefesas.Root>(Texto);
 
-                    Texto = string.Empty;
+                        if (objDefesa.guild_id == idGuilda)
+                        {
+                            lstDefesas.Add(objDefesa);
+                        }
+
+                    }
                 }
+                //var distinctItems = items.GroupBy(x => x.Id).Select(y => y.First());
+                lstDefesas = lstDefesas.GroupBy(x => x.defense_wizard_id).Select(y => y.First()).ToList();
+
+                daoTimeDefesa.AtualizarTimeDefesaGVG(lstDefesas, idBatalha);
             }
+            catch (Exception ex)
+            {
+                throw ex;
+                lblMsgDefesa.Text += Environment.NewLine + "Erro ao tentar incluir Time Defesa GVG";
+
+            }
+
+            
+
         }
 
         void Defesas()
@@ -625,7 +652,6 @@ namespace DemonOrange
                 string Texto = "";
                 foreach (string line in lines)
                 {
-                    //pedro
 
                     if (line.Contains("GetGuildWarBattleLogByGuildId") && line.Contains(@"ret_code"":0"))
                     {
@@ -776,9 +802,9 @@ namespace DemonOrange
                 }
                 catch (Exception)
                 {
-                    
+
                 }
-                
+
                 return objMatch;
             }
             catch (Exception ex)
@@ -1079,7 +1105,7 @@ namespace DemonOrange
                         IdBatalha = idBatalha
 
                     });
-                    
+
                 }
             }
             catch (Exception ex)
@@ -1339,7 +1365,7 @@ namespace DemonOrange
             }
         }
 
-        
+
     }
 
     public class PlayerDef

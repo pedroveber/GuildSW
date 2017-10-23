@@ -89,17 +89,26 @@ namespace Dados.DAO
 
         }
 
-        public void AtualizarTimeDefesaGVG(InfoDefesas.Root defesa)
+        public void AtualizarTimeDefesaGVG(List<InfoDefesas.Root> defesas,long idBatalha)
         {
-            //TODO: obter o o IDBATALHA no método principal e passar para cá como parametro.
+            
             SqlConnection conn = new SqlConnection();
             SqlCommand sqlCom = new SqlCommand();
-
             conn.ConnectionString = BLO.Conexao.ObterStringConexao2();
             StringBuilder cmd = new StringBuilder();
 
-            //Obter a Batalha
-            cmd.Append("delete FROM DB_SW.dbo.TimeDefesa WHERE IdPlayer = " + defesa.defense_wizard_id.ToString() + " and Data = convert(date,'" + DateTime.Now.ToString("yyyy-MM-dd") + "')");
+            string idPlayers = "";
+            foreach (InfoDefesas.Root item in defesas)
+            {
+                idPlayers += item.defense_wizard_id + ",";
+            }
+            idPlayers = idPlayers.TrimEnd(Convert.ToChar(","));
+
+            //Apagar as defesas
+            cmd.Append("delete FROM DB_SW.dbo.TimeDefesaGVG WHERE idBatalha = @idBatalha and IdPlayerOponente in (" + idPlayers + ")");
+
+            sqlCom.Parameters.Add(new SqlParameter("@idBatalha", System.Data.SqlDbType.BigInt));
+            sqlCom.Parameters["@idBatalha"].Value = idBatalha;
 
             conn.Open();
             sqlCom.Connection = conn;
@@ -108,6 +117,7 @@ namespace Dados.DAO
 
             //Inserir novamente
             cmd.Clear();
+            sqlCom.Parameters.Clear();
 
             long? monstro1 = 0;
             long? monstro2 = 0;
@@ -116,55 +126,59 @@ namespace Dados.DAO
             long? monstro5 = 0;
             long? monstro6 = 0;
 
-
-            foreach (List<Models.GuildWarDefenseUnitList> item in defesa.guildwar_defense_unit_list) //Roda 2 vz 
+            foreach (InfoDefesas.Root root in defesas)
             {
-                //Uma Lista de DefenseUNit
-                foreach (Models.GuildWarDefenseUnitList item2 in item) //Roda 3 vez (posiscao 1,2,3 no primeiro loop)(4,5,6 no segundo)
+                foreach (List<Models.GuildWarDefenseUnitList> item in root.guildwar_defense_unit_list) //Roda 2 vz 
                 {
-                    if (item2.pos_id == 1) monstro1 = item2.unit_info.unit_master_id;
-                    if (item2.pos_id == 2) monstro2 = item2.unit_info.unit_master_id;
-                    if (item2.pos_id == 3) monstro3 = item2.unit_info.unit_master_id;
-                    if (item2.pos_id == 4) monstro4 = item2.unit_info.unit_master_id;
-                    if (item2.pos_id == 5) monstro5 = item2.unit_info.unit_master_id;
-                    if (item2.pos_id == 6) monstro6 = item2.unit_info.unit_master_id;
+                    //Uma Lista de DefenseUNit
+                    foreach (Models.GuildWarDefenseUnitList item2 in item) //Roda 3 vez (posiscao 1,2,3 no primeiro loop)(4,5,6 no segundo)
+                    {
+                        if (item2.pos_id == 1) monstro1 = item2.unit_info.unit_master_id;
+                        if (item2.pos_id == 2) monstro2 = item2.unit_info.unit_master_id;
+                        if (item2.pos_id == 3) monstro3 = item2.unit_info.unit_master_id;
+                        if (item2.pos_id == 4) monstro4 = item2.unit_info.unit_master_id;
+                        if (item2.pos_id == 5) monstro5 = item2.unit_info.unit_master_id;
+                        if (item2.pos_id == 6) monstro6 = item2.unit_info.unit_master_id;
 
+                    }
                 }
+
+                cmd.AppendLine("insert into DB_SW.dbo.TimeDefesaGVG (IdBatalha,IdplayerOponente,Monstro1,Monstro2,Monstro3,Monstro4,Monstro5,Monstro6) values ");
+                cmd.AppendLine("(@idBatalha,@IdplayerOponente,@Monstro1,@Monstro2,@Monstro3,@Monstro4,@Monstro5,@Monstro6)");
+
+                sqlCom.CommandText = cmd.ToString();
+                sqlCom.CommandType = System.Data.CommandType.Text;
+
+                sqlCom.Parameters.Add(new SqlParameter("@IdplayerOponente", System.Data.SqlDbType.BigInt));
+                sqlCom.Parameters["@IdplayerOponente"].Value = root.defense_wizard_id;
+
+                sqlCom.Parameters.Add(new SqlParameter("@idBatalha", System.Data.SqlDbType.BigInt));
+                sqlCom.Parameters["@idBatalha"].Value = idBatalha;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro1", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro1"].Value = monstro1;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro2", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro2"].Value = monstro2;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro3", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro3"].Value = monstro3;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro4", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro4"].Value = monstro4;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro5", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro5"].Value = monstro5;
+
+                sqlCom.Parameters.Add(new SqlParameter("@Monstro6", System.Data.SqlDbType.Int));
+                sqlCom.Parameters["@Monstro6"].Value = monstro6;
+
+                sqlCom.CommandText = cmd.ToString();
+                sqlCom.ExecuteNonQuery();
+                sqlCom.Parameters.Clear();
+                cmd.Clear();
             }
-
-            cmd.AppendLine("insert into DB_SW.dbo.TimeDefesa (Idplayer, Data,Monstro1,Monstro2,Monstro3,Monstro4,Monstro5,Monstro6) values ");
-            cmd.AppendLine("(@idPlayer,@Data,@Monstro1,@Monstro2,@Monstro3,@Monstro4,@Monstro5,@Monstro6)");
-
-            sqlCom.CommandText = cmd.ToString();
-            sqlCom.CommandType = System.Data.CommandType.Text;
-
-            sqlCom.Parameters.Add(new SqlParameter("@idPlayer", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@idPlayer"].Value = defesa.defense_wizard_id;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.Date));
-            sqlCom.Parameters["@Data"].Value = DateTime.Now.ToShortDateString();
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro1", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro1"].Value = monstro1;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro2", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro2"].Value = monstro2;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro3", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro3"].Value = monstro3;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro4", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro4"].Value = monstro4;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro5", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro5"].Value = monstro5;
-
-            sqlCom.Parameters.Add(new SqlParameter("@Monstro6", System.Data.SqlDbType.Int));
-            sqlCom.Parameters["@Monstro6"].Value = monstro6;
-
-            sqlCom.CommandText = cmd.ToString();
-            sqlCom.ExecuteNonQuery();
-
+                
         }
     }
 }
