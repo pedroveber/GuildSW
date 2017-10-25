@@ -177,6 +177,13 @@ namespace Dados.DAO
                 sqlCom.ExecuteNonQuery();
                 sqlCom.Parameters.Clear();
                 cmd.Clear();
+
+                monstro1 = 0;
+                monstro2 = 0;
+                monstro3 = 0;
+                monstro4 = 0;
+                monstro5 = 0;
+                monstro6 = 0;
             }
                 
         }

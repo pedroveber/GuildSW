@@ -95,8 +95,6 @@ namespace Dados.BLO
 
             return conexao;
 
-
-
         }
 
         //public static string ObterStringConexao2()
