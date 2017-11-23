@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.pnlMatchLogs = new System.Windows.Forms.Panel();
             this.label10 = new System.Windows.Forms.Label();
@@ -69,6 +70,15 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnSalvarConfigs = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.plSiegeMatchUp = new System.Windows.Forms.Panel();
+            this.plSiegeDefenseDeck = new System.Windows.Forms.Panel();
+            this.plSiegeBattleLog = new System.Windows.Forms.Panel();
+            this.plSiegeMatchLog = new System.Windows.Forms.Panel();
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.pl_load.SuspendLayout();
@@ -79,6 +89,7 @@
             this.tabPage5.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.tabPage1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -87,6 +98,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage4);
+            this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage12);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(4, 5);
@@ -97,6 +109,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.button1);
             this.tabPage4.Controls.Add(this.label8);
             this.tabPage4.Controls.Add(this.pnlMatchLogs);
             this.tabPage4.Controls.Add(this.label10);
@@ -122,8 +135,18 @@
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(792, 603);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "Atualizar Base";
+            this.tabPage4.Text = "Atualizar GVG";
             this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(542, 113);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(163, 71);
+            this.button1.TabIndex = 82;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label8
             // 
@@ -519,6 +542,96 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.btnVerificaArq_Click);
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.label11);
+            this.tabPage1.Controls.Add(this.label12);
+            this.tabPage1.Controls.Add(this.label13);
+            this.tabPage1.Controls.Add(this.label14);
+            this.tabPage1.Controls.Add(this.plSiegeMatchUp);
+            this.tabPage1.Controls.Add(this.plSiegeDefenseDeck);
+            this.tabPage1.Controls.Add(this.plSiegeBattleLog);
+            this.tabPage1.Controls.Add(this.plSiegeMatchLog);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(792, 603);
+            this.tabPage1.TabIndex = 6;
+            this.tabPage1.Text = "Atualizar Siege";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(47, 115);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(165, 13);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "Arquivo: GetGuildSiegeMatchLog";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(47, 83);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(162, 13);
+            this.label12.TabIndex = 17;
+            this.label12.Text = "Arquivo: GetGuildSiegeBattleLog";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(47, 51);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(237, 13);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "Arquivo: GetGuildSiegeDefenseDeckByWizardId";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(47, 19);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(177, 13);
+            this.label14.TabIndex = 15;
+            this.label14.Text = "Arquivo: GetGuildSiegeMatchupInfo";
+            this.label14.Click += new System.EventHandler(this.label14_Click);
+            // 
+            // plSiegeMatchUp
+            // 
+            this.plSiegeMatchUp.BackColor = System.Drawing.Color.Tomato;
+            this.plSiegeMatchUp.ForeColor = System.Drawing.Color.Tomato;
+            this.plSiegeMatchUp.Location = new System.Drawing.Point(14, 12);
+            this.plSiegeMatchUp.Name = "plSiegeMatchUp";
+            this.plSiegeMatchUp.Size = new System.Drawing.Size(27, 26);
+            this.plSiegeMatchUp.TabIndex = 14;
+            // 
+            // plSiegeDefenseDeck
+            // 
+            this.plSiegeDefenseDeck.BackColor = System.Drawing.Color.Tomato;
+            this.plSiegeDefenseDeck.ForeColor = System.Drawing.Color.Tomato;
+            this.plSiegeDefenseDeck.Location = new System.Drawing.Point(14, 44);
+            this.plSiegeDefenseDeck.Name = "plSiegeDefenseDeck";
+            this.plSiegeDefenseDeck.Size = new System.Drawing.Size(27, 26);
+            this.plSiegeDefenseDeck.TabIndex = 13;
+            // 
+            // plSiegeBattleLog
+            // 
+            this.plSiegeBattleLog.BackColor = System.Drawing.Color.Tomato;
+            this.plSiegeBattleLog.ForeColor = System.Drawing.Color.Tomato;
+            this.plSiegeBattleLog.Location = new System.Drawing.Point(14, 76);
+            this.plSiegeBattleLog.Name = "plSiegeBattleLog";
+            this.plSiegeBattleLog.Size = new System.Drawing.Size(27, 26);
+            this.plSiegeBattleLog.TabIndex = 12;
+            // 
+            // plSiegeMatchLog
+            // 
+            this.plSiegeMatchLog.BackColor = System.Drawing.Color.Tomato;
+            this.plSiegeMatchLog.ForeColor = System.Drawing.Color.Tomato;
+            this.plSiegeMatchLog.Location = new System.Drawing.Point(14, 108);
+            this.plSiegeMatchLog.Name = "plSiegeMatchLog";
+            this.plSiegeMatchLog.Size = new System.Drawing.Size(27, 26);
+            this.plSiegeMatchLog.TabIndex = 11;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -544,6 +657,8 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -589,6 +704,16 @@
         private System.Windows.Forms.Label lblMsgDefesa;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Panel pnlMatchLogs;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Panel plSiegeMatchUp;
+        private System.Windows.Forms.Panel plSiegeDefenseDeck;
+        private System.Windows.Forms.Panel plSiegeBattleLog;
+        private System.Windows.Forms.Panel plSiegeMatchLog;
     }
 }
 

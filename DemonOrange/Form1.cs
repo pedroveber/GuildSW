@@ -821,6 +821,142 @@ namespace DemonOrange
 
         #endregion
 
+        #region Leitura do Arquivo Full Log - SIEGE
+        private InfoSiege.Root LerGuildSiegeMatchupInfo(string[] lines)
+        {
+            try
+            {
+                PainelLoad(true, "Lendo Siege Matchup Info", "GetGuildSiegeMatchupInfo", false);
+                string Texto = "";
+
+                foreach (string line in lines)
+                {
+
+                if (line.Contains("GetGuildSiegeMatchupInfo") && line.Contains(@"ret_code"":0"))
+                    {
+                        Texto += line;
+                        break;
+                    }
+                }
+                JavaScriptSerializer Siege = new JavaScriptSerializer();
+                InfoSiege.Root objSiege = Siege.Deserialize<InfoSiege.Root>(Texto);
+
+                return objSiege;
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Ler o GetGuildSiegeMatchupInfo.";
+                log += "\nErro:" + ex.Message;
+
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+        private List<InfoSiegeDefense.Root> LerGuildSiegeDefense(string[] lines)
+        {
+            try
+            {
+                PainelLoad(true, "Lendo Siege Defense Info", "GetGuildSiegeDefenseDeckByWizardId", false);
+                List<InfoSiegeDefense.Root> lstRetorno = new List<InfoSiegeDefense.Root>();
+
+                foreach (string line in lines)
+                {
+
+                    if (line.Contains("GetGuildSiegeDefenseDeckByWizardId") && line.Contains(@"ret_code"":0"))
+                    {
+                       
+                        JavaScriptSerializer Defense = new JavaScriptSerializer();
+                        InfoSiegeDefense.Root objDefense = Defense.Deserialize<InfoSiegeDefense.Root>(line);
+
+                        lstRetorno.Add(objDefense);
+                   }
+                }
+                
+                return lstRetorno;
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Ler o LerGuildSiegeDefense.";
+                log += "\nErro:" + ex.Message;
+
+                 GravarLog(log);
+                throw ex;
+            }
+
+        }
+
+        private List<InfoSiegeBattleLog.Root> LerGuildSiegeBattleLog(string[] lines)
+        {
+            try
+            {
+                PainelLoad(true, "Lendo Siege Defense Battle Log", "GetGuildSiegeBattleLog", false);
+                List<InfoSiegeBattleLog.Root> lstRetorno = new List<InfoSiegeBattleLog.Root>();
+
+                foreach (string line in lines)
+                {
+
+                    if (line.Contains("GetGuildSiegeBattleLog") && line.Contains(@"ret_code"":0"))
+                    {
+
+                        JavaScriptSerializer BattleLog = new JavaScriptSerializer();
+                        InfoSiegeBattleLog.Root objBattleLog = BattleLog.Deserialize<InfoSiegeBattleLog.Root>(line);
+
+                        lstRetorno.Add(objBattleLog);
+                    }
+                }
+
+                return lstRetorno;
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Ler o LerGuildSiegeBattleLog.";
+                log += "\nErro:" + ex.Message;
+
+                 GravarLog(log);
+                throw ex;
+            }
+
+        }
+        
+             private InfoSiegeMatchLog.Root LerGuildSiegeMatchLog(string[] lines)
+        {
+            try
+            {
+                PainelLoad(true, "Lendo Siege Defense Match Log", "GetGuildSiegeMatchLog", false);
+                List<InfoSiegeMatchLog.Root> lstRetorno = new List<InfoSiegeMatchLog.Root>();
+                string Texto = string.Empty;
+
+                foreach (string line in lines)
+                {
+
+                    if (line.Contains("GetGuildSiegeMatchLog") && line.Contains(@"ret_code"":0"))
+                    {
+                        Texto = line;
+
+                        break;
+                    }
+                }
+                JavaScriptSerializer MatchLog = new JavaScriptSerializer();
+                InfoSiegeMatchLog.Root objMatchLog = MatchLog.Deserialize<InfoSiegeMatchLog.Root>(Texto);
+
+                return objMatchLog;
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Ler o LerGuildSiegeMatchLog.";
+                log += "\nErro:" + ex.Message;
+
+                 GravarLog(log);
+                throw ex;
+            }
+
+        }
+
+
+
+        #endregion
+
 
         #region Cadastrar Dados do FullLog no Banco
 
@@ -1365,7 +1501,28 @@ namespace DemonOrange
             }
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //ler fulloog e ver se funfa a parte da siege
+            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
 
+            InfoSiege.Root ObjSiege = LerGuildSiegeMatchupInfo(lines);
+            List<InfoSiegeDefense.Root> Defesas = LerGuildSiegeDefense(lines);
+            List<InfoSiegeBattleLog.Root> Batalhas = LerGuildSiegeBattleLog(lines);
+            InfoSiegeMatchLog.Root Match = LerGuildSiegeMatchLog(lines);
+
+            
+
+
+
+            string a;
+            a = "pedroca";
+        }
+
+        private void label14_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class PlayerDef

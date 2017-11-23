@@ -79,6 +79,10 @@
     <Compile Include="Models\InfoOtherInfoPlayer.cs" />
     <Compile Include="Models\InfoParticipantes.cs" />
     <Compile Include="Models\InfoPlayer.cs" />
+    <Compile Include="Models\InfoSiege.cs" />
+    <Compile Include="Models\InfoSiegeBattleLog.cs" />
+    <Compile Include="Models\InfoSiegeDefense.cs" />
+    <Compile Include="Models\InfoSiegeMatchLog.cs" />
     <Compile Include="Models\Lutas.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerDefesas.cs" />
