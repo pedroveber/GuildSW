@@ -78,31 +78,32 @@ namespace DemonOrange
         }
         void Timer()
         {
-            ServiceReference.UploadSoapClient wsUpload = new ServiceReference.UploadSoapClient();
-            label9.Invoke(new MethodInvoker(delegate { label9.Text = wsUpload.UltimaAtt(); }));
-
-            btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = false; }));
+            ValidarArquivo(true);
+            ValidarArquivoSiege(true);
+        }
+        private void ValidarArquivo(bool timer)
+        {
+            if (timer)
+            { btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = false; })); }
+            else
+            { btnAlimentaDB.Enabled = false; }
 
             Boolean Arq1 = false;
             Boolean Arq2 = false;
             Boolean Arq3 = false;
             Boolean Arq4 = false;
             Boolean Arq5 = false;
-
             pl_1.BackColor = Color.Tomato;
             pl_2.BackColor = Color.Tomato;
             pl_3.BackColor = Color.Tomato;
             pl_4.BackColor = Color.Tomato;
             pl_5.BackColor = Color.Tomato;
-            pnlMatchLogs.BackColor = Color.Tomato;
-
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
-
-                //Percorre o arquivo e verificar se existem tudo o que precisa para alimentar a base. 
                 string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
                 foreach (string line in lines)
                 {
+
                     if (line.Contains("GetGuildWarContributeList") && line.Contains(@"ret_code"":0"))
                     {
                         Arq1 = true;
@@ -128,21 +129,26 @@ namespace DemonOrange
                         Arq5 = true;
                         pl_5.BackColor = Color.Green;
                     }
-
-                    if (line.Contains("GetGuildWarMatchLog") && line.Contains(@"ret_code"":0"))
-                    {
-                        pnlMatchLogs.BackColor = Color.Green;
-                    }
-
-
                 }
                 if (Arq1 && Arq2 && Arq3 && Arq4 && Arq5)
                 {
 
-                    btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = true; }));
-                    btnEnviarLog.Invoke(new MethodInvoker(delegate { btnEnviarLog.Enabled = true; }));
+                    if (timer)
+                    {
+                        btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = true; }));
+                        btnEnviarLog.Invoke(new MethodInvoker(delegate { btnEnviarLog.Enabled = true; }));
+                        lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "-"; }));
+                    }
+                    else
+                    {
+                        btnAlimentaDB.Enabled = true;
+                        btnEnviarLog.Enabled = true;
+                        lblErro.Text = "-";
+                    }
 
-                    lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "-"; }));
+
+
+
                     if (chkAtualizacaoAutomatica.Checked)
                     {
                         if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
@@ -154,86 +160,123 @@ namespace DemonOrange
                 }
                 else
                 {
-                    btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = false; }));
-                    btnEnviarLog.Invoke(new MethodInvoker(delegate { btnEnviarLog.Enabled = false; }));
-                    lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "Alguns Registro não forão encontrados"; }));
+                    if (timer)
+                    {
+                        btnAlimentaDB.Invoke(new MethodInvoker(delegate { btnAlimentaDB.Enabled = false; }));
+                        btnEnviarLog.Invoke(new MethodInvoker(delegate { btnEnviarLog.Enabled = false; }));
+                        lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "Alguns Registro não forão encontrados"; }));
+                    }
+                    else
+                    {
+                        btnAlimentaDB.Enabled = false;
+                        btnEnviarLog.Enabled = false;
+                        lblErro.Text = "Alguns Registro não forão encontrados";
+                    }
+
 
                 }
+
             }
             else
+        if (timer)
+            {
                 lblErro.Invoke(new MethodInvoker(delegate { lblErro.Text = "Arquivo não encontrado"; }));
-
+            }
+            else
+            {
+                lblErro.Text = "Arquivo não encontrado";
+            }
 
         }
-        private void ValidarArquivo()
+
+        private void ValidarArquivoSiege(bool timer)
         {
-            btnAlimentaDB.Enabled = false;
+            if (timer)
+            { btnAtualizarSiege.Invoke(new MethodInvoker(delegate { btnAtualizarSiege.Enabled = false; })); }
+            else
+            { btnAtualizarSiege.Enabled = false; }
+
+
             Boolean Arq1 = false;
             Boolean Arq2 = false;
             Boolean Arq3 = false;
             Boolean Arq4 = false;
-            Boolean Arq5 = false;
-            pl_1.BackColor = Color.Tomato;
-            pl_2.BackColor = Color.Tomato;
-            pl_3.BackColor = Color.Tomato;
-            pl_4.BackColor = Color.Tomato;
-            pl_5.BackColor = Color.Tomato;
+
+            plSiegeMatchUp.BackColor = Color.Tomato;
+            plSiegeDefenseDeck.BackColor = Color.Tomato;
+            plSiegeBattleLog.BackColor = Color.Tomato;
+            plSiegeMatchLog.BackColor = Color.Tomato;
+
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
                 string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
                 foreach (string line in lines)
                 {
 
-                    if (line.Contains("GetGuildWarContributeList") && line.Contains(@"ret_code"":0"))
+                    if (line.Contains("GetGuildSiegeMatchupInfo") && line.Contains(@"ret_code"":0"))
                     {
                         Arq1 = true;
-                        pl_1.BackColor = Color.Green;
+                        plSiegeMatchUp.BackColor = Color.Green;
                     }
-                    if (line.Contains("GetGuildWarBattleLogByGuildId") && line.Contains(@"ret_code"":0"))
+                    if (line.Contains("GetGuildSiegeDefenseDeckByWizardId") && line.Contains(@"ret_code"":0"))
                     {
                         Arq2 = true;
-                        pl_2.BackColor = Color.Green;
+                        plSiegeDefenseDeck.BackColor = Color.Green;
                     }
-                    if (line.Contains("GetGuildWarMatchupInfo") && line.Contains(@"ret_code"":0"))
+                    if (line.Contains("GetGuildSiegeBattleLog") && line.Contains(@"ret_code"":0"))
                     {
                         Arq3 = true;
-                        pl_3.BackColor = Color.Green;
+                        plSiegeBattleLog.BackColor = Color.Green;
                     }
-                    if (line.Contains("GetGuildInfo") && line.Contains(@"ret_code"":0"))
+                    if (line.Contains("GetGuildSiegeMatchLog") && line.Contains(@"ret_code"":0"))
                     {
                         Arq4 = true;
-                        pl_4.BackColor = Color.Green;
+                        plSiegeMatchLog.BackColor = Color.Green;
                     }
-                    if (line.Contains("GetGuildWarParticipationInfo") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq5 = true;
-                        pl_5.BackColor = Color.Green;
-                    }
+
                 }
-                if (Arq1 && Arq2 && Arq3 && Arq4 && Arq5)
+                if (Arq1 && Arq2 && Arq3 && Arq4)
                 {
-                    btnAlimentaDB.Enabled = true;
-                    btnEnviarLog.Enabled = true;
-                    lblErro.Text = "-";
-                    if (chkAtualizacaoAutomatica.Checked)
+                    if (timer)
                     {
-                        if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
-                            System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
-                        System.IO.File.Move(txtDiretorio.Text + @"//full_log.txt", txtDiretorio.Text + @"//tempDemonOrange.txt");
-                        Thread YhdIniciar = new Thread(() => Autorizacao());
-                        YhdIniciar.Start();
+                        btnAtualizarSiege.Invoke(new MethodInvoker(delegate { btnAtualizarSiege.Enabled = true; }));
+                        lblErroSiege.Invoke(new MethodInvoker(delegate { lblErroSiege.Text = "-"; }));
                     }
+                    else
+                    {
+                        btnAtualizarSiege.Enabled = true;
+                        lblErroSiege.Text = "-";
+                    }
+
+
+
                 }
                 else
                 {
-                    btnAlimentaDB.Enabled = false;
-                    btnEnviarLog.Enabled = false;
-                    lblErro.Text = "Alguns Registro não forão encontrados";
+
+                    if (timer)
+                    {
+                        btnAtualizarSiege.Invoke(new MethodInvoker(delegate { btnAtualizarSiege.Enabled = false; }));
+                        lblErroSiege.Invoke(new MethodInvoker(delegate { lblErroSiege.Text = "Alguns Registro não forão encontrados"; }));
+                    }
+                    else
+                    {
+                        btnAtualizarSiege.Enabled = false;
+                        lblErroSiege.Text = "Alguns Registro não forão encontrados";
+                    }
+
                 }
 
             }
             else
-                lblErro.Text = "Arquivo não encontrado";
+                 if (timer)
+            {
+                lblErroSiege.Invoke(new MethodInvoker(delegate { lblErroSiege.Text = "Arquivo não encontrado"; }));
+            }
+            else
+            {
+                lblErroSiege.Text = "Arquivo não encontrado";
+            }
         }
 
         private void btnAlimentaDB_Click(object sender, EventArgs e)
@@ -258,7 +301,24 @@ namespace DemonOrange
             lbl_msnLoad2.Text = _label2;
             tabControl1.Enabled = !_painel;
             if (!_painel)
-                ValidarArquivo();
+                ValidarArquivoSiege(false);
+
+
+        }
+
+        public void PainelLoadSiege(Boolean _painel, string _label, string _label2, Boolean _btnCancelar)
+        {
+            if (InvokeRequired)
+            {
+                this.Invoke(new Action<Boolean, string, string, Boolean>(PainelLoad), new object[] { _painel, _label, _label2, _btnCancelar });
+                return;
+            }
+            pl_loadSiege.Visible = _painel;
+            lbl_msnLoadSiege.Text = _label;
+            lbl_msnLoad2Siege.Text = _label2;
+            tabControl1.Enabled = !_painel;
+            if (!_painel)
+                ValidarArquivo(false);
 
 
         }
@@ -553,7 +613,7 @@ namespace DemonOrange
 
             }
 
-            
+
 
         }
 
@@ -832,7 +892,7 @@ namespace DemonOrange
                 foreach (string line in lines)
                 {
 
-                if (line.Contains("GetGuildSiegeMatchupInfo") && line.Contains(@"ret_code"":0"))
+                    if (line.Contains("GetGuildSiegeMatchupInfo") && line.Contains(@"ret_code"":0"))
                     {
                         Texto += line;
                         break;
@@ -865,14 +925,14 @@ namespace DemonOrange
 
                     if (line.Contains("GetGuildSiegeDefenseDeckByWizardId") && line.Contains(@"ret_code"":0"))
                     {
-                       
+
                         JavaScriptSerializer Defense = new JavaScriptSerializer();
                         InfoSiegeDefense.Root objDefense = Defense.Deserialize<InfoSiegeDefense.Root>(line);
 
                         lstRetorno.Add(objDefense);
-                   }
+                    }
                 }
-                
+
                 return lstRetorno;
             }
             catch (Exception ex)
@@ -880,7 +940,7 @@ namespace DemonOrange
                 string log = "Erro ao tentar Ler o LerGuildSiegeDefense.";
                 log += "\nErro:" + ex.Message;
 
-                 GravarLog(log);
+                GravarLog(log);
                 throw ex;
             }
 
@@ -913,13 +973,13 @@ namespace DemonOrange
                 string log = "Erro ao tentar Ler o LerGuildSiegeBattleLog.";
                 log += "\nErro:" + ex.Message;
 
-                 GravarLog(log);
+                GravarLog(log);
                 throw ex;
             }
 
         }
-        
-             private InfoSiegeMatchLog.Root LerGuildSiegeMatchLog(string[] lines)
+
+        private InfoSiegeMatchLog.Root LerGuildSiegeMatchLog(string[] lines)
         {
             try
             {
@@ -947,7 +1007,7 @@ namespace DemonOrange
                 string log = "Erro ao tentar Ler o LerGuildSiegeMatchLog.";
                 log += "\nErro:" + ex.Message;
 
-                 GravarLog(log);
+                GravarLog(log);
                 throw ex;
             }
 
@@ -985,6 +1045,34 @@ namespace DemonOrange
 
             }
         }
+
+        private void CadastrarGuilda(long id, string nome)
+        {
+            try
+            {
+                Dados.Models.Guilda GuildaTemp = new Dados.BLO.BLO_Guilda().Insert(new Dados.Models.Guilda()
+                {
+                    Id = id,
+                    Nome = nome
+
+                });
+
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Cadastrar Guilda.\r\n";
+
+                log += "OBJGuilda\r\n";
+                log += "Guild Id: " + id + "\r\n";
+                log += "Guild name: " + nome + "\r\n";
+                log += "\nErro:" + ex.Message;
+
+                GravarLog(log);
+
+            }
+        }
+
+
 
         private long CadastrarBatalha(InfoBatalha ObjBatalha, InfoOponente.Root ObjOponente, InfoParticipantes.Root ObjParticipante)
         {
@@ -1501,26 +1589,160 @@ namespace DemonOrange
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            //ler fulloog e ver se funfa a parte da siege
-            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
 
-            InfoSiege.Root ObjSiege = LerGuildSiegeMatchupInfo(lines);
-            List<InfoSiegeDefense.Root> Defesas = LerGuildSiegeDefense(lines);
-            List<InfoSiegeBattleLog.Root> Batalhas = LerGuildSiegeBattleLog(lines);
-            InfoSiegeMatchLog.Root Match = LerGuildSiegeMatchLog(lines);
-
-            
-
-
-
-            string a;
-            a = "pedroca";
-        }
 
         private void label14_Click(object sender, EventArgs e)
         {
+
+        }
+
+        private void btnAtualizarSiege_Click(object sender, EventArgs e)
+        {
+            if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
+                System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
+            System.IO.File.Move(txtDiretorio.Text + @"//full_log.txt", txtDiretorio.Text + @"//tempDemonOrange.txt");
+            Thread YhdIniciarSiege = new Thread(() => AtualizarSiege());
+            YhdIniciarSiege.Start();
+        }
+
+        private void AtualizarSiege()
+        {
+
+            PainelLoad(true, "Aguarde", "Iniciando Processo!", false);
+
+            FazerBackupArquivo();
+
+            string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//tempDemonOrange.txt");
+
+
+            // ---- Leitura do Arquivo FullLog ----// 
+            InfoSiege.Root rootSiege = LerGuildSiegeMatchupInfo(lines);
+            List<InfoSiegeDefense.Root> rootDefesas = LerGuildSiegeDefense(lines);
+            List<InfoSiegeBattleLog.Root> rootBatalhas = LerGuildSiegeBattleLog(lines);
+            InfoSiegeMatchLog.Root rootMatch = LerGuildSiegeMatchLog(lines);
+
+            PainelLoadSiege(true, "Leitura de arquivo concluido", "-", false);
+
+            // Unix timestamp is seconds past epoch
+            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            dtDateTime = dtDateTime.AddSeconds(rootSiege.match_info.match_start_time).ToLocalTime();
+
+            //Guarda o Código da Guild e da Siege
+            long codGuild = rootMatch.guildsiege_match_log_list[0].guild_id;
+            long codSiege = rootSiege.match_info.siege_id;
+
+
+            //-----> Siege
+            Siege objSiege = new Siege() { Id = rootSiege.match_info.siege_id, Data = dtDateTime };
+            objSiege = new Dados.BLO.BLO_Siege().InserirSiege(objSiege);
+
+            //----->Guilda e Siege x Guilda
+            SiegeGuilda objSiegexGuilda;
+            Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+
+            foreach (InfoSiege.GuildList item in rootSiege.guild_list)
+            {
+                CadastrarGuilda(item.guild_id, item.guild_name);
+
+                //Siege x Guilda
+                objSiegexGuilda = new SiegeGuilda()
+                {
+                    IdSiege = item.siege_id,
+                    IdGuilda = item.guild_id,
+                    Posicao = item.pos_id
+                };
+                bSiege.InserirSiegeGuilda(objSiegexGuilda);
+
+            }
+
+
+            //SiegePlayers
+            foreach (InfoSiege.WizardInfoList item in rootSiege.wizard_info_list)
+            {
+
+                //Incluir só se for da Guild
+                if (item.guild_id == codGuild)
+                {
+                    bSiege.InserirSiegePlayer
+                        (
+                            new SiegePlayer()
+                            {
+                                IdPlayer = item.wizard_id,
+                                IdSiege = codSiege,
+                                UsedUnits = rootSiege.used_unit_count_list.First(x => x.wizard_id == item.wizard_id).used_unit_count
+                            }
+                    );
+                }
+                else
+                {
+                    bSiege.InserirSiegePlayerOponente
+                       (
+                           new SiegePlayerOponente()
+                           {
+                               IdPlayer = item.wizard_id,
+                               IdGuild = item.guild_id,
+                               IdSiege = codSiege,
+                               Nome = item.wizard_name
+
+                           }
+                         );
+                }
+
+            }
+
+            //SiegeDefenseDeck
+            foreach (InfoSiege.DefenseDeckList item in rootSiege.defense_deck_list)
+            {
+                bSiege.InsertDefenseDeck
+                    (
+                    new SiegeDefenseDeck()
+                        {
+                            IdDeck = item.deck_id,
+                            IdSiege = codSiege,
+                            IdPlayer = item.wizard_id,
+                            IdGuild = rootSiege.wizard_info_list.First(x => x.wizard_id == item.wizard_id).guild_id
+                        }
+                    );
+            }
+
+
+            //SiegeAtaques
+            System.DateTime dDataluta = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+            
+            foreach (InfoSiegeBattleLog.BattleLogList item in rootBatalhas[0].log_list[0].battle_log_list)
+            {
+                //IF Ataque
+                if (item.log_type==1)
+                {
+                    bSiege.InsertSiegeAtaque
+                    (new SiegeAtaque()
+                    {
+                        Data = dtDateTime = dtDateTime.AddSeconds(item.log_timestamp).ToLocalTime(),
+                        IdPlayer = item.wizard_id,
+                        IdPlayerOponente = item.opp_wizard_id,
+                        IdSiege = item.siege_id,
+                        Vitoria = item.win_lose
+
+                    }
+                    );
+                }
+                else
+                {
+                    bSiege.InserirSiegePlayerDefense(new SiegePlayerDefesa()
+                    {
+                        Date = dtDateTime = dtDateTime.AddSeconds(item.log_timestamp).ToLocalTime(),
+                        IdDeck = item.
+                    }
+
+                   )
+;                }
+                
+            }
+
+            //SiegePlayerDefesas
+
+            //SiegeTimeDefesas
+
 
         }
     }

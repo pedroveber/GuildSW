@@ -61,6 +61,7 @@
     <Compile Include="BLO\BLO_PlayerOponente.cs" />
     <Compile Include="BLO\BLO_PlayerStatus.cs" />
     <Compile Include="BLO\BLO_Security.cs" />
+    <Compile Include="BLO\BLO_Siege.cs" />
     <Compile Include="DAO\DAO_Batalha.cs" />
     <Compile Include="DAO\DAO_Guilda.cs" />
     <Compile Include="DAO\DAO_Lutas.cs" />
@@ -68,6 +69,10 @@
     <Compile Include="DAO\DAO_PlayerDefesas.cs" />
     <Compile Include="DAO\DAO_PlayerOponente.cs" />
     <Compile Include="DAO\DAO_PlayerStatus.cs" />
+    <Compile Include="DAO\DAO_Siege.cs" />
+    <Compile Include="DAO\DAO_SiegeAtaques.cs" />
+    <Compile Include="DAO\DAO_SiegeDefense.cs" />
+    <Compile Include="DAO\DAO_SiegePlayer.cs" />
     <Compile Include="DAO\DAO_TimeDefesa.cs" />
     <Compile Include="Models\Batalhas.cs" />
     <Compile Include="Models\Guilda.cs" />
@@ -88,6 +93,7 @@
     <Compile Include="Models\PlayerDefesas.cs" />
     <Compile Include="Models\PlayerOponente.cs" />
     <Compile Include="Models\PlayerStatus.cs" />
+    <Compile Include="Models\Siege.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -83,7 +83,7 @@ namespace Dados.Models
             public long tvalue { get; set; }
             public long tvaluelocal { get; set; }
             public string command { get; set; }
-            public match_info guildwar_contribute_list { get; set; }
+            public match_info match_info { get; set; }
 
             public List<GuildList> guild_list { get; set; }
 
