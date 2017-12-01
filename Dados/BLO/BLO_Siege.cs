@@ -42,5 +42,15 @@ namespace Dados.BLO
             new DAO.DAO_SiegeDefense().InserirSiegePlayerDefense(obj);
         }
 
+        public void InserirSiegeTimeDefesa(Models.SiegeTimeDefesa obj)
+        {
+            new DAO.DAO_SiegeDefense().InserirSiegeTimeDefesa(obj);
+        }
+
+        public List<Models.SiegeDefenseDeck> ListarDefenseDecks(long idSiege)
+        {
+            return new DAO.DAO_SiegeDefense().ListarDefenseDecks(idSiege);
+        }
+
     }
 }

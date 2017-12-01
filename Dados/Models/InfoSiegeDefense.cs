@@ -19,6 +19,8 @@ namespace Dados.Models
             public List<DefenseDeckList> defense_deck_list { get; set; }
 
             public List<DefenseUnitList> defense_unit_list { get; set; }
+            public List<DefenseAssignList> defense_assign_list { get; set; }
+
         }
         public class WizardInfoList
         {
@@ -45,6 +47,12 @@ namespace Dados.Models
         {
             public long unit_master_id { get; set; }
 
+        }
+
+        public class DefenseAssignList
+        {
+            public long deck_id { get; set; }
+            public int base_number { get; set; }
         }
     }
 }

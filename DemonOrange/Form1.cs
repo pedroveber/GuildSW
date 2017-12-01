@@ -1721,29 +1721,72 @@ namespace DemonOrange
                         IdPlayer = item.wizard_id,
                         IdPlayerOponente = item.opp_wizard_id,
                         IdSiege = item.siege_id,
-                        Vitoria = item.win_lose
+                        Vitoria = item.win_lose,
+                        Base = item.base_number,
+                        IdGuildaOpp = item.opp_guild_id
 
                     }
                     );
                 }
+                //DEFESA
                 else
                 {
                     bSiege.InserirSiegePlayerDefense(new SiegePlayerDefesa()
                     {
                         Date = dtDateTime = dtDateTime.AddSeconds(item.log_timestamp).ToLocalTime(),
-                        IdDeck = item.
-                    }
+                        IdDeck = 0, //Se gerou o LOG depois que terminou a Siege nao consigo ver se tem  Deck. 
+                        //tenho que ver se vem no GetGuildSiegeBattleLogByWizardId
+                        IdPlayerOponente = item.opp_wizard_id,
+                        IdGuildaOpp = item.opp_guild_id,
+                        Vitoria = item.win_lose,
+                        IdSiege = item.siege_id,
+                        Base = item.base_number
+                        
+                     }
 
-                   )
-;                }
-                
+                   );
+                }              
             }
 
-            //SiegePlayerDefesas
-
+            //Obter os Decks para deixar na memória para não ficar toda hora indo no banco. 
+            List<SiegeDefenseDeck> lstDefenseDecks = new List<SiegeDefenseDeck>();
+            lstDefenseDecks = bSiege.ListarDefenseDecks(codSiege);
+            
             //SiegeTimeDefesas
+            foreach (var root in rootDefesas)
+            {
+                long monstro1 = 0, monstro2 = 0, monstro3 = 0,idDeck = 0;
+                int basedefesa = 0;
+                foreach (var item in root.defense_unit_list)
+                {
+                    if (item.pos_id ==1)
+                    {monstro1 = item.unit_info.unit_master_id;}
+                    if (item.pos_id == 2)
+                    { monstro2 = item.unit_info.unit_master_id; }
+                    if (item.pos_id == 3)
+                    { monstro3 = item.unit_info.unit_master_id; }
 
+                    basedefesa = item.pos_id;
+                    idDeck = item.deck_id;
+                 }
+                //Inserir time defesa
+                bSiege.InserirSiegeTimeDefesa(new SiegeTimeDefesa()
+                {
+                    Base = basedefesa,
+                    Monstro1 = monstro1,
+                    Monstro2 = monstro2,
+                    Monstro3 = monstro3,
+                    //Verificar depois se esse Wizard_iunfo_list vem mais de 1, pq parece q mesmo sendo uma lista só vem 1
+                    IdDeck = lstDefenseDecks.First(x => x.IdGuild == root.wizard_info_list[0].guild_id && x.IdPlayer == root.wizard_info_list[0].wizard_id && x.IdSiege == codSiege && x.IdDeck == idDeck).Id
+                });
+            }
 
+            /*
+             * Analisando os txts identifiquei que Dentro do GetGuildSiegeDefenseDeckByWizardId na coleção defense_assign_list é dinâmico, ou seja vc atribui a defesa ele cai nesta coleção
+             * se voce perder esta torre durante a luta e gerar o log de novo, o assign vai sumir e vc não vai conseguir saber qual era a defesa que estava na torre. 
+             * Então o ideial é montar as defesas. E antes da Siege começar, rodar o programa. Talvez criar uma rotina só para atualizar as defesas. um Botão. "Atualuzar Defesas"
+             * e pode ficar ficar isso ao longo da Siege. E eu não posso nunca excluir ou editar a tabela,. somente excluir.
+             * */
         }
     }
 

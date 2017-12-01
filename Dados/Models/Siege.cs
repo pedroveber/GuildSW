@@ -50,6 +50,8 @@ namespace Dados.Models
         public long IdSiege { get; set; }
         public long IdPlayer { get; set; }
         public long IdPlayerOponente { get; set; }
+        public long IdGuildaOpp { get; set; }
+        public int Base { get; set; }
         public int Vitoria { get; set; }
         public DateTime Data { get; set; }
     }
@@ -59,6 +61,9 @@ namespace Dados.Models
         public long Id { get; set; }
         public long IdDeck { get; set; }
         public long IdPlayerOponente { get; set; }
+        public long IdGuildaOpp { get; set; }
+        public int Base { get; set; }
+        public long IdSiege { get; set; }
         public int Vitoria { get; set; }
         public DateTime Date { get; set; }
 
