@@ -23,19 +23,20 @@ namespace Dados.DAO
 
 
             //Select
+            select.AppendLine("SET DATEFORMAT dmy;");
             select.AppendLine("MERGE DBO.SiegeAtaques AS TARGET ");
-            select.AppendLine("USING(SELECT @IdSiege AS IdSiege, @IPlayer as IdPlayer, @IdPlayer as IdPlayer, @IdPlayerOponente as IdPlayerOponente, ");
+            select.AppendLine("USING(SELECT @IdSiege AS IdSiege, @IdPlayer as IdPlayer, @IdPlayerOponente as IdPlayerOponente, ");
             select.AppendLine("@Vitoria as Vitoria, @Data as Data, @Base as Base, @IdGuildaOpp as IdGuildaOpp) AS SOURCE ");
             select.AppendLine("ON TARGET.IdSiege = SOURCE.IdSiege and ");
 
-            select.AppendLine("Target.IdPlayer SOURCE.IdPlayer and ");
+            select.AppendLine("Target.IdPlayer = SOURCE.IdPlayer and ");
             select.AppendLine("Target.IdPlayerOponente = SOURCE.IdPlayerOponente ");
             select.AppendLine("WHEN MATCHED THEN ");
             select.AppendLine("UPDATE SET TARGET.Vitoria = @Vitoria, TARGET.Data = @Data, TARGET.Base = @Base ");
             select.AppendLine("WHEN NOT MATCHED BY TARGET THEN ");
             select.AppendLine("INSERT(IdSiege, IdPlayer, IdPlayerOponente, Vitoria, Data,Base,IdGuildaOpp) ");
-            select.AppendLine("VALUES(IdSiege, IdPlayer, IdPlayerOponente, @IdGuild, @Vitoria, @Data,@Base,@IdGuildaOpp) ");
-            select.AppendLine("OUTPUT $action, inserted.Id ");
+            select.AppendLine("VALUES(@IdSiege,@IdPlayer,@IdPlayerOponente, @Vitoria, @Data,@Base,@IdGuildaOpp)");
+            select.AppendLine("OUTPUT inserted.Id; ");
 
             command.Parameters.Add(new SqlParameter("@IdSiege", System.Data.SqlDbType.BigInt));
             command.Parameters["@IdSiege"].Value = obj.IdSiege;
@@ -53,7 +54,7 @@ namespace Dados.DAO
             command.Parameters.Add(new SqlParameter("@Vitoria", System.Data.SqlDbType.Int));
             command.Parameters["@Vitoria"].Value = obj.Vitoria;
 
-            command.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.BigInt));
+            command.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.Date));
             command.Parameters["@Data"].Value = obj.Data;
 
             command.Parameters.Add(new SqlParameter("@Base", System.Data.SqlDbType.Int));

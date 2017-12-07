@@ -21,7 +21,7 @@ namespace Dados.DAO
 
             StringBuilder select = new StringBuilder();
 
-
+            select.AppendLine("SET DATEFORMAT dmy;");
             select.AppendLine("MERGE DBO.SIEGE AS TARGET ");
             select.AppendLine("USING(SELECT @ID AS ID) AS SOURCE ");
             select.AppendLine("ON TARGET.ID = SOURCE.ID ");
@@ -29,12 +29,8 @@ namespace Dados.DAO
             select.AppendLine("UPDATE SET TARGET.DATA = GETDATE() ");
             select.AppendLine("WHEN NOT MATCHED BY TARGET THEN ");
             select.AppendLine("INSERT(ID, DATA) ");
-            select.AppendLine("VALUES(@ID, @Data) ");
-
-
-            select.AppendLine("insert into dbo.Guilda (ID,Nome) ");
-            select.AppendLine("values (@ID, @Nome)");
-
+            select.AppendLine("VALUES(@ID, @Data); ");
+            
             command.Parameters.Add(new SqlParameter("@ID", System.Data.SqlDbType.BigInt));
             command.Parameters["@ID"].Value = obj.Id;
 
@@ -64,8 +60,8 @@ namespace Dados.DAO
 
             StringBuilder select = new StringBuilder();
 
-
-            select.Append("MERGE DBO.SiegeGuidla AS TARGET ");
+            select.AppendLine("SET DATEFORMAT dmy;");
+            select.Append("MERGE DBO.SiegeGuilda AS TARGET ");
             select.Append("USING(SELECT @IdSiege AS IdSiege, @IdGuilda as IdGuilda) AS SOURCE ");
             select.Append("ON TARGET.IdSiege = SOURCE.IdSiege and ");
             select.Append("Target.IdGuilda = SOURCE.IdGuilda ");
@@ -73,7 +69,7 @@ namespace Dados.DAO
             select.Append("UPDATE SET TARGET.Posicao = @Posicao ");
             select.Append("WHEN NOT MATCHED BY TARGET THEN ");
             select.Append("INSERT(IdSiege, IdGuilda, Posicao) ");
-            select.Append("VALUES(@IdSiege, @IdGuilda, @Posicao) ");
+            select.Append("VALUES(@IdSiege, @IdGuilda, @Posicao); ");
 
             
             command.Parameters.Add(new SqlParameter("@IdSiege", System.Data.SqlDbType.BigInt));

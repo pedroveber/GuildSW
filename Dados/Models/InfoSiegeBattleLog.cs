@@ -45,6 +45,7 @@ namespace Dados.Models
             public long wizard_id { get; set; }
             public long opp_guild_id { get; set; }
             public long opp_wizard_id { get; set; }
+            public string opp_wizard_name { get; set; }
             public int win_lose { get; set; }
             public long log_timestamp { get; set; }
         }

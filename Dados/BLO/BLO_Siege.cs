@@ -22,9 +22,9 @@ namespace Dados.BLO
             new DAO.DAO_SiegePlayer().InserirSiegePlayer(obj);
         }
 
-        public void InserirSiegePlayerOponente(Models.SiegePlayerOponente obj)
+        public Models.SiegePlayerOponente InserirSiegePlayerOponente(Models.SiegePlayerOponente obj)
         {
-            new DAO.DAO_SiegePlayer().InserirSiegePlayerOponente(obj);
+            return new DAO.DAO_SiegePlayer().InserirSiegePlayerOponente(obj);
         }
 
         public void InsertDefenseDeck(Models.SiegeDefenseDeck obj)
@@ -50,6 +50,16 @@ namespace Dados.BLO
         public List<Models.SiegeDefenseDeck> ListarDefenseDecks(long idSiege)
         {
             return new DAO.DAO_SiegeDefense().ListarDefenseDecks(idSiege);
+        }
+
+        public List<Models.SiegePlayerOponente> ListarPlayersOponentesSiege(long idSiege)
+        {
+            return new DAO.DAO_SiegePlayer().ListarPlayersOponentesSiege(idSiege);
+        }
+
+        public void InserirSiegeDefenseDeckAssign(Models.SiegeDefenseDeckAssign obj)
+        {
+            new DAO.DAO_SiegeDefense().InserirSiegeDefenseDeckAssign(obj);
         }
 
     }

@@ -61,6 +61,7 @@ namespace Dados.Models
         public long Id { get; set; }
         public long IdDeck { get; set; }
         public long IdPlayerOponente { get; set; }
+        public long IdPlayer { get; set; }
         public long IdGuildaOpp { get; set; }
         public int Base { get; set; }
         public long IdSiege { get; set; }
@@ -78,6 +79,12 @@ namespace Dados.Models
         public long Monstro3 { get; set; }
     }
 
+    public class SiegeDefenseDeckAssign
+    {
+        public long IdSiege { get; set; }
+        public int Base { get; set; }
+        public long IdDeck { get; set; }
+    }
 
 }
 
