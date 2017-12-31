@@ -191,10 +191,6 @@ namespace DemonOrange
 
         private void ValidarArquivoSiege(bool timer)
         {
-            if (timer)
-            { btnAtualizarSiege.Invoke(new MethodInvoker(delegate { btnAtualizarSiege.Enabled = false; })); }
-            else
-            { btnAtualizarSiege.Enabled = false; }
 
 
             Boolean Arq1 = false;
@@ -271,10 +267,12 @@ namespace DemonOrange
             else
                  if (timer)
             {
+                btnAtualizarSiege.Invoke(new MethodInvoker(delegate { btnAtualizarSiege.Enabled = false; }));
                 lblErroSiege.Invoke(new MethodInvoker(delegate { lblErroSiege.Text = "Arquivo não encontrado"; }));
             }
             else
             {
+                btnAtualizarSiege.Enabled = false;
                 lblErroSiege.Text = "Arquivo não encontrado";
             }
         }
@@ -310,7 +308,7 @@ namespace DemonOrange
         {
             if (InvokeRequired)
             {
-                this.Invoke(new Action<Boolean, string, string, Boolean>(PainelLoad), new object[] { _painel, _label, _label2, _btnCancelar });
+                this.Invoke(new Action<Boolean, string, string, Boolean>(PainelLoadSiege), new object[] { _painel, _label, _label2, _btnCancelar });
                 return;
             }
             pl_loadSiege.Visible = _painel;
@@ -1017,7 +1015,6 @@ namespace DemonOrange
 
         #endregion
 
-
         #region Cadastrar Dados do FullLog no Banco
 
         private void CadastrarGuilda(InfoBatalha ObjBatalha)
@@ -1605,10 +1602,12 @@ namespace DemonOrange
             YhdIniciarSiege.Start();
         }
 
+        #region "Métodos de Carregar a Siege"
+
         private void AtualizarSiege()
         {
-
-            PainelLoad(true, "Aguarde", "Iniciando Processo!", false);
+            timer1.Stop();
+            PainelLoadSiege(true, "Aguarde", "Iniciando Processo!", false);
 
             FazerBackupArquivo();
 
@@ -1622,198 +1621,480 @@ namespace DemonOrange
             InfoSiegeMatchLog.Root rootMatch = LerGuildSiegeMatchLog(lines);
 
             PainelLoadSiege(true, "Leitura de arquivo concluido", "-", false);
-
-            // Unix timestamp is seconds past epoch
-            System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            dtDateTime = dtDateTime.AddSeconds(rootSiege.match_info.match_start_time).ToLocalTime();
-
+            
             //Guarda o Código da Guild e da Siege
             long codGuild = rootMatch.guildsiege_match_log_list[0].guild_id;
             long codSiege = rootSiege.match_info.siege_id;
-                        
+
+            //----> Siege
+            PainelLoadSiege(true, "Gravando Siege", "-", false);
+            InserirSiege(rootSiege, rootMatch);
+
+            //----> Defense Deck Assign
+            PainelLoadSiege(true, "Gravando Decks", "-", false);
+            GravarDefenseDeckAssign(rootSiege, codSiege);
+
+            //----> Siege x Guilda
+            PainelLoadSiege(true, "Gravando Guildas", "-", false);
+            GravarSiegeGuilda(rootSiege, rootMatch);
+
+            //----> Siege Players
+            PainelLoadSiege(true, "Gravando Players", "-", false);
+            GravarSiegePlayers(rootSiege, codSiege, codGuild);
+
+            //----> Defense Decks
+            PainelLoadSiege(true, "Gravando Deck Defesas", "-", false);
+            GravarDefenseDecks(rootSiege, codSiege, codGuild);
+
+            //----> Ataques/Defesas
+            PainelLoadSiege(true, "Gravando Ataques", "-", false);
+            GravarAtaquesDefesas(rootBatalhas, rootSiege, codSiege);
+
+            //----> Times Defesas
+            PainelLoadSiege(true, "Gravando Times Defesa", "-", false);
+            GravarTimeDefesa(rootDefesas, codSiege);
+
+            PainelLoadSiege(true, "Concluído.", "-", false);
+            timer1.Start();
+        }
+
+        #region Inserir Siege
 
 
-            //-----> Siege
-            Siege objSiege = new Siege() { Id = rootSiege.match_info.siege_id, Data = dtDateTime };
-            objSiege = new Dados.BLO.BLO_Siege().InserirSiege(objSiege);
-            
-            //----->Guilda e Siege x Guilda
-            SiegeGuilda objSiegexGuilda;
-            Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
-
-            //----> SiegeDefenseDeckAssign
-            foreach (var item in rootSiege.defense_deck_assign_list)
+        private void InserirSiege(InfoSiege.Root rootSiege, InfoSiegeMatchLog.Root rootMatch)
+        {
+            Siege objSiege = new Siege();
+            bool historico = false;
+            try
             {
-                //bSiege.InserirSiegeGuilda
-                bSiege.InserirSiegeDefenseDeckAssign(new SiegeDefenseDeckAssign()
-                {
-                    Base = item.base_number,
-                    IdSiege = codSiege,
-                    IdDeck = item.deck_id
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
 
-                
-                });
+                // Unix timestamp is seconds past epoch
+                System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                dtDateTime = dtDateTime.AddSeconds(rootSiege.match_info.match_start_time).ToLocalTime();
+
+                //-----> Siege
+                objSiege = new Siege() { Id = rootSiege.match_info.siege_id, Data = dtDateTime };
+                objSiege = new Dados.BLO.BLO_Siege().InserirSiege(objSiege);
+
+
+                List<Dados.Models.Siege> lSieges = bSiege.ListarSieges();
+
+                //-----> Siege (rootMatch -- Histórico)
+                foreach (InfoSiegeMatchLog.GuildsiegeMatchLogList matchSieges in rootMatch.guildsiege_match_log_list)
+                {
+                    //Só insere se não existir no banco.
+                    if (!lSieges.Any(x => x.Id == matchSieges.siege_id))
+                    {
+                        historico = true;
+                        //Neste objeto eu nao tenho a data da Siege, então estou pegando no "LastUpdate".
+                        dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
+                        dtDateTime = dtDateTime.AddSeconds(matchSieges.guild_info[0].match_score_last_update_time).ToLocalTime();
+
+                        objSiege = new Siege() { Id = matchSieges.siege_id, Data = dtDateTime };
+                        objSiege = new Dados.BLO.BLO_Siege().InserirSiege(objSiege);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                string log = "Erro ao tentar Inserir Siege.";
+
+                log += "OBJGuilda\r\n";
+                log += "Siege Id: " + objSiege.Id.ToString() + "\r\n";
+                log += "Data: " + objSiege.Data.ToString() + "\r\n";
+                if (historico)
+                {
+                    log += "Histórico: Sim. \r\n";
+                }
+
+                log += "\nErro:" + ex.Message;
+
+                GravarLog(log);
+                throw ex;
+
             }
 
-            foreach (InfoSiege.GuildList item in rootSiege.guild_list)
+        }
+        #endregion
+
+        #region Deck Assign
+
+        private void GravarDefenseDeckAssign(InfoSiege.Root rootSiege, long codSiege)
+        {
+            try
             {
-                CadastrarGuilda(item.guild_id, item.guild_name);
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+                //----> SiegeDefenseDeckAssign
+                int cont = 1;
+                foreach (var item in rootSiege.defense_deck_assign_list)
+                {
+                    PainelLoadSiege(true, "Gravando Decks", cont + "/" + rootSiege.defense_deck_assign_list.Count.ToString(), false);
+
+                    //bSiege.InserirSiegeGuilda
+                    bSiege.InserirSiegeDefenseDeckAssign(new SiegeDefenseDeckAssign()
+                    {
+                        Base = item.base_number,
+                        IdSiege = codSiege,
+                        IdDeck = item.deck_id
+
+
+                    });
+                    cont++;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                string log = "Erro ao tentar Inserir DeckAssign.";
+                log += "\nErro:" + ex.Message;
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+
+        #endregion
+
+        #region Siege x Guilda
+
+        private void GravarSiegeGuilda(InfoSiege.Root rootSiege, InfoSiegeMatchLog.Root rootMatch)
+        {
+            SiegeGuilda objSiegexGuilda = new SiegeGuilda();
+            try
+            {
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
 
                 //Siege x Guilda
-                objSiegexGuilda = new SiegeGuilda()
+                foreach (InfoSiege.GuildList item in rootSiege.guild_list)
                 {
-                    IdSiege = item.siege_id,
-                    IdGuilda = item.guild_id,
-                    Posicao = item.pos_id
-                };
-                bSiege.InserirSiegeGuilda(objSiegexGuilda);
+                    CadastrarGuilda(item.guild_id, item.guild_name);
 
-            }
-
-
-            //SiegePlayers
-            foreach (InfoSiege.WizardInfoList item in rootSiege.wizard_info_list)
-            {
-
-                //Incluir só se for da Guild
-                if (item.guild_id == codGuild)
-                {
-                    bSiege.InserirSiegePlayer
-                        (
-                            new SiegePlayer()
-                            {
-                                IdPlayer = item.wizard_id,
-                                IdSiege = codSiege,
-                                UsedUnits = rootSiege.used_unit_count_list.First(x => x.wizard_id == item.wizard_id).used_unit_count
-                            }
-                    );
-                }
-                else
-                {
-                    bSiege.InserirSiegePlayerOponente
-                       (
-                           new SiegePlayerOponente()
-                           {
-                               IdPlayer = item.wizard_id,
-                               IdGuild = item.guild_id,
-                               IdSiege = codSiege,
-                               Nome = item.wizard_name
-
-                           }
-                         );
-                }
-
-            }
-
-            //SiegeDefenseDeck
-            //Só insere se for da Guilda
-            foreach (InfoSiege.DefenseDeckList item in rootSiege.defense_deck_list)
-            {
-                if (rootSiege.wizard_info_list.First(x => x.wizard_id == item.wizard_id).guild_id == codGuild)
-                {
-                    bSiege.InsertDefenseDeck
-                        (
-                        new SiegeDefenseDeck()
-                        {
-                            IdDeck = item.deck_id,
-                            IdSiege = codSiege,
-                            IdPlayer = item.wizard_id,
-                            IdGuild = rootSiege.wizard_info_list.First(x => x.wizard_id == item.wizard_id).guild_id
-                        }
-                        );
-                }
-
-            }
-
-
-            //SiegeAtaques
-
-            //Obter os PlayersOponente
-            List<SiegePlayerOponente> lstOponentes = bSiege.ListarPlayersOponentesSiege(codSiege);
-
-            foreach (var battleLog in rootBatalhas)
-            {
-                foreach (InfoSiegeBattleLog.BattleLogList item in battleLog.log_list[0].battle_log_list)
-                {
-                    //Se nao encontrar o PlayerOPonente Inclui (Existem casos que não estão no MatchInfo, nao sei porque)
-                    if (!lstOponentes.Any(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id))
+                    objSiegexGuilda = new SiegeGuilda()
                     {
-                        lstOponentes.Add(bSiege.InserirSiegePlayerOponente(new SiegePlayerOponente()
+                        IdSiege = item.siege_id,
+                        IdGuilda = item.guild_id,
+                        Posicao = item.pos_id,
+                        MatchScore = item.match_score,
+                        Members = item.play_member_count,
+                        Rating = item.rating_id
+                    };
+                    bSiege.InserirSiegeGuilda(objSiegexGuilda);
+
+                }
+
+                int cont = 1;
+
+                //Siege x Guilda (rootMatch -- Histórico)
+                foreach (var item in rootMatch.guildsiege_match_log_list)
+                {
+                    cont = 1;
+                    foreach (var item2 in item.guild_info)
+                    {
+                        PainelLoadSiege(true, "Gravando Guildas", cont + "/" + item.guild_info.Count.ToString(), false);
+
+                        CadastrarGuilda(item2.guild_id, item2.guild_name);
+
+                        objSiegexGuilda = new SiegeGuilda()
                         {
-                            IdGuild = item.opp_guild_id,
-                            IdPlayer = item.opp_wizard_id,
-                            IdSiege = item.siege_id,
-                            Nome= item.opp_wizard_name
-                        }));
+                            IdSiege = item2.siege_id,
+                            IdGuilda = item2.guild_id,
+                            Posicao = item2.match_rank,
+                            MatchScore = item2.match_score,
+                            Members = item2.play_member_count,
+                            Rating = item2.rating_id
+                        };
+                        bSiege.InserirSiegeGuilda(objSiegexGuilda);
+                        cont++;
                     }
-                    
+                }
+            }
+            catch (Exception ex)
+            {
 
-                    //IF Ataque
-                    if (item.log_type == 1)
+                string log = "Erro ao tentar Inserir Siege x Guilda.";
+
+                log += "Id Guilda: " + objSiegexGuilda.IdGuilda.ToString() + "\r\n";
+                log += "Siege Id: " + objSiegexGuilda.IdSiege.ToString() + "\r\n";
+                log += "Match Score: " + objSiegexGuilda.MatchScore.ToString() + "\r\n";
+                log += "Members: " + objSiegexGuilda.Members.ToString() + "\r\n";
+                log += "Posicao: " + objSiegexGuilda.Posicao.ToString() + "\r\n";
+                log += "Rating: " + objSiegexGuilda.Rating.ToString() + "\r\n";
+
+                log += "\nErro:" + ex.Message;
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region Siege Players
+
+
+        private void GravarSiegePlayers(InfoSiege.Root rootSiege, long codSiege, long codGuild)
+        {
+            
+            try
+            {
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+                int cont = 1;
+
+                //SiegePlayers
+                foreach (InfoSiege.WizardInfoList item in rootSiege.wizard_info_list)
+                {
+                    PainelLoadSiege(true, "Gravando Players", cont + "/" + rootSiege.wizard_info_list.Count.ToString(), false);
+
+                    //Incluir só se for da Guild
+                    if (item.guild_id == codGuild)
                     {
-                        bSiege.InsertSiegeAtaque
-                        (new SiegeAtaque()
-                        {
-                            Data = UnixTimeStampToDateTime(Convert.ToDouble(item.log_timestamp)),
-                            IdPlayer = item.wizard_id,
-                            IdPlayerOponente = lstOponentes.First(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id).Id,
-                            IdSiege = item.siege_id,
-                            Vitoria = item.win_lose,
-                            Base = item.base_number,
-                            IdGuildaOpp = item.opp_guild_id
-
-                        }
+                        bSiege.InserirSiegePlayer
+                            (
+                                new SiegePlayer()
+                                {
+                                    IdPlayer = item.wizard_id,
+                                    IdSiege = codSiege,
+                                    UsedUnits = rootSiege.used_unit_count_list.First(x => x.wizard_id == item.wizard_id).used_unit_count
+                                }
                         );
                     }
-                    //DEFESA
                     else
                     {
-                        
-                        List<int> listaDecks = new List<int>();
-                        listaDecks = rootSiege.defense_deck_assign_list.Where(x => x.base_number == item.base_number).Select(y => y.base_number).ToList<int>();
+                        bSiege.InserirSiegePlayerOponente
+                           (
+                               new SiegePlayerOponente()
+                               {
+                                   IdPlayer = item.wizard_id,
+                                   IdGuild = item.guild_id,
+                                   IdSiege = codSiege,
+                                   Nome = item.wizard_name
 
-                        //com a lista de Deck preciso saber qual deck é deste player
-
-                        bSiege.InserirSiegePlayerDefense(new SiegePlayerDefesa()
-                        {
-                            Date = UnixTimeStampToDateTime(Convert.ToDouble(item.log_timestamp)),
-
-                            IdDeck = 0, //Se gerou o LOG depois que terminou a Siege nao consigo ver se tem  Deck. 
-                                        //tenho que ver se vem no GetGuildSiegeBattleLogByWizardId
-                            //ID FK
-                            IdPlayerOponente = lstOponentes.First(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id).Id,
-                            IdGuildaOpp = item.opp_guild_id,
-                            IdPlayer = item.wizard_id,
-                            Vitoria = item.win_lose,
-                            IdSiege = item.siege_id,
-                            Base = item.base_number
-
-                        }
-
-                       );
+                               }
+                             );
                     }
+                    cont++;
                 }
             }
-
-
-           
-
-            //Obter os Decks para deixar na memória para não ficar toda hora indo no banco. 
-            List<SiegeDefenseDeck> lstDefenseDecks = new List<SiegeDefenseDeck>();
-            lstDefenseDecks = bSiege.ListarDefenseDecks(codSiege);
-
-            //SiegeTimeDefesas
-            foreach (var root in rootDefesas)
+            catch (Exception ex)
             {
-                long monstro1 = 0, monstro2 = 0, monstro3 = 0, idDeck = 0;
-                int basedefesa = 0;
 
-                foreach (var item in root.defense_unit_list)
+                string log = "Erro ao tentar Inserir Players e Player Oponente.";
+                log += "\nErro:" + ex.Message;
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region Defense Decks
+
+        private void GravarDefenseDecks(InfoSiege.Root rootSiege, long codSiege, long codGuild)
+        {
+            try
+            {
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+                int cont = 1;
+
+                //Só insere se for da Guilda
+                foreach (InfoSiege.DefenseDeckList item in rootSiege.defense_deck_list)
                 {
-                    //Se o ID do Deck mudar tem que inserer a Def
-                    if (idDeck != item.deck_id && idDeck > 0)
+                    PainelLoadSiege(true, "Gravando Deck Defesas", cont + "/" + rootSiege.defense_deck_list.Count.ToString(), false);
+
+                    if (rootSiege.wizard_info_list.First(x => x.wizard_id == item.wizard_id).guild_id == codGuild)
+                    {
+                        bSiege.InsertDefenseDeck
+                            (
+                            new SiegeDefenseDeck()
+                            {
+                                IdDeck = item.deck_id,
+                                IdSiege = codSiege,
+                                IdPlayer = item.wizard_id,
+                                IdGuild = rootSiege.wizard_info_list.First(x => x.wizard_id == item.wizard_id).guild_id
+                            }
+                            );
+                    }
+
+                    cont++;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                string log = "Erro ao tentar Inserir GravarDefenseDecks.";
+                log += "\nErro:" + ex.Message;
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region Ataques\Defesas
+
+        private void GravarAtaquesDefesas(List<InfoSiegeBattleLog.Root> rootBatalhas, InfoSiege.Root rootSiege, long codSiege)
+        {
+            try
+            {
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+                int cont = 1;
+
+                //Obter os PlayersOponente
+                List<SiegePlayerOponente> lstOponentes = bSiege.ListarPlayersOponentesSiege(codSiege);
+
+                foreach (var battleLog in rootBatalhas)
+                {
+                    foreach (var logList in battleLog.log_list)
+                    {
+                        cont = 1;
+                        foreach (InfoSiegeBattleLog.BattleLogList item in logList.battle_log_list)
+                        {
+                            PainelLoadSiege(true, "Gravando Ataques e Defesas", cont + "/" + logList.battle_log_list.Count.ToString(), false);
+
+                            //Se nao encontrar o PlayerOPonente Inclui (Existem casos que não estão no MatchInfo, nao sei porque)
+                            if (!lstOponentes.Any(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id))
+                            {
+                                lstOponentes.Add(bSiege.InserirSiegePlayerOponente(new SiegePlayerOponente()
+                                {
+                                    IdGuild = item.opp_guild_id,
+                                    IdPlayer = item.opp_wizard_id,
+                                    IdSiege = item.siege_id,
+                                    Nome = item.opp_wizard_name
+                                }));
+                            }
+
+
+                            //IF Ataque
+                            if (item.log_type == 1)
+                            {
+                                bSiege.InsertSiegeAtaque
+                                (new SiegeAtaque()
+                                {
+                                    Data = UnixTimeStampToDateTime(Convert.ToDouble(item.log_timestamp)),
+                                    IdPlayer = item.wizard_id,
+                                    IdPlayerOponente = lstOponentes.First(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id).Id,
+                                    IdSiege = item.siege_id,
+                                    Vitoria = item.win_lose,
+                                    Base = item.base_number,
+                                    IdGuildaOpp = item.opp_guild_id
+
+                                }
+                                );
+                            }
+                            //DEFESA
+                            else
+                            {
+
+                                List<int> listaDecks = new List<int>();
+                                listaDecks = rootSiege.defense_deck_assign_list.Where(x => x.base_number == item.base_number).Select(y => y.base_number).ToList<int>();
+
+                                //com a lista de Deck preciso saber qual deck é deste player
+
+                                bSiege.InserirSiegePlayerDefense(new SiegePlayerDefesa()
+                                {
+                                    Date = UnixTimeStampToDateTime(Convert.ToDouble(item.log_timestamp)),
+
+                                    IdDeck = 0, //Se gerou o LOG depois que terminou a Siege nao consigo ver se tem  Deck. 
+                                                //tenho que ver se vem no GetGuildSiegeBattleLogByWizardId
+                                                //ID FK
+                                    IdPlayerOponente = lstOponentes.First(x => x.IdGuild == item.opp_guild_id && x.IdPlayer == item.opp_wizard_id && x.IdSiege == item.siege_id).Id,
+                                    IdGuildaOpp = item.opp_guild_id,
+                                    IdPlayer = item.wizard_id,
+                                    Vitoria = item.win_lose,
+                                    IdSiege = item.siege_id,
+                                    Base = item.base_number
+
+                                }
+
+                               );
+                            }
+
+                            cont++;
+                        }
+                    }
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                string log = "Erro ao tentar Inserir Ataques e Defesas.";
+                log += "\nErro:" + ex.Message;
+                GravarLog(log);
+                throw ex;
+            }
+
+        }
+        #endregion
+
+        #region Time Defesa
+        private void GravarTimeDefesa(List<InfoSiegeDefense.Root> rootDefesas, long codSiege)
+        {
+            string logmonstro1 = string.Empty, logmonstro2 = string.Empty, logmonstro3 = string.Empty;
+            try
+            {
+                Dados.BLO.BLO_Siege bSiege = new Dados.BLO.BLO_Siege();
+                int cont = 1;
+
+                //Obter os Decks para deixar na memória para não ficar toda hora indo no banco. 
+                List<SiegeDefenseDeck> lstDefenseDecks = new List<SiegeDefenseDeck>();
+                lstDefenseDecks = bSiege.ListarDefenseDecks(codSiege);
+
+                //SiegeTimeDefesas
+                foreach (var root in rootDefesas)
+                {
+                    PainelLoadSiege(true, "Gravando Times Defesa", cont + "/" + rootDefesas.Count.ToString(), false);
+
+                    long monstro1 = 0, monstro2 = 0, monstro3 = 0, idDeck = 0;
+                    int basedefesa = 0;
+                    
+
+                    foreach (var item in root.defense_unit_list)
+                    {
+                        //Se o ID do Deck mudar tem que inserer a Def
+                        if (idDeck != item.deck_id && idDeck > 0)
+                        {
+                            //Inserir time defesa
+
+                            logmonstro1 = monstro1.ToString();
+                            logmonstro2 = monstro2.ToString();
+                            logmonstro3 = monstro3.ToString();
+
+                            bSiege.InserirSiegeTimeDefesa(new SiegeTimeDefesa()
+                            {
+                                Base = basedefesa,
+                                Monstro1 = monstro1,
+                                Monstro2 = monstro2,
+                                Monstro3 = monstro3,
+                                //Verificar depois se esse Wizard_iunfo_list vem mais de 1, pq parece q mesmo sendo uma lista só vem 1
+                                IdDeck = lstDefenseDecks.First(x => x.IdGuild == root.wizard_info_list[0].guild_id && x.IdPlayer == root.wizard_info_list[0].wizard_id && x.IdSiege == codSiege && x.IdDeck == idDeck).Id
+                            });
+                        }
+
+
+                        if (item.pos_id == 1)
+                        { monstro1 = item.unit_info.unit_master_id; }
+                        if (item.pos_id == 2)
+                        { monstro2 = item.unit_info.unit_master_id; }
+                        if (item.pos_id == 3)
+                        { monstro3 = item.unit_info.unit_master_id; }
+
+                        idDeck = item.deck_id;
+                        if (root.defense_assign_list.Any(x => x.deck_id == item.deck_id))
+                        { basedefesa = root.defense_assign_list.First(x => x.deck_id == item.deck_id).base_number; }
+                        else { basedefesa = 0; }
+
+                    }
+
+                    if (idDeck>0)
                     {
                         //Inserir time defesa
+                        logmonstro1 = monstro1.ToString();
+                        logmonstro2 = monstro2.ToString();
+                        logmonstro3 = monstro3.ToString();
+
                         bSiege.InserirSiegeTimeDefesa(new SiegeTimeDefesa()
                         {
                             Base = basedefesa,
@@ -1822,47 +2103,31 @@ namespace DemonOrange
                             Monstro3 = monstro3,
                             //Verificar depois se esse Wizard_iunfo_list vem mais de 1, pq parece q mesmo sendo uma lista só vem 1
                             IdDeck = lstDefenseDecks.First(x => x.IdGuild == root.wizard_info_list[0].guild_id && x.IdPlayer == root.wizard_info_list[0].wizard_id && x.IdSiege == codSiege && x.IdDeck == idDeck).Id
+
                         });
                     }
 
-
-                    if (item.pos_id == 1)
-                    { monstro1 = item.unit_info.unit_master_id; }
-                    if (item.pos_id == 2)
-                    { monstro2 = item.unit_info.unit_master_id; }
-                    if (item.pos_id == 3)
-                    { monstro3 = item.unit_info.unit_master_id; }
-
-                    idDeck = item.deck_id;
-                    if (root.defense_assign_list.Any(x => x.deck_id == item.deck_id))
-                    { basedefesa = root.defense_assign_list.First(x => x.deck_id == item.deck_id).base_number; }
-                    else { basedefesa = 0; }
-
+                    logmonstro1 = string.Empty;
+                    logmonstro2 = string.Empty;
+                    logmonstro3 = string.Empty;
+                    cont++;
                 }
-
-                //Inserir time defesa
-                bSiege.InserirSiegeTimeDefesa(new SiegeTimeDefesa()
-                {
-                    Base = basedefesa,
-                    Monstro1 = monstro1,
-                    Monstro2 = monstro2,
-                    Monstro3 = monstro3,
-                    //Verificar depois se esse Wizard_iunfo_list vem mais de 1, pq parece q mesmo sendo uma lista só vem 1
-                    IdDeck = lstDefenseDecks.First(x => x.IdGuild == root.wizard_info_list[0].guild_id && x.IdPlayer == root.wizard_info_list[0].wizard_id && x.IdSiege == codSiege && x.IdDeck == idDeck).Id
-
-                });
-
-
             }
+            catch (Exception ex)
+            {
 
-            /*
-             * Analisando os txts identifiquei que Dentro do GetGuildSiegeDefenseDeckByWizardId na coleção defense_assign_list é dinâmico, ou seja vc atribui a defesa ele cai 
-             * nesta coleção
-             * se voce perder esta torre durante a luta e gerar o log de novo, o assign vai sumir e vc não vai conseguir saber qual era a defesa que estava na torre. 
-             * Então o ideial é montar as defesas. E antes da Siege começar, rodar o programa. Talvez criar uma rotina só para atualizar as defesas. um Botão. "Atualuzar Defesas"
-             * e pode ficar ficar isso ao longo da Siege. E eu não posso nunca excluir ou editar a tabela,. somente excluir.
-             * */
+                string log = "Erro ao tentar Inserir Time Defesa.";
+                log += "\nErro:" + ex.Message;
+                log += "\nMonstro 1:" + logmonstro1;
+                log += "\nMonstro 2:" + logmonstro2;
+                log += "\nMonstro 3:" + logmonstro3;
+                GravarLog(log);
+                throw ex;
+            }
         }
+
+        #endregion
+
         public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
             // Unix timestamp is seconds past epoch
@@ -1871,6 +2136,9 @@ namespace DemonOrange
             return dtDateTime;
         }
     }
+    #endregion
+
+
 
     public class PlayerDef
     {

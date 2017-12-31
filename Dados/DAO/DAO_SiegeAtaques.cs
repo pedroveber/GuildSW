@@ -30,7 +30,8 @@ namespace Dados.DAO
             select.AppendLine("ON TARGET.IdSiege = SOURCE.IdSiege and ");
 
             select.AppendLine("Target.IdPlayer = SOURCE.IdPlayer and ");
-            select.AppendLine("Target.IdPlayerOponente = SOURCE.IdPlayerOponente ");
+            select.AppendLine("Target.IdPlayerOponente = SOURCE.IdPlayerOponente and");
+            select.AppendLine("Target.Data = SOURCE.Data ");
             select.AppendLine("WHEN MATCHED THEN ");
             select.AppendLine("UPDATE SET TARGET.Vitoria = @Vitoria, TARGET.Data = @Data, TARGET.Base = @Base ");
             select.AppendLine("WHEN NOT MATCHED BY TARGET THEN ");
@@ -54,7 +55,7 @@ namespace Dados.DAO
             command.Parameters.Add(new SqlParameter("@Vitoria", System.Data.SqlDbType.Int));
             command.Parameters["@Vitoria"].Value = obj.Vitoria;
 
-            command.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.Date));
+            command.Parameters.Add(new SqlParameter("@Data", System.Data.SqlDbType.DateTime));
             command.Parameters["@Data"].Value = obj.Data;
 
             command.Parameters.Add(new SqlParameter("@Base", System.Data.SqlDbType.Int));
