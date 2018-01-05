@@ -129,6 +129,11 @@ namespace DemonOrange
                         Arq5 = true;
                         pl_5.BackColor = Color.Green;
                     }
+
+                    if (line.Contains("GetGuildWarMatchLog") && line.Contains(@"ret_code"":0"))
+                    {
+                        pnlMatchLogs.BackColor = Color.Green;
+                    }
                 }
                 if (Arq1 && Arq2 && Arq3 && Arq4 && Arq5)
                 {
