@@ -19,6 +19,11 @@ namespace Dados.Models
             public long siege_id { get; set; }
             public long guild_id { get; set; }
             public int pos_id { get; set; }
+            public int match_rank { get; set; }
+            public int rating_id { get; set; }
+            public double match_score { get; set; }
+            public int play_member_count { get; set; }
+
             public string guild_name { get; set; }
         }
         public class BaseList

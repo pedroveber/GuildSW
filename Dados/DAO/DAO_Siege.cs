@@ -26,7 +26,7 @@ namespace Dados.DAO
             select.AppendLine("USING(SELECT @ID AS ID) AS SOURCE ");
             select.AppendLine("ON TARGET.ID = SOURCE.ID ");
             select.AppendLine("WHEN MATCHED THEN ");
-            select.AppendLine("UPDATE SET TARGET.DATA = GETDATE() ");
+            select.AppendLine("UPDATE SET TARGET.DATA =  @Data ");
             select.AppendLine("WHEN NOT MATCHED BY TARGET THEN ");
             select.AppendLine("INSERT(ID, DATA) ");
             select.AppendLine("VALUES(@ID, @Data); ");
@@ -66,10 +66,10 @@ namespace Dados.DAO
             select.Append("ON TARGET.IdSiege = SOURCE.IdSiege and ");
             select.Append("Target.IdGuilda = SOURCE.IdGuilda ");
             select.Append("WHEN MATCHED THEN ");
-            select.Append("UPDATE SET TARGET.Posicao = @Posicao ");
+            select.Append("UPDATE SET TARGET.Posicao = @Posicao, Rating = @Rating, MatchScore = @MatchScore, Members = @Members ");
             select.Append("WHEN NOT MATCHED BY TARGET THEN ");
-            select.Append("INSERT(IdSiege, IdGuilda, Posicao) ");
-            select.Append("VALUES(@IdSiege, @IdGuilda, @Posicao); ");
+            select.Append("INSERT(IdSiege, IdGuilda, Posicao,Rating,MatchScore,Members) ");
+            select.Append("VALUES(@IdSiege, @IdGuilda, @Posicao,@Rating,@MatchScore,@Members); ");
 
             
             command.Parameters.Add(new SqlParameter("@IdSiege", System.Data.SqlDbType.BigInt));
@@ -80,7 +80,16 @@ namespace Dados.DAO
 
             command.Parameters.Add(new SqlParameter("@Posicao", System.Data.SqlDbType.Int));
             command.Parameters["@Posicao"].Value = obj.Posicao;
-            
+
+            command.Parameters.Add(new SqlParameter("@Rating", System.Data.SqlDbType.Int));
+            command.Parameters["@Rating"].Value = obj.Rating;
+
+            command.Parameters.Add(new SqlParameter("@MatchScore", System.Data.SqlDbType.Float));
+            command.Parameters["@MatchScore"].Value = obj.MatchScore;
+
+            command.Parameters.Add(new SqlParameter("@Members", System.Data.SqlDbType.Int));
+            command.Parameters["@Members"].Value = obj.Members;
+
             command.CommandText = select.ToString();
             command.CommandType = System.Data.CommandType.Text;
 
@@ -92,6 +101,51 @@ namespace Dados.DAO
             conexao.Dispose();
 
             return obj;
+        }
+
+        public List<Dados.Models.Siege> ListarSieges()
+        {
+            List<Dados.Models.Siege> objRetorno = new List<Dados.Models.Siege>();
+
+            SqlConnection conexao = new SqlConnection();
+            SqlCommand command = new SqlCommand();
+
+            conexao.ConnectionString = BLO.Conexao.ObterStringConexao2();
+
+            StringBuilder select = new StringBuilder();
+
+
+            select.AppendLine("SELECT ");
+            select.AppendLine("Id,Data");
+            select.AppendLine("FROM dbo.Siege ");
+            
+            command.CommandText = select.ToString();
+            command.CommandType = System.Data.CommandType.Text;
+
+            conexao.Open();
+            command.Connection = conexao;
+            SqlDataReader reader = command.ExecuteReader();
+
+            Models.Siege objSiege;
+
+            while (reader.Read())
+            {
+                objSiege = new Siege();
+                objSiege.Id = long.Parse(reader["Id"].ToString());
+                if (reader["Data"].ToString() != string.Empty)
+                {
+                    objSiege.Data = Convert.ToDateTime(reader["Data"].ToString());
+                }
+                
+
+                objRetorno.Add(objSiege);
+            }
+
+            conexao.Close();
+            conexao.Dispose();
+
+
+            return objRetorno;
         }
     }
 }

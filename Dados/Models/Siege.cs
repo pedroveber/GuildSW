@@ -17,6 +17,9 @@ namespace Dados.Models
         public long IdSiege { get; set; }
         public long IdGuilda { get; set; }
         public int Posicao { get; set; }
+        public int Rating { get; set; }
+        public double MatchScore { get; set; }
+        public int Members { get; set; }
     }
 
     public class SiegePlayer

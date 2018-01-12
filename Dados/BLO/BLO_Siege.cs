@@ -62,5 +62,10 @@ namespace Dados.BLO
             new DAO.DAO_SiegeDefense().InserirSiegeDefenseDeckAssign(obj);
         }
 
+        public List<Dados.Models.Siege> ListarSieges()
+        {
+            return new DAO.DAO_Siege().ListarSieges();
+        }
+
     }
 }
