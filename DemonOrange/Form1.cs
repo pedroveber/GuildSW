@@ -1243,9 +1243,21 @@ namespace DemonOrange
         {
             try
             {
+                string nome = string.Empty;
+                long pontoArena = 0;
                 for (int j = 0; j < ObjOponente.my_attack_list.Count; j++)
                 {
+                    nome = string.Empty;
+                    pontoArena = 0;
+
                     PainelLoad(true, "Verificando Status dos Players", (j + 1).ToString() + "/" + ObjOponente.my_attack_list.Count.ToString(), false);
+
+                    //As vezes nao está no Contribute
+                    if (ObjPlayer.guildwar_contribute_list.Any(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id))
+                    {
+                        nome = ObjPlayer.guildwar_contribute_list.Where(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id).FirstOrDefault().wizard_name;
+                        pontoArena = ObjPlayer.guildwar_contribute_list.Where(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id).FirstOrDefault().guild_pts;
+                    }
 
                     //Insert Player
                     try
@@ -1253,12 +1265,12 @@ namespace DemonOrange
                         new Dados.BLO.BLO_Player().Insert(new Dados.Models.Player()
                         {
                             ID = ObjOponente.my_attack_list[j].wizard_id,
-                            Nome = ObjPlayer.guildwar_contribute_list.Where(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id).FirstOrDefault().wizard_name,
-                            PontoArena = ObjPlayer.guildwar_contribute_list.Where(w => w.wizard_id == ObjOponente.my_attack_list[j].wizard_id).FirstOrDefault().guild_pts,
+                            Nome = nome,
+                            PontoArena = pontoArena,
                             Status = "S"
                         });
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
                         MessageBox.Show("Erro ao incluir Players 2");

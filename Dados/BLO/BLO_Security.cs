@@ -99,7 +99,7 @@ namespace Dados.BLO
         //public static string ObterStringConexao2()
         //{
         //    string conn;
-        //    conn = System.Configuration.ConfigurationManager.ConnectionStrings["DB_SW_ADONET"].ToString();
+        //    conn = System.Configuration.ConfigurationManager.ConnectionStrings["db_sw_adonet"].ToString();
         //    return conn;
         //}
     }
