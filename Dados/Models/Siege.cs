@@ -8,6 +8,8 @@ namespace Dados.Models
     public class Siege
     {
         public long Id { get; set; }
+        public long IdSiege { get; set; }
+        public long IdMatch { get; set; }
         public DateTime Data { get; set; }
     }
 
@@ -35,6 +37,7 @@ namespace Dados.Models
         public long IdGuild { get; set; }
         public long IdPlayer { get; set; }
         public string Nome { get; set; }
+        public Siege Siege { get; set; }
     }
 
     public class SiegeDefenseDeck
@@ -44,6 +47,8 @@ namespace Dados.Models
         public long IdSiege { get; set; }
         public long IdPlayer { get; set; }
         public long IdGuild { get; set; }
+
+        public Siege Siege { get; set; }
 
     }
 

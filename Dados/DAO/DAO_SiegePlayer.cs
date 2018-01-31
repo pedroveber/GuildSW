@@ -75,7 +75,7 @@ namespace Dados.DAO
             select.AppendLine("INSERT(IdPlayer, IdSiege, IdGuilda, Nome) ");
             select.AppendLine("VALUES(@IdPlayer, @IdSiege, @IdGuilda, @Nome)");
             select.AppendLine("OUTPUT inserted.Id ;");
-            
+
             command.Parameters.Add(new SqlParameter("@IdSiege", System.Data.SqlDbType.BigInt));
             command.Parameters["@IdSiege"].Value = obj.IdSiege;
 
@@ -95,13 +95,13 @@ namespace Dados.DAO
 
             conexao.Open();
             command.Connection = conexao;
-            long modified =(long)command.ExecuteScalar();
+            long modified = (long)command.ExecuteScalar();
 
             conexao.Close();
             conexao.Dispose();
             obj.Id = modified;
             return obj;
-            
+
         }
 
         public List<Models.SiegePlayerOponente> ListarPlayersOponentesSiege(long idSiege)
@@ -115,11 +115,13 @@ namespace Dados.DAO
 
             StringBuilder select = new StringBuilder();
 
-            
+
             select.AppendLine("SELECT ");
-            select.AppendLine("Id,IdPlayer,IdSiege,IdGuilda,Nome");
-            select.AppendLine("FROM dbo.SiegePlayerOponente ");
-            select.AppendLine("where IdSiege = @idSiege");
+            select.AppendLine("a.Id,a.IdPlayer,a.IdSiege,a.IdGuilda,a.Nome,b.IdSiege codsiege,b.idMatch ");
+            select.AppendLine("FROM dbo.SiegePlayerOponente a ");
+            select.AppendLine("inner join dbo.Siege b on b.Id = a.IdSiege ");
+            select.AppendLine("where a.IdSiege = @idSiege ");
+
 
             command.Parameters.Add(new SqlParameter("@idSiege", System.Data.SqlDbType.BigInt));
             command.Parameters["@idSiege"].Value = idSiege;
@@ -141,6 +143,13 @@ namespace Dados.DAO
                 objOponente.IdPlayer = long.Parse(reader["IdPlayer"].ToString());
                 objOponente.IdSiege = long.Parse(reader["IdSiege"].ToString());
                 objOponente.Nome = reader["Nome"].ToString();
+
+                objOponente.Siege = new Siege()
+                {
+                    Id = long.Parse(reader["IdSiege"].ToString()),
+                    IdSiege = long.Parse(reader["codsiege"].ToString()),
+                    IdMatch = long.Parse(reader["idMatch"].ToString()),
+                };
 
                 objRetorno.Add(objOponente);
             }

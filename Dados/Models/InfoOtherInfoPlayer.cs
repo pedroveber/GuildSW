@@ -149,6 +149,9 @@ namespace Models
             public GuildwarRankingInfo guildwar_ranking_info { get; set; }
             public string command { get; set; }
             public GuildwarRankingStat guildwar_ranking_stat { get; set; }
+
+            
         }
+                
     }
 }

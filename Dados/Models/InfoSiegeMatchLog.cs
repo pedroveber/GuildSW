@@ -21,6 +21,7 @@ namespace Dados.Models
         public class GuildsiegeMatchLogList
         {
             public long siege_id { get; set; }
+            public long match_id { get; set; }
             public long guild_id { get; set; }
             public int pos_id { get; set; }
             public int match_rank { get; set; }
@@ -32,6 +33,7 @@ namespace Dados.Models
         {
             public long siege_id { get; set; }
             public long guild_id { get; set; }
+            public long match_id { get; set; }            
             public int pos_id { get; set; }
             public int match_rank { get; set; }
             public int rating_id { get; set; }

@@ -68,11 +68,11 @@ namespace Dados.DAO
 
             StringBuilder select = new StringBuilder();
 
-            select.AppendLine("SET DATEFORMAT dmy;");
-            select.AppendLine("SELECT ");
-            select.AppendLine("ID, IDDECK, IDSIEGE, IDPLAYER, IDGUILD ");
-            select.AppendLine("FROM DBO.SIEGEDEFENSEDECK ");
-            select.AppendLine("where IDSIEGE = @idSiege");
+            select.AppendLine("SET DATEFORMAT dmy; ");
+            select.AppendLine("SELECT a.ID, a.IDDECK, a.IDSIEGE, a.IDPLAYER, a.IDGUILD, b.idsiege codsiege,b.idmatch ");
+            select.AppendLine("FROM DBO.SIEGEDEFENSEDECK a ");
+            select.AppendLine("inner join dbo.Siege b on b.id = a.IdSiege ");
+            select.AppendLine("where a.IDSIEGE = @idSiege ");
 
             command.Parameters.Add(new SqlParameter("@idSiege", System.Data.SqlDbType.BigInt));
             command.Parameters["@idSiege"].Value = idSiege;
@@ -94,6 +94,13 @@ namespace Dados.DAO
                 objDefense.IdGuild = long.Parse(reader["IDGUILD"].ToString());
                 objDefense.IdPlayer = long.Parse(reader["IDPLAYER"].ToString());
                 objDefense.IdSiege = long.Parse(reader["IDSIEGE"].ToString());
+
+                objDefense.Siege = new Siege()
+                {
+                    Id = long.Parse(reader["IDSIEGE"].ToString()),
+                    IdSiege = long.Parse(reader["codsiege"].ToString()),
+                    IdMatch = long.Parse(reader["idmatch"].ToString())
+                };
 
                 objRetorno.Add(objDefense);
             }

@@ -10,6 +10,7 @@ namespace Dados.Models
         public class match_info
         {
             public long siege_id { get; set; }
+            public long match_id { get; set; }
             public long match_start_time { get; set; }
 
         }
