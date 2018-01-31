@@ -83,7 +83,7 @@ namespace Dados.DAO
             command.Parameters["@Nome"].Value = obj.Nome;
 
             command.Parameters.Add(new SqlParameter("@Level", System.Data.SqlDbType.BigInt));
-            command.Parameters["@Level"].Value = obj.Level;
+            command.Parameters["@Level"].Value = 1;
 
             command.Parameters.Add(new SqlParameter("@PontoArena", System.Data.SqlDbType.BigInt));
             command.Parameters["@PontoArena"].Value = obj.PontoArena;
