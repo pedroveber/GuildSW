@@ -83,7 +83,8 @@
             this.txtDiretorio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnSalvarConfigs = new System.Windows.Forms.Button();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.timerGVG = new System.Windows.Forms.Timer(this.components);
+            this.timerSiege = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.pl_load.SuspendLayout();
@@ -113,6 +114,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(800, 629);
             this.tabControl1.TabIndex = 3;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage4
             // 
@@ -697,10 +699,15 @@
             this.btnSalvarConfigs.UseVisualStyleBackColor = true;
             this.btnSalvarConfigs.Click += new System.EventHandler(this.btnSalvarConfigs_Click);
             // 
-            // timer1
+            // timerGVG
             // 
-            this.timer1.Interval = 1000;
-            this.timer1.Tick += new System.EventHandler(this.btnVerificaArq_Click);
+            this.timerGVG.Interval = 2000;
+            this.timerGVG.Tick += new System.EventHandler(this.btnVerificaArq_Click);
+            // 
+            // timerSiege
+            // 
+            this.timerSiege.Interval = 2000;
+            this.timerSiege.Tick += new System.EventHandler(this.timerSiege_Tick);
             // 
             // Form1
             // 
@@ -761,7 +768,7 @@
         private System.Windows.Forms.Label lbl_msnLoad2;
         private System.Windows.Forms.Label lbl_msnLoad;
         private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer timerGVG;
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.Button btnLimparLog;
@@ -792,6 +799,7 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lbl_msnLoadSiege;
         private System.Windows.Forms.Label lblErroSiege;
+        private System.Windows.Forms.Timer timerSiege;
     }
 }
 

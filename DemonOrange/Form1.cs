@@ -29,21 +29,9 @@ namespace DemonOrange
 
         string PATH = System.AppDomain.CurrentDomain.BaseDirectory.ToString();
 
-        private void btnSalvarConfigs_Click(object sender, EventArgs e)
+             private void Form1_Load(object sender, EventArgs e)
         {
-            string[] conf = new string[2];
-            conf[0] = txtDiretorio.Text;
-            if (chkAtualizacaoAutomatica.Checked == true)
-            { conf[1] = "1"; }
-            else
-            { conf[1] = "0"; }
-            System.IO.File.WriteAllLines(PATH + "\\config.txt", conf);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            Thread YhdIniciar = new Thread(() => TimerIni());
-            YhdIniciar.Start();
+            timerGVG.Start();
 
             string[] lines;
             if (System.IO.File.Exists(PATH + @"config.txt"))
@@ -62,25 +50,32 @@ namespace DemonOrange
         }
 
 
+        //Tick do Timer da GVG
         private void btnVerificaArq_Click(object sender, EventArgs e)
         {
             Thread YhdIniciar = new Thread(() => Timer());
             YhdIniciar.Start();
         }
-        void TimerIni()
+        //Tick do Timer da Siege    
+        private void timerSiege_Tick(object sender, EventArgs e)
         {
-            while (true)
-            {
-                Thread.Sleep(2000);
-                Thread YhdIniciar = new Thread(() => Timer());
-                YhdIniciar.Start();
-            }
+            Thread YhdIniciar = new Thread(() => TimerSiege());
+            YhdIniciar.Start();
         }
+        
         void Timer()
         {
             ValidarArquivo(true);
+            
+        }
+        void TimerSiege()
+        {
             ValidarArquivoSiege(true);
         }
+
+        #region ValidarArquivo
+
+        
         private void ValidarArquivo(bool timer)
         {
             if (timer)
@@ -194,6 +189,10 @@ namespace DemonOrange
 
         }
 
+        #endregion
+
+        #region Validar Arquivo Siege
+        
         private void ValidarArquivoSiege(bool timer)
         {
 
@@ -282,6 +281,8 @@ namespace DemonOrange
             }
         }
 
+        #endregion
+
         private void btnAlimentaDB_Click(object sender, EventArgs e)
         {
 
@@ -332,7 +333,7 @@ namespace DemonOrange
             try
             {
 
-
+                timerGVG.Stop();
                 PainelLoad(true, "Aguarde", "Iniciando Processo!", false);
 
                 FazerBackupArquivo();
@@ -475,7 +476,7 @@ namespace DemonOrange
 
                 }
 
-
+                timerGVG.Start();
 
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
@@ -1627,7 +1628,7 @@ namespace DemonOrange
 
         private void AtualizarSiege()
         {
-            timer1.Stop();
+            timerSiege.Stop();
             PainelLoadSiege(true, "Aguarde", "Iniciando Processo!", false);
 
             FazerBackupArquivo();
@@ -1677,7 +1678,7 @@ namespace DemonOrange
             GravarTimeDefesa(rootDefesas, idSiege);
 
             PainelLoadSiege(true, "Concluído.", "-", false);
-            timer1.Start();
+            timerSiege.Start();
         }
 
         #region Inserir Siege
@@ -2189,6 +2190,41 @@ namespace DemonOrange
             System.DateTime dtDateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
             dtDateTime = dtDateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dtDateTime;
+        }
+
+        private void btnSalvarConfigs_Click(object sender, EventArgs e)
+        {
+            string[] conf = new string[2];
+            conf[0] = txtDiretorio.Text;
+            if (chkAtualizacaoAutomatica.Checked == true)
+            { conf[1] = "1"; }
+            else
+            { conf[1] = "0"; }
+            System.IO.File.WriteAllLines(PATH + "\\config.txt", conf);
+        }
+
+        private void tabControl1_TabIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            switch (tabControl1.SelectedIndex)
+            {
+                case 0:
+                    timerGVG.Start();
+                    timerSiege.Stop ();
+                    break;
+                case 1:
+                    timerGVG.Stop();
+                    timerSiege.Start();
+                    break;
+                default:
+                    timerGVG.Stop();
+                    timerSiege.Stop();
+                    break;
+            }
         }
     }
     #endregion
