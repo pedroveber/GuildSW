@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c992b872-47b6-4041-acd2-ff14381403b2" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="91d8a148-c33d-4c44-b655-cf89a5e5d335" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
-    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
     <EnableDataBinding>true</EnableDataBinding>
     <ExcludedTypes />
     <ImportXmlTypes>false</ImportXmlTypes>
@@ -19,11 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://54.94.213.182/Upload.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://localhost:64149/WSArquivo.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="Upload.disco" MetadataType="Disco" ID="bd3a5ff7-da4a-4483-a07f-d3f196e3104e" SourceId="1" SourceUrl="http://54.94.213.182/Upload.asmx?disco" />
-    <MetadataFile FileName="Upload.wsdl" MetadataType="Wsdl" ID="c8f912bd-1602-4327-bfed-01e37e848c4a" SourceId="1" SourceUrl="http://54.94.213.182/Upload.asmx?wsdl" />
+    <MetadataFile FileName="WSArquivo1.wsdl" MetadataType="Wsdl" ID="90a4635d-437b-4eb4-9ea1-9b29049d9ca8" SourceId="1" SourceUrl="http://localhost:64149/WSArquivo.asmx?wsdl" />
+    <MetadataFile FileName="WSArquivo1.disco" MetadataType="Disco" ID="d104aa82-4b15-4e89-a160-23fab5955d42" SourceId="1" SourceUrl="http://localhost:64149/WSArquivo.asmx?disco" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

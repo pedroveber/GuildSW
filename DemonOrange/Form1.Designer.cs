@@ -36,7 +36,6 @@
             this.label10 = new System.Windows.Forms.Label();
             this.txtSenhaEnviaServer = new System.Windows.Forms.TextBox();
             this.pl_load = new System.Windows.Forms.Panel();
-            this.lbl_msnLoad2 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lbl_msnLoad = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
@@ -58,7 +57,6 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.lblErroSiege = new System.Windows.Forms.Label();
             this.pl_loadSiege = new System.Windows.Forms.Panel();
-            this.lbl_msnLoad2Siege = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lbl_msnLoadSiege = new System.Windows.Forms.Label();
             this.btnAtualizarSiege = new System.Windows.Forms.Button();
@@ -78,7 +76,6 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage6 = new System.Windows.Forms.TabPage();
-            this.chkAtualizacaoAutomatica = new System.Windows.Forms.CheckBox();
             this.btnLimparLog = new System.Windows.Forms.Button();
             this.txtDiretorio = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -188,7 +185,6 @@
             this.pl_load.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pl_load.BackColor = System.Drawing.Color.DarkGray;
             this.pl_load.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pl_load.Controls.Add(this.lbl_msnLoad2);
             this.pl_load.Controls.Add(this.pictureBox2);
             this.pl_load.Controls.Add(this.lbl_msnLoad);
             this.pl_load.Location = new System.Drawing.Point(104, 309);
@@ -197,22 +193,11 @@
             this.pl_load.TabIndex = 77;
             this.pl_load.Visible = false;
             // 
-            // lbl_msnLoad2
-            // 
-            this.lbl_msnLoad2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lbl_msnLoad2.AutoSize = true;
-            this.lbl_msnLoad2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_msnLoad2.Location = new System.Drawing.Point(196, 55);
-            this.lbl_msnLoad2.Name = "lbl_msnLoad2";
-            this.lbl_msnLoad2.Size = new System.Drawing.Size(12, 16);
-            this.lbl_msnLoad2.TabIndex = 56;
-            this.lbl_msnLoad2.Text = "-";
-            // 
             // pictureBox2
             // 
             this.pictureBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pictureBox2.Image = global::DemonOrange.Properties.Resources.loading;
-            this.pictureBox2.Location = new System.Drawing.Point(140, 25);
+            this.pictureBox2.Location = new System.Drawing.Point(137, 25);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(50, 50);
             this.pictureBox2.TabIndex = 1;
@@ -432,7 +417,6 @@
             this.pl_loadSiege.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pl_loadSiege.BackColor = System.Drawing.Color.DarkGray;
             this.pl_loadSiege.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pl_loadSiege.Controls.Add(this.lbl_msnLoad2Siege);
             this.pl_loadSiege.Controls.Add(this.pictureBox1);
             this.pl_loadSiege.Controls.Add(this.lbl_msnLoadSiege);
             this.pl_loadSiege.Location = new System.Drawing.Point(96, 235);
@@ -441,20 +425,10 @@
             this.pl_loadSiege.TabIndex = 78;
             this.pl_loadSiege.Visible = false;
             // 
-            // lbl_msnLoad2Siege
-            // 
-            this.lbl_msnLoad2Siege.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.lbl_msnLoad2Siege.AutoSize = true;
-            this.lbl_msnLoad2Siege.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lbl_msnLoad2Siege.Location = new System.Drawing.Point(196, 55);
-            this.lbl_msnLoad2Siege.Name = "lbl_msnLoad2Siege";
-            this.lbl_msnLoad2Siege.Size = new System.Drawing.Size(12, 16);
-            this.lbl_msnLoad2Siege.TabIndex = 56;
-            this.lbl_msnLoad2Siege.Text = "-";
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pictureBox1.Enabled = false;
             this.pictureBox1.Image = global::DemonOrange.Properties.Resources.loading;
             this.pictureBox1.Location = new System.Drawing.Point(140, 25);
             this.pictureBox1.Name = "pictureBox1";
@@ -637,7 +611,6 @@
             // 
             // tabPage6
             // 
-            this.tabPage6.Controls.Add(this.chkAtualizacaoAutomatica);
             this.tabPage6.Controls.Add(this.btnLimparLog);
             this.tabPage6.Controls.Add(this.txtDiretorio);
             this.tabPage6.Controls.Add(this.label1);
@@ -649,17 +622,6 @@
             this.tabPage6.TabIndex = 0;
             this.tabPage6.Text = "Geral";
             this.tabPage6.UseVisualStyleBackColor = true;
-            // 
-            // chkAtualizacaoAutomatica
-            // 
-            this.chkAtualizacaoAutomatica.AutoSize = true;
-            this.chkAtualizacaoAutomatica.Location = new System.Drawing.Point(188, 48);
-            this.chkAtualizacaoAutomatica.Name = "chkAtualizacaoAutomatica";
-            this.chkAtualizacaoAutomatica.Size = new System.Drawing.Size(137, 17);
-            this.chkAtualizacaoAutomatica.TabIndex = 14;
-            this.chkAtualizacaoAutomatica.Text = "Atualização Automática";
-            this.chkAtualizacaoAutomatica.UseVisualStyleBackColor = true;
-            this.chkAtualizacaoAutomatica.CheckedChanged += new System.EventHandler(this.chkAtualizacaoAutomatica_CheckedChanged);
             // 
             // btnLimparLog
             // 
@@ -765,7 +727,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lblErro;
         private System.Windows.Forms.Panel pl_load;
-        private System.Windows.Forms.Label lbl_msnLoad2;
         private System.Windows.Forms.Label lbl_msnLoad;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Timer timerGVG;
@@ -773,7 +734,6 @@
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.Button btnLimparLog;
         private System.Windows.Forms.Button btnEnviarLog;
-        private System.Windows.Forms.CheckBox chkAtualizacaoAutomatica;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabPage12;
         private System.Windows.Forms.DataGridView dtvArquivoDefesa;
@@ -795,7 +755,6 @@
         private System.Windows.Forms.Panel plSiegeMatchLog;
         private System.Windows.Forms.Button btnAtualizarSiege;
         private System.Windows.Forms.Panel pl_loadSiege;
-        private System.Windows.Forms.Label lbl_msnLoad2Siege;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label lbl_msnLoadSiege;
         private System.Windows.Forms.Label lblErroSiege;
