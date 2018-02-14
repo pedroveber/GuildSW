@@ -16,7 +16,7 @@ namespace Dados.BLO
         public void CarregarGVG(FileInfo arquivo)
         {
             CarregaArquivoGVG(arquivo.FullName);
-            System.IO.File.Move(arquivo.FullName, @"C:\ArquivosProxy\Processado\" + arquivo.Name);
+            
         }
 
         public void CarregarGVG()
@@ -28,7 +28,7 @@ namespace Dados.BLO
         public void CarregarSiege(FileInfo arquivo)
         {
             CarregarArquivoSiege(arquivo.FullName);
-            System.IO.File.Move(arquivo.FullName, @"C:\ArquivosProxy\Processado\" + arquivo.Name);
+            
         }
 
         public void CarregarSiege()
@@ -262,7 +262,7 @@ namespace Dados.BLO
                 CarregarTimeDefesas(arquivo.FullName);
                 GravarDefesas(list);
 
-                System.IO.File.Move(arquivo.FullName, @"C:\ArquivosProxy\Processado\" + arquivo.Name);
+                
 
             }
             catch (Exception)

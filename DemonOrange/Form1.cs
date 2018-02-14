@@ -125,7 +125,6 @@ namespace DemonOrange
 
 
                     btnAlimentaDB.Enabled = true;
-                    btnEnviarLog.Enabled = true;
                     lblErro.Text = "-";
 
 
@@ -133,7 +132,6 @@ namespace DemonOrange
                 else
                 {
                     btnAlimentaDB.Enabled = false;
-                    btnEnviarLog.Enabled = false;
                     lblErro.Text = "Alguns Registro não forão encontrados";
 
 
@@ -224,6 +222,7 @@ namespace DemonOrange
                 panel1.Enabled = false;
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
+
                 System.IO.File.Move(txtDiretorio.Text + @"//full_log.txt", txtDiretorio.Text + @"//tempDemonOrange.txt");
 
                 Autorizacao();
@@ -270,10 +269,11 @@ namespace DemonOrange
                 pictureBox2.Enabled = true;
                 PainelLoad(true, "Aguarde \nEnviando Arquivo para o Servidor", false);
 
-                string sfile = @"C:\Users\pbveber\Source\Repos\DB_SW\GuildSw\tempDemonOrange.txt";
+                string sfile = @txtDiretorio.Text + "\\tempDemonOrange.txt";
 
                 //new Dados.BLO.BLO_Arquivo().CarregarGVG();
                 WSArquivo.WSArquivoSoapClient wsArquivo = new WSArquivo.WSArquivoSoapClient();
+
 
                 FileStream objfilestream = new FileStream(sfile, FileMode.Open, FileAccess.Read);
                 int len = (int)objfilestream.Length;
@@ -361,10 +361,7 @@ namespace DemonOrange
         {
             lblMsgDefesa.Text = "Enviando arquivo para o Servidor.";
 
-            //string txtDiretorio = @"C:\Users\pbveber\Source\Repos\DB_SW\GuildSw";
-            //new Dados.BLO.BLO_Arquivo().CarregarDefesas(List, txtDiretorio + @"//tempDemonOrange.txt");
-
-            string sfile = @"C:\Users\pbveber\Source\Repos\DB_SW\GuildSw\full_log.txt";
+            string sfile = txtDiretorio.Text + "\\full_log.txt";
 
             WSArquivo.WSArquivoSoapClient wsArquivo = new WSArquivo.WSArquivoSoapClient();
 
@@ -379,44 +376,6 @@ namespace DemonOrange
 
 
             lblMsgDefesa.Text = "Arquivo enviado com sucesso, dentro de alguns minutos estará disponível no site.";
-        }
-
-
-
-        private void btnEnviarLog_Click(object sender, EventArgs e)
-        {
-            if (txtSenhaEnviaServer.Text == "155468")
-            {
-
-            }
-
-        }
-
-
-
-
-        private void GravarLog(string mensagem)
-        {
-            try
-            {
-                //Grava 1 log da ultima execução
-                string nomeArquivo = @"c:\temp\logSWProxy" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + ".txt";
-
-                StreamWriter writer = new StreamWriter(nomeArquivo, true);
-                writer.WriteLine("--------- " + DateTime.Now.ToString() + "---------------");
-                writer.WriteLine("");
-                writer.WriteLine(mensagem);
-                writer.Flush();
-                writer.Close();
-
-            }
-            catch (Exception ex)
-            {
-                string erro = ex.Message;
-                //nao pode parar se der pau na gravação do LOG
-            }
-
-
         }
 
 
@@ -454,7 +413,7 @@ namespace DemonOrange
 
             //new Dados.BLO.BLO_Arquivo().CarregarSiege();
             //TODO: pegar da config
-            string sfile = @"C:\Users\pbveber\Source\Repos\DB_SW\GuildSw\tempDemonOrange.txt";
+            string sfile = txtDiretorio.Text + "\\tempDemonOrange.txt";
 
             WSArquivo.WSArquivoSoapClient wsArquivo = new WSArquivo.WSArquivoSoapClient();
 

@@ -18,11 +18,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="http://localhost:64149/WSArquivo.asmx" Protocol="http" SourceId="1" />
+    <MetadataSource Address="http://www.demonorange.party/WSArquivo.asmx" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="WSArquivo1.wsdl" MetadataType="Wsdl" ID="90a4635d-437b-4eb4-9ea1-9b29049d9ca8" SourceId="1" SourceUrl="http://localhost:64149/WSArquivo.asmx?wsdl" />
-    <MetadataFile FileName="WSArquivo1.disco" MetadataType="Disco" ID="d104aa82-4b15-4e89-a160-23fab5955d42" SourceId="1" SourceUrl="http://localhost:64149/WSArquivo.asmx?disco" />
+    <MetadataFile FileName="WSArquivo.disco" MetadataType="Disco" ID="bd034248-f877-4e1a-93b3-32be707fbeb7" SourceId="1" SourceUrl="http://www.demonorange.party/WSArquivo.asmx?disco" />
+    <MetadataFile FileName="WSArquivo.wsdl" MetadataType="Wsdl" ID="df57cd9e-f985-4479-aae8-801b8bc0892b" SourceId="1" SourceUrl="http://www.demonorange.party/WSArquivo.asmx?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

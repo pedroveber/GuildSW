@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="kT+lXPnuDkphBsyq7H0QjcPuAFI=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="J9QakRvU7+JJ3Mkjit7kQtlIDBg=">
   <bindingConfigurations>
     <bindingConfiguration bindingType="basicHttpBinding" name="WSArquivoSoap">
       <properties>
@@ -112,10 +112,10 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSArquivoSoap" contract="WSArquivo.WSArquivoSoap" bindingType="basicHttpBinding" address="http://localhost:64149/WSArquivo.asmx" bindingConfiguration="WSArquivoSoap">
+    <endpoint name="WSArquivoSoap" contract="WSArquivo.WSArquivoSoap" bindingType="basicHttpBinding" address="http://www.demonorange.party/WSArquivo.asmx" bindingConfiguration="WSArquivoSoap">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>http://localhost:64149/WSArquivo.asmx</serializedValue>
+          <serializedValue>http://www.demonorange.party/WSArquivo.asmx</serializedValue>
         </property>
         <property path="/behaviorConfiguration" isComplexType="false" isExplicitlyDefined="false" clrType="System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue />

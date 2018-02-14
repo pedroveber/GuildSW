@@ -58,10 +58,10 @@
   </wsdl:binding>
   <wsdl:service name="WSArquivo">
     <wsdl:port name="WSArquivoSoap" binding="tns:WSArquivoSoap">
-      <soap:address location="http://localhost:64149/WSArquivo.asmx" />
+      <soap:address location="http://www.demonorange.party/WSArquivo.asmx" />
     </wsdl:port>
     <wsdl:port name="WSArquivoSoap12" binding="tns:WSArquivoSoap12">
-      <soap12:address location="http://localhost:64149/WSArquivo.asmx" />
+      <soap12:address location="http://www.demonorange.party/WSArquivo.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>

@@ -39,7 +39,6 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.lbl_msnLoad = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnEnviarLog = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lblErro = new System.Windows.Forms.Label();
             this.btnAlimentaDB = new System.Windows.Forms.Button();
@@ -121,7 +120,6 @@
             this.tabPage4.Controls.Add(this.txtSenhaEnviaServer);
             this.tabPage4.Controls.Add(this.pl_load);
             this.tabPage4.Controls.Add(this.label9);
-            this.tabPage4.Controls.Add(this.btnEnviarLog);
             this.tabPage4.Controls.Add(this.panel1);
             this.tabPage4.Controls.Add(this.btnAlimentaDB);
             this.tabPage4.Controls.Add(this.btnVerificaArq);
@@ -225,20 +223,6 @@
             this.label9.TabIndex = 14;
             this.label9.Text = "-";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // btnEnviarLog
-            // 
-            this.btnEnviarLog.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEnviarLog.Enabled = false;
-            this.btnEnviarLog.Location = new System.Drawing.Point(4, 240);
-            this.btnEnviarLog.Name = "btnEnviarLog";
-            this.btnEnviarLog.Size = new System.Drawing.Size(780, 44);
-            this.btnEnviarLog.TabIndex = 13;
-            this.btnEnviarLog.Text = "Enviar Log p/ Servidor";
-            this.btnEnviarLog.UseVisualStyleBackColor = true;
-            this.btnEnviarLog.Visible = false;
-            this.btnEnviarLog.Click += new System.EventHandler(this.btnEnviarLog_Click);
             // 
             // panel1
             // 
@@ -733,7 +717,6 @@
         private System.Windows.Forms.TabControl tabControl2;
         private System.Windows.Forms.TabPage tabPage6;
         private System.Windows.Forms.Button btnLimparLog;
-        private System.Windows.Forms.Button btnEnviarLog;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabPage12;
         private System.Windows.Forms.DataGridView dtvArquivoDefesa;

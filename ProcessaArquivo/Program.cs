@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Dados;
 using System.Threading;
+using System.Configuration;
 
 namespace ProcessaArquivo
 {
@@ -18,11 +19,15 @@ namespace ProcessaArquivo
             ProcessaArquivo();
 
             FileSystemWatcher watcher = new FileSystemWatcher();
-            watcher.Path = @"C:\ArquivosProxy\Pendente";
+
+            watcher.Path = ConfigurationManager.AppSettings["LocalPastaPendente"].ToString();
+
             watcher.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName;
             watcher.Filter = "*";
             
             watcher.Created += new FileSystemEventHandler(OnChanged);
+            watcher.Changed += new FileSystemEventHandler(OnChanged);
+            
             watcher.EnableRaisingEvents = true;
 
             Console.WriteLine("");
@@ -42,11 +47,18 @@ namespace ProcessaArquivo
 
         private static void ProcessaArquivo()
         {
-            string strdocPath = @"C:\ArquivosProxy\Pendente";
+            try
+            {
 
-            System.IO.DirectoryInfo diretorio = new DirectoryInfo(strdocPath);
+            
+            string strCaminhoPendente = ConfigurationManager.AppSettings["LocalPastaPendente"].ToString();
+            string strCaminhoProcessado = ConfigurationManager.AppSettings["LocalPastaProcessado"].ToString();
+            string strCaminhoDesconhecido= ConfigurationManager.AppSettings["LocalPastaDesconhecido"].ToString();
 
+            System.IO.DirectoryInfo diretorio = new DirectoryInfo(strCaminhoPendente);
+            
             FileInfo[] arquivos = diretorio.GetFiles();
+
             
             while (arquivos.Count() > 0)
             {
@@ -62,6 +74,8 @@ namespace ProcessaArquivo
                         Console.WriteLine(DateTime.Now.ToString() + ": Processando arquivo: " + item.Name);
                         new Dados.BLO.BLO_Arquivo().CarregarGVG(item);
 
+                        System.IO.File.Move(item.FullName, strCaminhoProcessado + item.Name);
+
                         Console.WriteLine(DateTime.Now.ToString() + ": Arquivo: " + item.Name + " processado com sucesso");
                         Console.WriteLine("");
                     }
@@ -70,6 +84,7 @@ namespace ProcessaArquivo
                         arqConhecido = true;
                         Console.WriteLine(DateTime.Now.ToString() + ": Processando arquivo: " + item.Name);
                         new Dados.BLO.BLO_Arquivo().CarregarSiege(item);
+                        System.IO.File.Move(item.FullName, strCaminhoProcessado + item.Name);
 
                         Console.WriteLine(DateTime.Now.ToString() + ": Arquivo: " + item.Name + " processado com sucesso");
                         Console.WriteLine("");
@@ -79,6 +94,7 @@ namespace ProcessaArquivo
                         arqConhecido = true;
                         Console.WriteLine(DateTime.Now.ToString() + ": Processando arquivo: " + item.Name);
                         new Dados.BLO.BLO_Arquivo().CarregarDefesas(item);
+                        System.IO.File.Move(item.FullName, strCaminhoProcessado + item.Name);
 
                         Console.WriteLine(DateTime.Now.ToString() + ": Arquivo: " + item.Name + " processado com sucesso");
                         Console.WriteLine("");
@@ -86,12 +102,18 @@ namespace ProcessaArquivo
 
                     if(!arqConhecido)
                     {
-                        System.IO.File.Move(item.FullName, @"C:\ArquivosProxy\ArquivoDesconhecido\" + item.Name);
+                        System.IO.File.Move(item.FullName, strCaminhoDesconhecido + item.Name);
                     }
                     
                 }
                 Thread.Sleep(1000);
                 arquivos = diretorio.GetFiles();
+            }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
         }
     }
