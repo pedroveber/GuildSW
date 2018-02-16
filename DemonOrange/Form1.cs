@@ -15,6 +15,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using Dados.Models;
 using Dados.DAO;
+using System.Threading;
 
 
 namespace DemonOrange
@@ -220,12 +221,22 @@ namespace DemonOrange
             try
             {
                 panel1.Enabled = false;
+                btnAlimentaDB.Enabled = false;
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
 
                 System.IO.File.Move(txtDiretorio.Text + @"//full_log.txt", txtDiretorio.Text + @"//tempDemonOrange.txt");
 
-                Autorizacao();
+                timerGVG.Stop();
+
+                pictureBox2.Enabled = true;
+                PainelLoad(true, "Aguarde \nEnviando Arquivo para o Servidor");
+
+                System.Threading.Thread t = new System.Threading.Thread(() => AtualizaGVG());
+                t.Start();
+
+
+
                 panel1.Enabled = true;
             }
             catch (Exception)
@@ -237,15 +248,13 @@ namespace DemonOrange
 
         }
 
-        public void PainelLoad(Boolean _painel, string _label, Boolean _btnCancelar)
+        public void PainelLoad(Boolean _painel, string _label)
         {
-
             pl_load.Visible = _painel;
             lbl_msnLoad.Text = _label;
             if (!_painel)
                 ValidarArquivo();
-
-
+            
         }
 
         public void PainelLoadSiege(Boolean _painel, string _label)
@@ -258,16 +267,15 @@ namespace DemonOrange
 
         }
 
-
-        void Autorizacao()
+        void AtualizaGVG()
         {
 
             try
             {
-                timerGVG.Stop();
+                
 
-                pictureBox2.Enabled = true;
-                PainelLoad(true, "Aguarde \nEnviando Arquivo para o Servidor", false);
+                //System.Threading.Thread t = new System.Threading.Thread(() => UpdateStatus("Aguarde \nEnviando Arquivo para o Servidor"));
+                //t.Start();
 
                 string sfile = @txtDiretorio.Text + "\\tempDemonOrange.txt";
 
@@ -281,21 +289,16 @@ namespace DemonOrange
                 objfilestream.Read(mybytearray, 0, len);
 
                 wsArquivo.SaveDocument(mybytearray, "741852963", 1);
-
+                
                 objfilestream.Close();
 
-
-                //pedroca
-                pictureBox2.Enabled = false;
-                PainelLoad(true, "Arquivo enviado com sucesso. \nDentro de alguns minutos ficará disponivel \npara consulta no site.", false);
-
-                ValidarArquivo();
-
-                timerGVG.Start();
-
-                if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
-                    System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
-
+                                
+                if (pictureBox2.InvokeRequired)
+                {
+                    this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] {  });
+                    return;
+                }
+                
 
             }
             catch (Exception ex)
@@ -305,8 +308,26 @@ namespace DemonOrange
             }
         }
 
+        private delegate void HabilitaObjetosGVGDelegate();
+        private void HabilitaObjetosGVG()
+        {
+            if (pictureBox2.InvokeRequired)
+            {
+                this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] {  });
+                return;
+            }
+
+            pictureBox2.Enabled = false;
+            PainelLoad(true, "Arquivo enviado com sucesso. \nDentro de alguns minutos ficará disponivel \npara consulta no site.");
+            ValidarArquivo();
+
+            timerGVG.Start();
+
+            if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
+                System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
 
 
+        }
 
 
         private void btnLimparLog_Click(object sender, EventArgs e)
@@ -389,11 +410,21 @@ namespace DemonOrange
             try
             {
                 panel1.Enabled = false;
+                btnAtualizarSiege.Enabled = false;
+                
+
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
                 System.IO.File.Move(txtDiretorio.Text + @"//full_log.txt", txtDiretorio.Text + @"//tempDemonOrange.txt");
 
-                AtualizarSiege();
+                timerSiege.Stop();
+                PainelLoadSiege(true, "Aguarde \nEnviando Arquivo para o Servidor");
+
+                pictureBox1.Enabled = true;
+
+                System.Threading.Thread t = new System.Threading.Thread(() => AtualizarSiege());
+                t.Start();
+
                 panel1.Enabled = true;
             }
             catch (Exception)
@@ -408,13 +439,9 @@ namespace DemonOrange
 
         private void AtualizarSiege()
         {
-            timerSiege.Stop();
-            PainelLoadSiege(true, "Aguarde \nEnviando Arquivo para o Servidor");
 
-            //new Dados.BLO.BLO_Arquivo().CarregarSiege();
             //TODO: pegar da config
             string sfile = txtDiretorio.Text + "\\tempDemonOrange.txt";
-
             WSArquivo.WSArquivoSoapClient wsArquivo = new WSArquivo.WSArquivoSoapClient();
 
             FileStream objfilestream = new FileStream(sfile, FileMode.Open, FileAccess.Read);
@@ -423,15 +450,40 @@ namespace DemonOrange
             objfilestream.Read(mybytearray, 0, len);
 
             wsArquivo.SaveDocument(mybytearray, "741852963", 2);
-
+            
             objfilestream.Close();
 
+
+            if (pictureBox1.InvokeRequired)
+            {
+                this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosSiege), new object[] { });
+                return;
+            }
+            
+
+        }
+
+        private delegate void HabilitaObjetosSiegeDelegate();
+        private void HabilitaObjetosSiege()
+        {
+            if (pictureBox1.InvokeRequired)
+            {
+                this.Invoke(new HabilitaObjetosSiegeDelegate(this.HabilitaObjetosSiege), new object[] { });
+                return;
+            }
+
             PainelLoadSiege(true, "Arquivo enviado com sucesso. \nDentro de alguns minutos ficará disponivel \npara consulta no site.");
+            pictureBox1.Enabled = false;
+
             ValidarArquivoSiege();
 
             timerSiege.Start();
-        }
 
+            if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
+                System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
+
+
+        }
 
 
 
