@@ -197,7 +197,19 @@ namespace Dados.BLO
             //PainelLoadSiege(true, "Leitura de arquivo concluido", "-", false);
 
             //Guarda o Código da Guild e da Siege
-            long codGuild = rootMatch.guildsiege_match_log_list[0].guild_id;
+
+            //Quando reseta a Siege não tem mais este objeto para pegar o código da guild. 
+            long codGuild = 0;
+            if (rootMatch.guildsiege_match_log_list.Count()>0)
+            {
+                codGuild= rootMatch.guildsiege_match_log_list[0].guild_id;
+                
+            }
+            else
+            {
+                codGuild = rootBatalhas[0].log_list[0].battle_log_list[0].guild_id;
+            }
+
             long idSiege = 0;
 
 
@@ -1064,7 +1076,11 @@ namespace Dados.BLO
                 //var distinctItems = items.GroupBy(x => x.Id).Select(y => y.First());
                 lstDefesas = lstDefesas.GroupBy(x => x.defense_wizard_id).Select(y => y.First()).ToList();
 
-                daoTimeDefesa.AtualizarTimeDefesaGVG(lstDefesas, idBatalha);
+                if (lstDefesas.Count>0)
+                {
+                    daoTimeDefesa.AtualizarTimeDefesaGVG(lstDefesas, idBatalha);
+                }
+                
             }
             catch (Exception ex)
             {

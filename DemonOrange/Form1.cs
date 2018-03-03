@@ -86,41 +86,51 @@ namespace DemonOrange
             pl_5.BackColor = Color.Tomato;
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
-                string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
-                foreach (string line in lines)
+                //string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
+
+                FileStream fs = new FileStream(txtDiretorio.Text + @"//full_log.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader objReader = new StreamReader(fs);
+
+                string str = objReader.ReadToEnd();
+                fs.Close();
+                fs.Dispose();
+
+
+                //foreach (string line in lines)
+                //{
+
+                if (str.Contains("GetGuildWarContributeList") && str.Contains(@"ret_code"":0"))
                 {
-
-                    if (line.Contains("GetGuildWarContributeList") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq1 = true;
-                        pl_1.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildWarBattleLogByGuildId") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq2 = true;
-                        pl_2.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildWarMatchupInfo") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq3 = true;
-                        pl_3.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildInfo") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq4 = true;
-                        pl_4.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildWarParticipationInfo") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq5 = true;
-                        pl_5.BackColor = Color.Green;
-                    }
-
-                    if (line.Contains("GetGuildWarMatchLog") && line.Contains(@"ret_code"":0"))
-                    {
-                        pnlMatchLogs.BackColor = Color.Green;
-                    }
+                    Arq1 = true;
+                    pl_1.BackColor = Color.Green;
                 }
+                if (str.Contains("GetGuildWarBattleLogByGuildId") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq2 = true;
+                    pl_2.BackColor = Color.Green;
+                }
+                if (str.Contains("GetGuildWarMatchupInfo") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq3 = true;
+                    pl_3.BackColor = Color.Green;
+                }
+                if (str.Contains("GetGuildInfo") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq4 = true;
+                    pl_4.BackColor = Color.Green;
+                }
+                if (str.Contains("GetGuildWarParticipationInfo") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq5 = true;
+                    pl_5.BackColor = Color.Green;
+                }
+
+                if (str.Contains("GetGuildWarMatchLog") && str.Contains(@"ret_code"":0"))
+                {
+                    pnlMatchLogs.BackColor = Color.Green;
+                }
+                //}
+
                 if (Arq1 && Arq2 && Arq3 && Arq4 && Arq5)
                 {
 
@@ -165,32 +175,42 @@ namespace DemonOrange
 
             if (System.IO.File.Exists(txtDiretorio.Text + @"//full_log.txt"))
             {
-                string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
-                foreach (string line in lines)
+
+                //string[] lines = System.IO.File.ReadAllLines(txtDiretorio.Text + @"//full_log.txt");
+                //foreach (string line in lines)
+                //{
+
+                FileStream fs = new FileStream(txtDiretorio.Text + @"//full_log.txt", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                StreamReader objReader = new StreamReader(fs);
+                
+                string str = objReader.ReadToEnd();
+
+                fs.Close();
+                fs.Dispose();
+
+                if (str.Contains("GetGuildSiegeMatchupInfo") && str.Contains(@"ret_code"":0"))
                 {
-
-                    if (line.Contains("GetGuildSiegeMatchupInfo") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq1 = true;
-                        plSiegeMatchUp.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildSiegeDefenseDeckByWizardId") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq2 = true;
-                        plSiegeDefenseDeck.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildSiegeBattleLog") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq3 = true;
-                        plSiegeBattleLog.BackColor = Color.Green;
-                    }
-                    if (line.Contains("GetGuildSiegeMatchLog") && line.Contains(@"ret_code"":0"))
-                    {
-                        Arq4 = true;
-                        plSiegeMatchLog.BackColor = Color.Green;
-                    }
-
+                    Arq1 = true;
+                    plSiegeMatchUp.BackColor = Color.Green;
                 }
+                if (str.Contains("GetGuildSiegeDefenseDeckByWizardId") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq2 = true;
+                    plSiegeDefenseDeck.BackColor = Color.Green;
+                }
+                if (str.Contains("GetGuildSiegeBattleLog") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq3 = true;
+                    plSiegeBattleLog.BackColor = Color.Green;
+                }
+                if (str.Contains("GetGuildSiegeMatchLog") && str.Contains(@"ret_code"":0"))
+                {
+                    Arq4 = true;
+                    plSiegeMatchLog.BackColor = Color.Green;
+                }
+
+                //}
+
                 if (Arq1 && Arq2 && Arq3 && Arq4)
                 {
 
@@ -239,7 +259,7 @@ namespace DemonOrange
 
                 panel1.Enabled = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 panel1.Enabled = true;
 
@@ -254,7 +274,7 @@ namespace DemonOrange
             lbl_msnLoad.Text = _label;
             if (!_painel)
                 ValidarArquivo();
-            
+
         }
 
         public void PainelLoadSiege(Boolean _painel, string _label)
@@ -272,7 +292,7 @@ namespace DemonOrange
 
             try
             {
-                
+
 
                 //System.Threading.Thread t = new System.Threading.Thread(() => UpdateStatus("Aguarde \nEnviando Arquivo para o Servidor"));
                 //t.Start();
@@ -289,16 +309,16 @@ namespace DemonOrange
                 objfilestream.Read(mybytearray, 0, len);
 
                 wsArquivo.SaveDocument(mybytearray, "741852963", 1);
-                
+
                 objfilestream.Close();
 
-                                
+
                 if (pictureBox2.InvokeRequired)
                 {
-                    this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] {  });
+                    this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] { });
                     return;
                 }
-                
+
 
             }
             catch (Exception ex)
@@ -313,7 +333,7 @@ namespace DemonOrange
         {
             if (pictureBox2.InvokeRequired)
             {
-                this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] {  });
+                this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosGVG), new object[] { });
                 return;
             }
 
@@ -376,7 +396,7 @@ namespace DemonOrange
 
         }
 
-        
+
 
         private void btnEfetivarCargaDefesa_Click(object sender, EventArgs e)
         {
@@ -411,7 +431,7 @@ namespace DemonOrange
             {
                 panel1.Enabled = false;
                 btnAtualizarSiege.Enabled = false;
-                
+
 
                 if (System.IO.File.Exists(txtDiretorio.Text + @"//tempDemonOrange.txt"))
                     System.IO.File.Delete(txtDiretorio.Text + @"//tempDemonOrange.txt");
@@ -450,7 +470,7 @@ namespace DemonOrange
             objfilestream.Read(mybytearray, 0, len);
 
             wsArquivo.SaveDocument(mybytearray, "741852963", 2);
-            
+
             objfilestream.Close();
 
 
@@ -459,7 +479,7 @@ namespace DemonOrange
                 this.Invoke(new HabilitaObjetosGVGDelegate(this.HabilitaObjetosSiege), new object[] { });
                 return;
             }
-            
+
 
         }
 
