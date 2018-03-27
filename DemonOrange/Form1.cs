@@ -299,7 +299,7 @@ namespace DemonOrange
 
                 string sfile = @txtDiretorio.Text + "\\tempDemonOrange.txt";
 
-                //new Dados.BLO.BLO_Arquivo().CarregarGVG();
+                
                 WSArquivo.WSArquivoSoapClient wsArquivo = new WSArquivo.WSArquivoSoapClient();
 
 
@@ -308,6 +308,7 @@ namespace DemonOrange
                 Byte[] mybytearray = new Byte[len];
                 objfilestream.Read(mybytearray, 0, len);
 
+                //new Dados.BLO.BLO_Arquivo().CarregarGVG();
                 wsArquivo.SaveDocument(mybytearray, "741852963", 1);
 
                 objfilestream.Close();
@@ -469,6 +470,7 @@ namespace DemonOrange
             Byte[] mybytearray = new Byte[len];
             objfilestream.Read(mybytearray, 0, len);
 
+            //new Dados.BLO.BLO_Arquivo().CarregarSiege();
             wsArquivo.SaveDocument(mybytearray, "741852963", 2);
 
             objfilestream.Close();

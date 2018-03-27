@@ -16,7 +16,7 @@ namespace Dados.BLO
         public void CarregarGVG(FileInfo arquivo)
         {
             CarregaArquivoGVG(arquivo.FullName);
-            
+
         }
 
         public void CarregarGVG()
@@ -28,7 +28,7 @@ namespace Dados.BLO
         public void CarregarSiege(FileInfo arquivo)
         {
             CarregarArquivoSiege(arquivo.FullName);
-            
+
         }
 
         public void CarregarSiege()
@@ -200,14 +200,18 @@ namespace Dados.BLO
 
             //Quando reseta a Siege não tem mais este objeto para pegar o código da guild. 
             long codGuild = 0;
-            if (rootMatch.guildsiege_match_log_list.Count()>0)
+            if (rootMatch.guildsiege_match_log_list.Count() > 0)
             {
-                codGuild= rootMatch.guildsiege_match_log_list[0].guild_id;
-                
+                codGuild = rootMatch.guildsiege_match_log_list[0].guild_id;
+
+            }
+            else if (rootBatalhas[0].log_list[0].battle_log_list.Count() > 0)
+            {
+                codGuild = rootBatalhas[0].log_list[0].battle_log_list[0].guild_id;
             }
             else
             {
-                codGuild = rootBatalhas[0].log_list[0].battle_log_list[0].guild_id;
+                codGuild = rootSiege.guild_list[0].guild_id;
             }
 
             long idSiege = 0;
@@ -270,11 +274,11 @@ namespace Dados.BLO
 
                     }
                 }
-                
+
                 CarregarTimeDefesas(arquivo.FullName);
                 GravarDefesas(list);
 
-                
+
 
             }
             catch (Exception)
@@ -877,7 +881,7 @@ namespace Dados.BLO
                         {
                             nome = "NãoEncontrado";
                         }
-                        
+
                         pontoArena = 0;
                     }
                     else
@@ -1047,7 +1051,7 @@ namespace Dados.BLO
 
         }
 
-        private void CarregarDefesasGVG(long idBatalha, long idGuilda,string caminhoArquivo)
+        private void CarregarDefesasGVG(long idBatalha, long idGuilda, string caminhoArquivo)
         {
             string[] lines = System.IO.File.ReadAllLines(caminhoArquivo);
             string Texto = "";
@@ -1076,11 +1080,11 @@ namespace Dados.BLO
                 //var distinctItems = items.GroupBy(x => x.Id).Select(y => y.First());
                 lstDefesas = lstDefesas.GroupBy(x => x.defense_wizard_id).Select(y => y.First()).ToList();
 
-                if (lstDefesas.Count>0)
+                if (lstDefesas.Count > 0)
                 {
                     daoTimeDefesa.AtualizarTimeDefesaGVG(lstDefesas, idBatalha);
                 }
-                
+
             }
             catch (Exception ex)
             {
