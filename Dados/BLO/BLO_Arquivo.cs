@@ -33,7 +33,7 @@ namespace Dados.BLO
 
         public void CarregarSiege()
         {
-            string txtDiretorio = @"C:\Users\pbveber\Source\Repos\DB_SW\GuildSw";
+            string txtDiretorio = @"C:\Users\cabec\Source\Repos\GuildSw";
             CarregarArquivoSiege(txtDiretorio + @"//tempDemonOrange.txt");
         }
 
@@ -1661,11 +1661,11 @@ namespace Dados.BLO
 
 
                         if (item.pos_id == 1)
-                        { monstro1 = item.unit_info.unit_master_id; }
+                        { monstro1 = item.unit_info != null?item.unit_info.unit_master_id:0; }
                         if (item.pos_id == 2)
-                        { monstro2 = item.unit_info.unit_master_id; }
+                        { monstro2 = item.unit_info != null ? item.unit_info.unit_master_id : 0; }
                         if (item.pos_id == 3)
-                        { monstro3 = item.unit_info.unit_master_id; }
+                        { monstro3 = item.unit_info != null?item.unit_info.unit_master_id:0; }
 
                         idDeck = item.deck_id;
                         if (root.defense_assign_list.Any(x => x.deck_id == item.deck_id))
